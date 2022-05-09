@@ -61,18 +61,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return null;
             },
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _registerWithEmailAndPassword();
-                }
-              },
-              child: const Text('Sign Up'),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    _registerWithEmailAndPassword();
+                  }
+                },
+                child: const Text('Sign Up'),
+              ),
             ),
-          ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.notifyParent(false);
+                },
+                child: const Text('Sign In'),
+              ),
+            )
+          ]),
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 16),
