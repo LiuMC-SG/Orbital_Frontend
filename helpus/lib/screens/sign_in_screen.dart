@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../widgets/sign_in/google_sign_in_button.dart';
-import '../widgets/sign_in/email_sign_in.dart';
-import 'register_screen.dart';
-import 'forget_password_screen.dart';
+import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/sign_in/facebook_sign_in_button.dart';
+import 'package:helpus/widgets/sign_in/google_sign_in_button.dart';
+import 'package:helpus/widgets/sign_in/email_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  final User? user;
+  const SignInScreen({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -15,11 +19,16 @@ class _SignInScreenState extends State<SignInScreen> {
   bool isForgetPassword = false;
   bool isRegister = false;
   User? _user;
-  String? _email;
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    _user = widget.user ?? FirebaseAuth.instance.currentUser;
+    Future.delayed(Duration.zero, () {
+      checkUser(_user);
+    });
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -30,76 +39,86 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: elements(),
+            children: [
+              EmailPasswordForm(
+                checkUser: checkUser,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RoutesText.forgetPassword,
+                  );
+                },
+                child: const Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              buildRowDivider(
+                size: size,
+              ),
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                children: [
+                  GoogleSignInButton(
+                    checkUser: checkUser,
+                  ),
+                  FacebookSignInButton(
+                    checkUser: checkUser,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  List<Widget> elements() {
-    if (isForgetPassword) {
-      return [
-        ForgetPasswordScreen(
-          setForgetPassword: setForgetPassword,
-        ),
-      ];
-    } else if (isRegister) {
-      return [
-        RegisterScreen(
-          setRegister: setRegister,
-        ),
-      ];
+  Widget buildRowDivider({required Size size}) {
+    return SizedBox(
+      width: size.width * 0.8,
+      child: Row(
+        children: const <Widget>[
+          Expanded(
+              child: Divider(
+            color: FirebaseColors.firebaseGrey,
+          )),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+            ),
+            child: Text(
+              "Or",
+              style: TextStyle(
+                color: FirebaseColors.firebaseGrey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              color: FirebaseColors.firebaseGrey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void checkUser(User? user) {
+    if (user != null) {
+      Future.delayed(Duration.zero, () {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesText.home,
+          (route) => false,
+        );
+      });
     }
-    return [
-      Row(),
-      EmailPasswordForm(
-        setRegister: setRegister,
-        setUser: setUser,
-      ),
-      TextButton(
-        onPressed: () {
-          setState(() {
-            isForgetPassword = true;
-          });
-        },
-        child: const Text(
-          'Forgot Password?',
-          style: TextStyle(color: Colors.grey, fontSize: 12),
-        ),
-      ),
-      Row(),
-      Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(
-          _email == null ? '' : 'Sign in with $_email',
-          style: const TextStyle(color: Colors.red),
-        ),
-      ),
-      Row(),
-      GoogleSignInButton(
-        setUser: setUser,
-      ),
-    ];
-  }
-
-  void setForgetPassword(bool isForgetPassword) {
-    setState(() {
-      this.isForgetPassword = isForgetPassword;
-    });
-  }
-
-  void setRegister(bool isRegister) {
-    setState(() {
-      this.isRegister = isRegister;
-    });
-  }
-
-  void setUser(User? user) {
-    setState(() {
-      _user = user;
-      _email = user!.email;
-    });
   }
 }

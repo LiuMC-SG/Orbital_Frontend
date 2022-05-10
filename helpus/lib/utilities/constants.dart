@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 // Firebase Colors
 class FirebaseColors {
@@ -11,9 +11,24 @@ class FirebaseColors {
   static const firebaseGrey = Color(0xFFECEFF1);
 }
 
+// Google Colors
 class GoogleColors {
   static const googleBlue = Color(0xFF4285F4);
   static const googleRed = Color(0xFFDB4437);
   static const googleYellow = Color(0xFFF4B400);
   static const googleGreen = Color(0xFF0F9D58);
+}
+
+// Sign In Text
+class SignInText {
+  static const google = "Sign in with Google";
+  static const facebook = "Sign in with Facebook";
+}
+
+// Routes
+class RoutesText {
+  static const signIn = "/sign_in";
+  static const forgetPassword = "/forget_password";
+  static const register = "/register";
+  static const home = "/home";
 }

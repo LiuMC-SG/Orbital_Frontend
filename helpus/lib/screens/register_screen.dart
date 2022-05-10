@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:helpus/utilities/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final Function(bool) setRegister;
-  const RegisterScreen({Key? key, required this.setRegister}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -18,81 +18,109 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _message;
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: const Text('Register with email and password'),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-            validator: (String? value) {
-              if (value!.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
-            validator: (String? value) {
-              if (value!.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordRepeatController,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Confirm Password'),
-            validator: (String? value) {
-              if (value != _passwordController.text) {
-                return 'Please enter same password';
-              }
-              return null;
-            },
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _registerWithEmailAndPassword();
-                  }
-                },
-                child: const Text('Sign Up'),
+              child: const Text(
+                'Register with email and password',
               ),
+              padding: const EdgeInsets.all(
+                16,
+              ),
+              alignment: Alignment.center,
+            ),
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+              ),
+              validator: (String? value) {
+                if (value!.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+              ),
+              validator: (String? value) {
+                if (value!.isEmpty) {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _passwordRepeatController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+              ),
+              validator: (String? value) {
+                if (value != _passwordController.text) {
+                  return 'Please enter same password';
+                }
+                return null;
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                  ),
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _registerWithEmailAndPassword();
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                  ),
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        RoutesText.signIn,
+                      );
+                    },
+                    child: const Text(
+                      'Back to Sign In',
+                    ),
+                  ),
+                )
+              ],
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
               alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.setRegister(false);
-                },
-                child: const Text('Sign In'),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              child: Text(
+                _success == null ? '' : _message ?? '',
+                style: const TextStyle(
+                  color: Colors.red,
+                ),
               ),
             )
-          ]),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              _success == null ? '' : _message ?? '',
-              style: const TextStyle(color: Colors.red),
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -103,7 +131,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      widget.setRegister(false);
+      Navigator.pushNamed(
+        context,
+        RoutesText.signIn,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         debugPrint('registerWithPassword: The password provided is too weak.');

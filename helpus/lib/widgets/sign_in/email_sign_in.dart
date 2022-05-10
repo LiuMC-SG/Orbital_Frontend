@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helpus/utilities/constants.dart';
 
 class EmailPasswordForm extends StatefulWidget {
-  final Function(bool) setRegister;
-  final Function(User?) setUser;
-  const EmailPasswordForm(
-      {Key? key, required this.setRegister, required this.setUser})
-      : super(key: key);
+  final Function(User?) checkUser;
+  const EmailPasswordForm({
+    Key? key,
+    required this.checkUser,
+  }) : super(key: key);
   @override
   _EmailPasswordFormState createState() => _EmailPasswordFormState();
 }
@@ -24,13 +25,19 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: const Text('Sign in with email and password'),
-            padding: const EdgeInsets.all(16),
+            child: const Text(
+              'Sign in with email and password',
+            ),
+            padding: const EdgeInsets.all(
+              16,
+            ),
             alignment: Alignment.center,
           ),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
+            decoration: const InputDecoration(
+              labelText: 'Email',
+            ),
             validator: (String? value) {
               if (value!.isEmpty) {
                 return 'Please enter some text';
@@ -41,7 +48,9 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
           TextFormField(
             controller: _passwordController,
             obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(
+              labelText: 'Password',
+            ),
             validator: (String? value) {
               if (value!.isEmpty) {
                 return 'Please enter some text';
@@ -49,36 +58,52 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
               return null;
             },
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _signInWithEmailAndPassword();
-                  }
-                },
-                child: const Text('Sign In'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                ),
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _signInWithEmailAndPassword();
+                    }
+                  },
+                  child: const Text('Sign In'),
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  widget.setRegister(true);
-                },
-                child: const Text('Register'),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                ),
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      RoutesText.register,
+                    );
+                  },
+                  child: const Text(
+                    'Register',
+                  ),
+                ),
               ),
-            )
-          ]),
+            ],
+          ),
           Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
             child: Text(
               _success == null || _success == true ? '' : 'Sign in failed',
-              style: const TextStyle(color: Colors.red),
+              style: const TextStyle(
+                color: Colors.red,
+              ),
             ),
           )
         ],
@@ -90,7 +115,9 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
     User? user;
     try {
       user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text))
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
           .user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -102,10 +129,9 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
     }
 
     if (user != null) {
-      User currUser = user;
       setState(() {
         _success = true;
-        widget.setUser(currUser);
+        widget.checkUser(user);
       });
     } else {
       setState(() {

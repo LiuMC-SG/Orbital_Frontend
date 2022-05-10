@@ -3,44 +3,32 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/sign_in/sign_in_button.dart';
 
 class GoogleSignInButton extends StatefulWidget {
-  final Function(User?) setUser;
-  const GoogleSignInButton({Key? key, required this.setUser}) : super(key: key);
+  final Function(User?) checkUser;
+  const GoogleSignInButton({
+    Key? key,
+    required this.checkUser,
+  }) : super(key: key);
   @override
   _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
 }
 
 class _GoogleSignInButtonState extends State<GoogleSignInButton> {
-  bool _isSigningIn = false;
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: _isSigningIn
-          ? const CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(GoogleColors.googleBlue),
-            )
-          : ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(20),
-                  primary: FirebaseColors.firebaseNavy),
-              child: Image.asset(
-                'assets/logo/google_logo.png',
-                width: 35,
-              ),
-              onPressed: googleSignIn,
-            ),
+    return SignInButton(
+      image: const Image(
+        image: AssetImage('assets/logo/google_logo.png'),
+        width: 30,
+      ),
+      textLabel: SignInText.google,
+      login: googleSignIn,
     );
   }
 
   void googleSignIn() async {
-    setState(() {
-      _isSigningIn = true;
-    });
     try {
       if (kIsWeb) {
         googleSignInWeb();
@@ -49,10 +37,6 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
       }
     } on FirebaseAuthException catch (e) {
       debugPrint("googleSignIn: $e");
-    } finally {
-      setState(() {
-        _isSigningIn = false;
-      });
     }
   }
 
@@ -71,7 +55,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     // Or use signInWithRedirect
     // UserCredential userCredential = await FirebaseAuth.instance.signInWithRedirect(googleProvider);
 
-    widget.setUser(userCredential.user);
+    widget.checkUser(userCredential.user);
   }
 
   void googleSignInOthers() async {
@@ -92,6 +76,6 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    widget.setUser(userCredential.user);
+    widget.checkUser(userCredential.user);
   }
 }

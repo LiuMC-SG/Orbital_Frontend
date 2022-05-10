@@ -1,8 +1,8 @@
 # Secret file
-/lib/secrets.dart
 /lib/firebase_options.dart
 /android/app/google-services.json
 /ios/firebase_app_id_file.json
+/android/app/src/main/res/values/strings.xml
 
 # Miscellaneous
 *.class
