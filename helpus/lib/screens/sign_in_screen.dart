@@ -63,6 +63,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               Wrap(
                 alignment: WrapAlignment.spaceEvenly,
+                spacing: 20,
                 children: [
                   GoogleSignInButton(
                     checkUser: checkUser,
@@ -80,32 +81,35 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget buildRowDivider({required Size size}) {
-    return SizedBox(
-      width: size.width * 0.8,
-      child: Row(
-        children: const <Widget>[
-          Expanded(
-              child: Divider(
-            color: FirebaseColors.firebaseGrey,
-          )),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: SizedBox(
+        width: size.width * 0.8,
+        child: Row(
+          children: const <Widget>[
+            Expanded(
+                child: Divider(
+              color: FirebaseColors.firebaseGrey,
+            )),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
+              ),
+              child: Text(
+                "Or",
+                style: TextStyle(
+                  color: FirebaseColors.firebaseGrey,
+                ),
+              ),
             ),
-            child: Text(
-              "Or",
-              style: TextStyle(
+            Expanded(
+              child: Divider(
                 color: FirebaseColors.firebaseGrey,
               ),
             ),
-          ),
-          Expanded(
-            child: Divider(
-              color: FirebaseColors.firebaseGrey,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
