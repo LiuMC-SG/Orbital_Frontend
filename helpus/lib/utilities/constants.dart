@@ -10,3 +10,10 @@ class FirebaseColors {
   static const firebaseCoral = Color(0xFFFF8A65);
   static const firebaseGrey = Color(0xFFECEFF1);
 }
+
+class GoogleColors {
+  static const googleBlue = Color(0xFF4285F4);
+  static const googleRed = Color(0xFFDB4437);
+  static const googleYellow = Color(0xFFF4B400);
+  static const googleGreen = Color(0xFF0F9D58);
+}

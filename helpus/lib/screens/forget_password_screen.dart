@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
-  final Function(bool) notifyParent;
-  const ForgetPasswordScreen({Key? key, required this.notifyParent})
+  final Function(bool) setForgetPassword;
+  const ForgetPasswordScreen({Key? key, required this.setForgetPassword})
       : super(key: key);
   @override
   _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();
@@ -46,7 +46,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           TextButton(
               child: const Text('Sign In'),
               onPressed: () {
-                widget.notifyParent(false);
+                widget.setForgetPassword(false);
               })
         ],
       ),

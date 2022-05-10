@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:helpus/utilities/constants.dart';
 
 class GoogleSignInButton extends StatefulWidget {
-  const GoogleSignInButton({Key? key}) : super(key: key);
+  final Function(User?) setUser;
+  const GoogleSignInButton({Key? key, required this.setUser}) : super(key: key);
   @override
   _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
 }
@@ -15,53 +20,78 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
           ? const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(GoogleColors.googleBlue),
             )
-          : OutlinedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                ),
+          : ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(20),
+                  primary: FirebaseColors.firebaseNavy),
+              child: Image.asset(
+                'assets/logo/google_logo.png',
+                width: 35,
               ),
-              onPressed: () async {
-                setState(() {
-                  _isSigningIn = true;
-                });
-
-                // TODO: Add method call to the Google Sign-In authentication
-
-                setState(() {
-                  _isSigningIn = false;
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Image(
-                      image: AssetImage("assets/logo/google_logo.png"),
-                      height: 35.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        'Sign in with Google',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              onPressed: googleSignIn,
             ),
     );
+  }
+
+  void googleSignIn() async {
+    setState(() {
+      _isSigningIn = true;
+    });
+    try {
+      if (kIsWeb) {
+        googleSignInWeb();
+      } else {
+        googleSignInOthers();
+      }
+    } on FirebaseAuthException catch (e) {
+      debugPrint("googleSignIn: $e");
+    } finally {
+      setState(() {
+        _isSigningIn = false;
+      });
+    }
+  }
+
+  void googleSignInWeb() async {
+    // Create a new provider
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+    googleProvider
+        .addScope('https://www.googleapis.com/auth/contacts.readonly');
+    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+
+    // Once signed in, return the UserCredential
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithPopup(googleProvider);
+
+    // Or use signInWithRedirect
+    // UserCredential userCredential = await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+
+    widget.setUser(userCredential.user);
+  }
+
+  void googleSignInOthers() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    widget.setUser(userCredential.user);
   }
 }

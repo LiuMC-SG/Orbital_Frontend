@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/sign_in/google_sign_in_button.dart';
 import '../widgets/sign_in/email_sign_in.dart';
 import 'register_screen.dart';
@@ -13,6 +14,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   bool isForgetPassword = false;
   bool isRegister = false;
+  User? _user;
+  String? _email;
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +41,21 @@ class _SignInScreenState extends State<SignInScreen> {
     if (isForgetPassword) {
       return [
         ForgetPasswordScreen(
-          notifyParent: setForgetPassword,
+          setForgetPassword: setForgetPassword,
         ),
       ];
     } else if (isRegister) {
       return [
         RegisterScreen(
-          notifyParent: setRegister,
+          setRegister: setRegister,
         ),
       ];
     }
     return [
       Row(),
       EmailPasswordForm(
-        notifyParent: setRegister,
+        setRegister: setRegister,
+        setUser: setUser,
       ),
       TextButton(
         onPressed: () {
@@ -65,7 +69,18 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
       Row(),
-      // const GoogleSignInButton(),
+      Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          _email == null ? '' : 'Sign in with $_email',
+          style: const TextStyle(color: Colors.red),
+        ),
+      ),
+      Row(),
+      GoogleSignInButton(
+        setUser: setUser,
+      ),
     ];
   }
 
@@ -78,6 +93,13 @@ class _SignInScreenState extends State<SignInScreen> {
   void setRegister(bool isRegister) {
     setState(() {
       this.isRegister = isRegister;
+    });
+  }
+
+  void setUser(User? user) {
+    setState(() {
+      _user = user;
+      _email = user!.email;
     });
   }
 }

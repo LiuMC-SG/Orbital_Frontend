@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final Function(bool) notifyParent;
-  const RegisterScreen({Key? key, required this.notifyParent})
-      : super(key: key);
+  final Function(bool) setRegister;
+  const RegisterScreen({Key? key, required this.setRegister}) : super(key: key);
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -79,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  widget.notifyParent(false);
+                  widget.setRegister(false);
                 },
                 child: const Text('Sign In'),
               ),
@@ -104,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      widget.notifyParent(false);
+      widget.setRegister(false);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         debugPrint('registerWithPassword: The password provided is too weak.');

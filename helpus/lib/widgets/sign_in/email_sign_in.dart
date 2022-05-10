@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class EmailPasswordForm extends StatefulWidget {
-  final Function(bool) notifyParent;
-  const EmailPasswordForm({Key? key, required this.notifyParent})
+  final Function(bool) setRegister;
+  final Function(User?) setUser;
+  const EmailPasswordForm(
+      {Key? key, required this.setRegister, required this.setUser})
       : super(key: key);
   @override
   _EmailPasswordFormState createState() => _EmailPasswordFormState();
@@ -14,7 +16,6 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool? _success;
-  String? _userEmail;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -66,7 +67,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  widget.notifyParent(true);
+                  widget.setRegister(true);
                 },
                 child: const Text('Register'),
               ),
@@ -76,11 +77,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              _success == null
-                  ? ''
-                  : (_success ?? false
-                      ? 'Successfully signed in ' + (_userEmail ?? "")
-                      : 'Sign in failed'),
+              _success == null || _success == true ? '' : 'Sign in failed',
               style: const TextStyle(color: Colors.red),
             ),
           )
@@ -105,9 +102,10 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
     }
 
     if (user != null) {
+      User currUser = user;
       setState(() {
         _success = true;
-        _userEmail = user!.email;
+        widget.setUser(currUser);
       });
     } else {
       setState(() {
