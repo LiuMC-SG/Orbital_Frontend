@@ -12,6 +12,6 @@ class Routes {
         ),
     RoutesText.forgetPassword: (context) => const ForgetPasswordScreen(),
     RoutesText.register: (context) => const RegisterScreen(),
-    RoutesText.home: (context) => const HomeScreen(),
+    RoutesText.home: (context) => HomeScreen(),
   };
 }
