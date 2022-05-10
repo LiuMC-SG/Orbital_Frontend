@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/sign_in_button.dart';
 
@@ -24,7 +25,11 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
         width: 30,
       ),
       textLabel: SignInText.facebook,
-      login: facebookSignIn,
+      login: () async {
+        Fluttertoast.showToast(
+          msg: "Facebook login is currently disabled",
+        );
+      },
     );
   }
 
