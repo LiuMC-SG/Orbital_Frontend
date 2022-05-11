@@ -1,5 +1,6 @@
 # Secret file
 /lib/firebase_options.dart
+/lib/secrets.dart
 /android/app/google-services.json
 /ios/firebase_app_id_file.json
 /android/app/src/main/res/values/strings.xml

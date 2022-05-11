@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helpus/models/recaptcha/recaptcha_service.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/facebook_sign_in_button.dart';
 import 'package:helpus/widgets/sign_in/google_sign_in_button.dart';
@@ -114,15 +115,19 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void checkUser(User? user) {
+  void checkUser(User? user) async {
     if (user != null) {
-      Future.delayed(Duration.zero, () {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          RoutesText.home,
-          (route) => false,
-        );
-      });
+      bool _isNotABot = await RecaptchaService.isNotABot();
+
+      if (_isNotABot) {
+        Future.delayed(Duration.zero, () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RoutesText.home,
+            (route) => false,
+          );
+        });
+      }
     }
   }
 }

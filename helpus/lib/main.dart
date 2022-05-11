@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:helpus/firebase_options.dart';
+import 'package:helpus/models/recaptcha/recaptcha_service.dart';
 import 'package:helpus/utilities/routes.dart';
 
 void main() async {
@@ -8,6 +9,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await RecaptchaService.initiate();
   runApp(const MyApp());
 }
 
