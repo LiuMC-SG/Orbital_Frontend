@@ -31,4 +31,5 @@ class RoutesText {
   static const forgetPassword = "/forget_password";
   static const register = "/register";
   static const home = "/home";
+  static const changePassword = "/change_password";
 }

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/screens/module_generation_screen.dart';
 import 'package:helpus/screens/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
-import 'package:helpus/screens/profile_screen.dart';
+import 'package:helpus/screens/profile/profile_screen.dart';
 import 'package:helpus/screens/settings_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/models/drawer_item.dart';
@@ -31,7 +31,6 @@ class HomeScreen extends StatefulWidget {
       Icons.view_carousel_rounded,
     ),
   ];
-
   HomeScreen({Key? key}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -50,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getDrawerItemWidget(int index) {
     switch (index) {
       case 0:
-        return const ProfileScreen();
+        return ProfileScreen();
       case 1:
         return const SettingsScreen();
       case 2:

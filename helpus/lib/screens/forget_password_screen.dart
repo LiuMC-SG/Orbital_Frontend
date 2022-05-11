@@ -49,22 +49,28 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-              child: const Text(
-                'Send Email',
-              ),
-              onPressed: resetPassword,
-            ),
-            TextButton(
-                child: const Text(
-                  'Sign In',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  child: const Text(
+                    'Send Email',
+                  ),
+                  onPressed: resetPassword,
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    RoutesText.signIn,
-                  );
-                })
+                ElevatedButton(
+                  child: const Text(
+                    'Sign In',
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      RoutesText.signIn,
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

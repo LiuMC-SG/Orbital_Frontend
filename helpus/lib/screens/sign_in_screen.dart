@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/models/recaptcha/recaptcha_service.dart';
@@ -117,17 +118,28 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void checkUser(User? user) async {
     if (user != null) {
-      bool _isNotABot = await RecaptchaService.isNotABot();
+      if (kIsWeb) {
+        bool _isNotABot = await RecaptchaService.isNotABot();
 
-      if (_isNotABot) {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RoutesText.home,
-            (route) => false,
-          );
-        });
+        if (_isNotABot) {
+          login();
+        }
+      } else {
+        login();
       }
     }
+  }
+
+  void login() {
+    Future.delayed(
+      Duration.zero,
+      () {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesText.home,
+          (route) => false,
+        );
+      },
+    );
   }
 }

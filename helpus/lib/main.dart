@@ -1,7 +1,10 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:helpus/firebase_options.dart';
 import 'package:helpus/models/recaptcha/recaptcha_service.dart';
+import 'package:helpus/secrets.dart';
 import 'package:helpus/utilities/routes.dart';
 
 void main() async {
@@ -9,7 +12,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await RecaptchaService.initiate();
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: Config.siteKey);
+  if (kIsWeb) {
+    await RecaptchaService.initiate();
+  }
   runApp(const MyApp());
 }
 
