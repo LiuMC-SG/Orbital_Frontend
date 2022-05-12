@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/screens/module_generation_screen.dart';
@@ -7,6 +8,8 @@ import 'package:helpus/screens/profile/profile_screen.dart';
 import 'package:helpus/screens/settings_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/models/drawer_item.dart';
+import 'package:helpus/widgets/profile/profile_photo.dart';
+import 'package:helpus/models/profile_data.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<SideMenuItem> sideMenuItems = [
@@ -37,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Profile blankProfile = Profile('', '', '');
   int _selectedDrawerIndex = 0;
 
   void _onItemSelect(int index) {
@@ -46,10 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).pop();
   }
 
-  Widget _getDrawerItemWidget(int index) {
+  Widget _getDrawerItemWidget(int index, Profile profile) {
     switch (index) {
       case 0:
-        return ProfileScreen();
+        return ProfileScreen(
+          profile: profile,
+        );
       case 1:
         return const SettingsScreen();
       case 2:
@@ -96,49 +102,71 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     ));
 
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  backgroundColor: Colors.grey.withOpacity(0.5),
+    return FutureBuilder(
+      future: checkProfile(),
+      builder: (BuildContext context, AsyncSnapshot<Profile> snapshot) {
+        return snapshot.hasData
+            ? Scaffold(
+                drawer: Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: ProfilePhoto(
+                            profile: snapshot.data ?? blankProfile,
+                          ),
+                        ),
+                      ),
+                      ...sideMenuOptions,
+                    ],
+                  ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(
-                      FirebaseAuth.instance.currentUser!.photoURL ?? ""),
+                appBar: AppBar(
+                  title: const Text(
+                    "HelpUS",
+                  ),
+                  leading: Builder(
+                    builder: (BuildContext context) {
+                      return IconButton(
+                        icon: const Icon(Icons.menu_rounded),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        tooltip: "Menu",
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ),
-            ...sideMenuOptions,
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        title: const Text(
-          "HelpUS",
-        ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: "Menu",
-            );
-          },
-        ),
-      ),
-      body: _getDrawerItemWidget(_selectedDrawerIndex),
+                body: _getDrawerItemWidget(
+                  _selectedDrawerIndex,
+                  snapshot.data ?? blankProfile,
+                ),
+              )
+            : const Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(),
+                  height: 40,
+                ),
+              );
+      },
     );
+  }
+
+  Future<Profile> checkProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection("users").doc(user!.uid);
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+    if (!documentSnapshot.exists) {
+      documentReference.set({
+        'name': user.displayName ?? '',
+        'email': user.email ?? '',
+        'photoURL': user.photoURL ?? '',
+      });
+    }
+    Profile profile = await Profile.generate(user.uid);
+    return profile;
   }
 }

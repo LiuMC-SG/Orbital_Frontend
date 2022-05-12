@@ -1,16 +1,32 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/profile/profile_photo.dart';
+import 'package:helpus/models/profile_data.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProfilePhotoEdit extends StatelessWidget {
-  final String imagePath;
-
+class ProfilePhotoEdit extends StatefulWidget {
+  final Profile profile;
   const ProfilePhotoEdit({
     Key? key,
-    required this.imagePath,
+    required this.profile,
   }) : super(key: key);
 
   @override
+  _ProfilePhotoEditState createState() => _ProfilePhotoEditState();
+}
+
+class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
+  ProfilePhoto _profilePhoto = ProfilePhoto(profile: Profile('', '', ''));
+  @override
   Widget build(BuildContext context) {
+    _profilePhoto = ProfilePhoto(profile: widget.profile);
     return Center(
       child: Stack(
         children: [
@@ -27,14 +43,18 @@ class ProfilePhotoEdit extends StatelessWidget {
 
   // Builds Profile Image which border color and thickness 5
   Widget profilePhoto(Color color) {
-    return CircleAvatar(
-      radius: 75,
-      backgroundColor: color,
-      child: CircleAvatar(
-        // backgroundImage: NetworkImage(imagePath),
-        backgroundColor: Colors.black,
-        radius: 72,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(
+          side: BorderSide(
+            width: 3,
+            color: color,
+          ),
+        ),
+        fixedSize: const Size(150, 150),
       ),
+      onPressed: setPicture,
+      child: _profilePhoto,
     );
   }
 
@@ -52,5 +72,38 @@ class ProfilePhotoEdit extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void setPicture() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    Reference reference =
+        FirebaseStorage.instance.ref().child('users/${user!.uid}');
+    final ImagePicker _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      try {
+        String photoURL;
+        await reference.putData(await image.readAsBytes());
+        photoURL = await reference.getDownloadURL();
+        DocumentReference documentReference =
+            FirebaseFirestore.instance.collection("users").doc(user.uid);
+        documentReference.set(
+          {'photoURL': photoURL},
+          SetOptions(merge: true),
+        );
+        widget.profile.photoURL = photoURL;
+        setState(() {
+          _profilePhoto = ProfilePhoto(profile: widget.profile);
+        });
+      } on FirebaseException catch (e) {
+        debugPrint("setPicture: ${e.message}");
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: "No image selected",
+      );
+    }
   }
 }

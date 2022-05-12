@@ -1,25 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class Profile {
-  final String name;
-  final String photo;
+  String name;
   final String email;
-  Profile(this.name, this.email, this.photo);
+  String photoURL;
+  Profile(this.name, this.email, this.photoURL);
 
-  static generate(Object? object) {
-    if (object.runtimeType == Null) {
+  static generate(String userUID) async {
+    DocumentReference _documentReference =
+        FirebaseFirestore.instance.collection('users').doc(userUID);
+    DocumentSnapshot documentSnapshot = await _documentReference.get();
+    Object? data = documentSnapshot.data();
+
+    if (data == null) {
       debugPrint("Object is null and cannot be parsed.");
-      return Profile("", "", "");
+      return Profile('', '', '');
     } else {
       final mappedValue =
-          Map<String, String>.from(object as Map<Object?, Object?>);
-      return Profile(mappedValue['name'] ?? "", mappedValue['email'] ?? "",
-          mappedValue['photo'] ?? "");
+          Map<String, String>.from(data as Map<Object?, Object?>);
+      return Profile(
+        mappedValue['name'] ?? '',
+        mappedValue['email'] ?? '',
+        mappedValue['photoURL'] ?? '',
+      );
     }
   }
 
   @override
   String toString() {
-    return ("name: $name, email: $email, photo: $photo");
+    return ("name: $name, email: $email, photoURL: $photoURL");
   }
 }

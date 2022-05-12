@@ -100,7 +100,9 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
               horizontal: 16,
             ),
             child: Text(
-              _success == null || _success == true ? '' : 'Sign in failed',
+              _success == null || _success == true
+                  ? ''
+                  : 'Sign in failed. Check you keyed in the correct email and password.',
               style: const TextStyle(
                 color: Colors.red,
               ),

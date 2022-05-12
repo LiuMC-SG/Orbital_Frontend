@@ -32,4 +32,5 @@ class RoutesText {
   static const register = "/register";
   static const home = "/home";
   static const changePassword = "/change_password";
+  static const changePhoto = "/change_photo";
 }

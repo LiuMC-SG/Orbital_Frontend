@@ -35,37 +35,34 @@ class _ProfileInfoEditState extends State<ProfileInfoEdit> {
           const SizedBox(
             height: 1,
           ),
-          Container(
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1,
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _textController,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+              IconButton(
+                icon: const Icon(
+                  Icons.navigate_next_rounded,
+                  color: Colors.black,
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.navigate_next_rounded,
-                    color: Colors.black,
-                  ),
-                  onPressed: widget.submission(
+                onPressed: () {
+                  widget.submission(
                     _textController!.text,
-                  ),
-                ),
-              ],
-            ),
-          )
+                  );
+                },
+                padding: const EdgeInsets.all(0),
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                iconSize: 16,
+              ),
+            ],
+          ),
         ],
       ),
     );
