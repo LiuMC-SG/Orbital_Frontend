@@ -66,6 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {'name': name},
       SetOptions(merge: true),
     );
+    Fluttertoast.showToast(
+      msg: "Name has been updated",
+    );
   }
 
   void changePassword() {
@@ -75,7 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           msg:
               "Account is from 3rd party authentication services. Password cannot be changed");
     } else {
-      Navigator.pushNamed(context, RoutesText.changePassword);
+      Navigator.pushNamed(
+        context,
+        RoutesText.changePassword,
+      );
     }
   }
 
@@ -85,10 +91,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .delete();
-    await FirebaseStorage.instance.ref().child('users/${user!.uid}').delete();
-    await user.delete();
+    try {
+      await FirebaseStorage.instance.ref().child('users/${user!.uid}').delete();
+    } on FirebaseException catch (e) {
+      debugPrint("deleteAccount: ${e.message}");
+    }
+    await user!.delete();
     await FirebaseAuth.instance.signOut();
     Navigator.pushNamedAndRemoveUntil(
-        context, RoutesText.signIn, (route) => false);
+      context,
+      RoutesText.signIn,
+      (route) => false,
+    );
   }
 }
