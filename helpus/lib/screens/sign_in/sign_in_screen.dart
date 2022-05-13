@@ -91,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
           children: const <Widget>[
             Expanded(
                 child: Divider(
-              color: FirebaseColors.firebaseGrey,
+              color: Colors.black45,
             )),
             Padding(
               padding: EdgeInsets.only(
@@ -101,13 +101,13 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Text(
                 "Or",
                 style: TextStyle(
-                  color: FirebaseColors.firebaseGrey,
+                  color: Colors.black45,
                 ),
               ),
             ),
             Expanded(
               child: Divider(
-                color: FirebaseColors.firebaseGrey,
+                color: Colors.black45,
               ),
             ),
           ],

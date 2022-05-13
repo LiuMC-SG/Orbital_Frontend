@@ -15,63 +15,69 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Email Your Email',
-            ),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-              ),
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Text(
-                _sent == null ? '' : _message ?? '',
-                style: const TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  child: const Text(
-                    'Send Email',
-                  ),
-                  onPressed: resetPassword,
+                const Text(
+                  'Email Your Email',
                 ),
-                ElevatedButton(
-                  child: const Text(
-                    'Sign In',
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      RoutesText.signIn,
-                    );
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
                   },
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Text(
+                    _sent == null ? '' : _message ?? '',
+                    style: const TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      child: const Text(
+                        'Send Email',
+                      ),
+                      onPressed: resetPassword,
+                    ),
+                    ElevatedButton(
+                      child: const Text(
+                        'Sign In',
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesText.signIn,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
