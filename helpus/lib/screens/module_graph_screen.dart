@@ -14,6 +14,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   GraphModel? _graphModel;
   @override
   void initState() {
+    super.initState();
     _configuration.nodeSeparation = 20; // X Separation
     _configuration.levelSeparation = 20; // Y Separation
 

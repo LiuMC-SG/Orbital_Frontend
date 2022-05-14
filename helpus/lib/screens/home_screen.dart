@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/screens/module_generation_screen.dart';
 import 'package:helpus/screens/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
@@ -154,18 +155,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Profile> checkProfile() async {
+    debugPrint("1");
     User? user = FirebaseAuth.instance.currentUser;
+    debugPrint("2");
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection("users").doc(user!.uid);
+    debugPrint("3");
     DocumentSnapshot documentSnapshot = await documentReference.get();
+    debugPrint("4");
+    debugPrint(GraphModel.blankGraphModel.toString());
     if (!documentSnapshot.exists) {
+      debugPrint("Started");
       documentReference.set({
         'name': user.displayName ?? '',
         'email': user.email ?? '',
         'photoURL': user.photoURL ?? '',
+        'graphModel': GraphModel.blankGraphModel.toJson(),
       });
+      debugPrint("Ended");
     }
+    debugPrint("5");
     Profile profile = await Profile.generate(user.uid);
+    debugPrint("6");
     return profile;
   }
 }

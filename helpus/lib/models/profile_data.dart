@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:helpus/models/graph_model.dart';
 
 class Profile {
   String name;
   final String email;
   String photoURL;
-  static final blankProfile = Profile('', '', '');
+  GraphModel graphModel;
+  static final blankProfile = Profile('', '', '', GraphModel.blankGraphModel);
 
-  Profile(this.name, this.email, this.photoURL);
+  Profile(this.name, this.email, this.photoURL, this.graphModel);
 
   static generate(String userUID) async {
     DocumentReference _documentReference =
@@ -16,21 +18,22 @@ class Profile {
     Object? data = documentSnapshot.data();
 
     if (data == null) {
-      debugPrint("Object is null and cannot be parsed.");
+      debugPrint("profileGenerate: Object is null and cannot be parsed.");
       return Profile.blankProfile;
     } else {
       final mappedValue =
-          Map<String, String>.from(data as Map<Object?, Object?>);
+          Map<String, dynamic>.from(data as Map<Object?, Object?>);
       return Profile(
         mappedValue['name'] ?? '',
         mappedValue['email'] ?? '',
         mappedValue['photoURL'] ?? '',
+        GraphModel(mappedValue['graphModel']),
       );
     }
   }
 
   @override
   String toString() {
-    return ("name: $name, email: $email, photoURL: $photoURL");
+    return "name: $name, email: $email, photoURL: $photoURL, graphModel: $graphModel";
   }
 }

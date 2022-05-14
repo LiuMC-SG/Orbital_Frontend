@@ -20,7 +20,7 @@ class ProfilePhotoEdit extends StatefulWidget {
 }
 
 class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
-  ProfilePhoto _profilePhoto = ProfilePhoto(profile: Profile('', '', ''));
+  ProfilePhoto _profilePhoto = ProfilePhoto(profile: Profile.blankProfile);
   @override
   Widget build(BuildContext context) {
     _profilePhoto = ProfilePhoto(profile: widget.profile);

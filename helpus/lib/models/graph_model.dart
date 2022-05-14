@@ -1,8 +1,13 @@
 class GraphModel {
   final List<GraphNode> nodes = [];
   final List<GraphEdge> edges = [];
+  static final GraphModel blankGraphModel = GraphModel({
+    'nodes': [],
+    'edges': [],
+  });
+
   GraphModel(Map<String, dynamic> json) {
-    List<Map<String, dynamic>> _nodes = json['nodes'];
+    var _nodes = json['nodes'];
     for (Map<String, dynamic> _node in _nodes) {
       GraphNode? generatedNode = GraphNode.generate(_node);
       if (generatedNode != null) {
@@ -10,13 +15,25 @@ class GraphModel {
       }
     }
 
-    List<Map<String, int>> _edges = json['edges'];
+    var _edges = json['edges'];
     for (Map<String, int> _edge in _edges) {
       GraphEdge? generatedEdge = GraphEdge.generate(_edge);
       if (generatedEdge != null) {
         edges.add(generatedEdge);
       }
     }
+  }
+
+  @override
+  String toString() {
+    return "{nodes: $nodes, edges: $edges}";
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nodes': nodes.map((element) => element.toJson()),
+      'edges': edges.map((element) => element.toJson()),
+    };
   }
 }
 
@@ -37,6 +54,18 @@ class GraphNode {
     }
     return null;
   }
+
+  @override
+  String toString() {
+    return "{id: $id, label: $label}";
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'label': label,
+    };
+  }
 }
 
 class GraphEdge {
@@ -55,5 +84,17 @@ class GraphEdge {
       );
     }
     return null;
+  }
+
+  @override
+  String toString() {
+    return "{from: $from, to: $to}";
+  }
+
+  Map<String, int> toJson() {
+    return {
+      'from': from,
+      'to': to,
+    };
   }
 }
