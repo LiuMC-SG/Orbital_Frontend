@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/sign_in/email_text_field.dart';
+import 'package:helpus/widgets/sign_in/password_text_field.dart';
 
 class EmailPasswordForm extends StatefulWidget {
   final Function(User?) checkUser;
@@ -33,30 +35,12 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
             ),
             alignment: Alignment.center,
           ),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-            ),
-            validator: (String? value) {
-              if (value!.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+          EmailTextField(
+            emailController: _emailController,
           ),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-            ),
-            validator: (String? value) {
-              if (value!.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+          PasswordTextField(
+            passwordController: _passwordController,
+            labelText: 'Password',
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

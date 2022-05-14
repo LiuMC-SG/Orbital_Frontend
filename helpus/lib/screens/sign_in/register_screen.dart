@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/sign_in/email_text_field.dart';
+import 'package:helpus/widgets/sign_in/password_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -37,37 +39,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   alignment: Alignment.center,
                 ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
-                  validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
+                EmailTextField(
+                  emailController: _emailController,
                 ),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
+                PasswordTextField(
+                  passwordController: _passwordController,
+                  labelText: 'Password',
                 ),
-                TextFormField(
-                  controller: _passwordRepeatController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm Password',
-                  ),
+                PasswordTextField(
+                  passwordController: _passwordRepeatController,
+                  labelText: 'Confirm Password',
                   validator: (String? value) {
                     if (value != _passwordController.text) {
                       return 'Please enter same password';
@@ -87,6 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _registerWithEmailAndPassword();
+                          } else {
+                            _success = null;
                           }
                         },
                         child: const Text('Sign Up'),

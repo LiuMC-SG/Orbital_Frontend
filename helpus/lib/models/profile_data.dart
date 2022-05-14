@@ -5,6 +5,8 @@ class Profile {
   String name;
   final String email;
   String photoURL;
+  static final blankProfile = Profile('', '', '');
+
   Profile(this.name, this.email, this.photoURL);
 
   static generate(String userUID) async {
@@ -15,7 +17,7 @@ class Profile {
 
     if (data == null) {
       debugPrint("Object is null and cannot be parsed.");
-      return Profile('', '', '');
+      return Profile.blankProfile;
     } else {
       final mappedValue =
           Map<String, String>.from(data as Map<Object?, Object?>);

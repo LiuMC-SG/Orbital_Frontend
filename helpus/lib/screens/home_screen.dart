@@ -40,7 +40,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Profile blankProfile = Profile('', '', '');
   int _selectedDrawerIndex = 0;
 
   void _onItemSelect(int index) {
@@ -115,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: FittedBox(
                           fit: BoxFit.fitHeight,
                           child: ProfilePhoto(
-                            profile: snapshot.data ?? blankProfile,
+                            profile: snapshot.data ?? Profile.blankProfile,
                           ),
                         ),
                       ),
@@ -141,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 body: _getDrawerItemWidget(
                   _selectedDrawerIndex,
-                  snapshot.data ?? blankProfile,
+                  snapshot.data ?? Profile.blankProfile,
                 ),
               )
             : const Center(
