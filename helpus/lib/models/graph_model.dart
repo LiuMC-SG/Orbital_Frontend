@@ -26,6 +26,9 @@ class GraphNode {
   GraphNode(this.id, this.label);
 
   static GraphNode? generate(Map<String, dynamic> node) {
+    if (!node.containsKey('id') || !node.containsKey('label')) {
+      return null;
+    }
     if (node['id'] != null && node['label'] != null) {
       return GraphNode(
         node['id'] ?? 0,
@@ -42,6 +45,9 @@ class GraphEdge {
   GraphEdge(this.from, this.to);
 
   static GraphEdge? generate(Map<String, int> edge) {
+    if (!edge.containsKey('from') || !edge.containsKey('to')) {
+      return null;
+    }
     if (edge['from'] != null && edge['to'] != null) {
       return GraphEdge(
         edge['from'] ?? 0,

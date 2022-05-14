@@ -38,21 +38,29 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: InteractiveViewer(
-                constrained: false,
-                minScale: 0.01,
-                maxScale: 6,
-                child: GraphView(
-                  graph: _graph,
-                  algorithm: SugiyamaAlgorithm(_configuration),
-                  builder: builder,
-                ),
-              ),
+              child: generateGraph(),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget generateGraph() {
+    if (_graphModel != null) {
+      return InteractiveViewer(
+        constrained: false,
+        minScale: 0.01,
+        maxScale: 6,
+        child: GraphView(
+          graph: _graph,
+          algorithm: SugiyamaAlgorithm(_configuration),
+          builder: builder,
+        ),
+      );
+    } else {
+      return const Text("No graph detected");
+    }
   }
 
   Widget builder(Node node) {
