@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -15,6 +17,17 @@ void main() async {
   await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: Config.siteKey);
   if (kIsWeb) {
     await RecaptchaService.initiate();
+  }
+  if (kIsWeb) {
+    await FirebaseFirestore.instance.enablePersistence(
+      const PersistenceSettings(
+        synchronizeTabs: true,
+      ),
+    );
+  } else {
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+    );
   }
   runApp(const MyApp());
 }

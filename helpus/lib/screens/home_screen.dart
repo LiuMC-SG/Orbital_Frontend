@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/models/graph_model.dart';
@@ -42,12 +43,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedDrawerIndex = 0;
+  // ignore: prefer_final_fields
+  Profile _profile = Profile('', '', '', GraphModel.blankGraphModel);
 
   void _onItemSelect(int index) {
     setState(() {
       _selectedDrawerIndex = index;
     });
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 
   Widget _getDrawerItemWidget(int index, Profile profile) {
@@ -106,57 +109,64 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return FutureBuilder(
       future: checkProfile(),
-      builder: (BuildContext context, AsyncSnapshot<Profile> snapshot) {
-        return snapshot.hasData
-            ? Scaffold(
-                drawer: Drawer(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      DrawerHeader(
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: ProfilePhoto(
-                            profile: snapshot.data ?? Profile.blankProfile,
-                          ),
-                        ),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            !_profile.equals(Profile.blankProfile)) {
+          return Scaffold(
+            drawer: Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  DrawerHeader(
+                    child: FittedBox(
+                      fit: BoxFit.fitHeight,
+                      child: ProfilePhoto(
+                        profile: _profile,
                       ),
-                      ...sideMenuOptions,
-                    ],
+                    ),
                   ),
-                ),
-                appBar: AppBar(
-                  title: const Text(
-                    'HelpUS',
-                  ),
-                  leading: Builder(
-                    builder: (BuildContext context) {
-                      return IconButton(
-                        icon: const Icon(Icons.menu_rounded),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        tooltip: 'Menu',
-                      );
+                  ...sideMenuOptions,
+                ],
+              ),
+            ),
+            appBar: AppBar(
+              title: const Text(
+                'HelpUS',
+              ),
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu_rounded),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
                     },
-                  ),
-                ),
-                body: _getDrawerItemWidget(
-                  _selectedDrawerIndex,
-                  snapshot.data ?? Profile.blankProfile,
-                ),
-              )
-            : const Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(),
-                  height: 40,
-                ),
-              );
+                    tooltip: 'Menu',
+                  );
+                },
+              ),
+            ),
+            body: _getDrawerItemWidget(
+              _selectedDrawerIndex,
+              _profile,
+            ),
+          );
+        }
+        return Scaffold(
+          body: const Center(
+            child: SizedBox(
+              child: CircularProgressIndicator(),
+              height: 40,
+            ),
+          ),
+          appBar: AppBar(
+            title: const Text('HelpUS'),
+          ),
+        );
       },
     );
   }
 
-  Future<Profile> checkProfile() async {
+  Future<bool> checkProfile() async {
     User? user = FirebaseAuth.instance.currentUser;
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection('users').doc(user!.uid);
@@ -169,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'graphModel': GraphModel.blankGraphModel.toJson(),
       });
     }
-    Profile profile = await Profile.generate(user.uid);
-    return profile;
+    await Profile.generate(user.uid, _profile);
+    return true;
   }
 }

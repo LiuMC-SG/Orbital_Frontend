@@ -51,17 +51,21 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
             Expanded(
               child: generateGraph(),
             ),
-            FloatingActionButton(
-              onPressed: () {},
-              backgroundColor: FirebaseColors.firebaseNavy,
-              child: const Icon(
-                Icons.add,
-              ),
-              tooltip: 'Add module',
-            ),
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20),
+        child: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: FirebaseColors.firebaseNavy,
+          child: const Icon(
+            Icons.add,
+          ),
+          tooltip: 'Add module',
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 
