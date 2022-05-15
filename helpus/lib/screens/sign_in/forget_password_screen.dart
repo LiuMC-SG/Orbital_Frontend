@@ -84,7 +84,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   }
 
   Future<void> resetPassword() async {
-    String message = "Email sent if it is one of the registered users.";
+    String message = 'Email sent if it is one of the registered users.';
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text,
@@ -92,7 +92,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         debugPrint('forgetPassword: The email is not valid.');
-        message = "Invalid Email. Please try again";
+        message = 'Invalid Email. Please try again';
       } else if (e.code == 'user-not-found') {
         debugPrint('forgetPassword: No user exist with this email.');
       }

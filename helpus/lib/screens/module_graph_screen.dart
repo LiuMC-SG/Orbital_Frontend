@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:helpus/models/graph_model.dart';
+import 'package:helpus/models/profile_data.dart';
 
 class ModuleGraphScreen extends StatefulWidget {
-  const ModuleGraphScreen({Key? key}) : super(key: key);
+  final Profile profile;
+  const ModuleGraphScreen({
+    Key? key,
+    required this.profile,
+  }) : super(key: key);
   @override
   _ModuleGraphScreenState createState() => _ModuleGraphScreenState();
 }
 
 class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   final Graph _graph = Graph();
-  SugiyamaConfiguration _configuration = SugiyamaConfiguration();
+  final SugiyamaConfiguration _configuration = SugiyamaConfiguration();
   GraphModel? _graphModel;
   @override
   void initState() {
@@ -18,14 +23,13 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     _configuration.nodeSeparation = 20; // X Separation
     _configuration.levelSeparation = 20; // Y Separation
 
+    _graphModel = widget.profile.graphModel;
     // Add all edges
-    if (_graphModel != null) {
-      for (GraphEdge _edge in _graphModel!.edges) {
-        _graph.addEdge(
-          Node.Id(_edge.from),
-          Node.Id(_edge.to),
-        );
-      }
+    for (GraphEdge _edge in _graphModel!.edges) {
+      _graph.addEdge(
+        Node.Id(_edge.from),
+        Node.Id(_edge.to),
+      );
     }
   }
 
@@ -48,7 +52,8 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   }
 
   Widget generateGraph() {
-    if (_graphModel != null) {
+    debugPrint(_graphModel.toString());
+    if (_graphModel!.nodes.isNotEmpty && _graphModel!.edges.isNotEmpty) {
       return InteractiveViewer(
         constrained: false,
         minScale: 0.01,
@@ -60,17 +65,23 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         ),
       );
     } else {
-      return const Text("No graph detected");
+      return const Text('No graph detected');
     }
   }
 
   Widget builder(Node node) {
     int id = node.key!.value;
-
+    if (id == -1) {
+      return masterNodeWidget();
+    }
     List<GraphNode> nodes = _graphModel!.nodes;
     String nodeValue =
         nodes.firstWhere((graphNode) => graphNode.id == id).label;
     return nodeWidget(nodeValue);
+  }
+
+  Widget masterNodeWidget() {
+    return const Text('');
   }
 
   Widget nodeWidget(String value) {

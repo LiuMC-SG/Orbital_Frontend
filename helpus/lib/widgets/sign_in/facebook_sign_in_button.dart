@@ -27,7 +27,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
       textLabel: SignInText.facebook,
       login: () async {
         Fluttertoast.showToast(
-          msg: "Facebook login is currently disabled",
+          msg: 'Facebook login is currently disabled',
         );
       },
     );
@@ -41,7 +41,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
         facebookSignInOthers();
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint("facebookSignIn: $e");
+      debugPrint('facebookSignIn: $e');
     }
   }
 

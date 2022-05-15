@@ -128,18 +128,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (e.code == 'weak-password') {
         debugPrint('registerWithPassword: The password provided is too weak.');
         setState(() {
-          _message = "Set a stronger password!";
+          _message = 'Set a stronger password!';
         });
       } else if (e.code == 'email-already-in-use') {
         debugPrint(
             'registerWithPassword: The account already exists for that email.');
         setState(() {
           _message =
-              "An account with this email already exist! Please use another email";
+              'An account with this email already exist! Please use another email';
         });
       } else if (e.code == 'invalid-email') {
         debugPrint('registerWithPassword: The email is not valid.');
-        _message = "Invalid Email. Please try again";
+        _message = 'Invalid Email. Please try again';
       }
     } catch (e) {
       debugPrint('registerWithPassword: $e');

@@ -15,23 +15,23 @@ import 'package:helpus/models/profile_data.dart';
 class HomeScreen extends StatefulWidget {
   final List<SideMenuItem> sideMenuItems = [
     SideMenuItem(
-      "Profile",
+      'Profile',
       Icons.account_circle_rounded,
     ),
     SideMenuItem(
-      "Settings",
+      'Settings',
       Icons.settings_rounded,
     ),
     SideMenuItem(
-      "Module Graph",
+      'Module Graph',
       Icons.backup_table,
     ),
     SideMenuItem(
-      "Module Tracking",
+      'Module Tracking',
       Icons.book_rounded,
     ),
     SideMenuItem(
-      "Module Generation",
+      'Module Generation',
       Icons.view_carousel_rounded,
     ),
   ];
@@ -59,13 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const SettingsScreen();
       case 2:
-        return const ModuleGraphScreen();
+        return ModuleGraphScreen(
+          profile: profile,
+        );
       case 3:
         return const ModuleTrackingScreen();
       case 4:
         return const ModuleGenerationScreen();
       default:
-        return const Text("Error");
+        return const Text('Error');
     }
   }
 
@@ -125,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 appBar: AppBar(
                   title: const Text(
-                    "HelpUS",
+                    'HelpUS',
                   ),
                   leading: Builder(
                     builder: (BuildContext context) {
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
                         },
-                        tooltip: "Menu",
+                        tooltip: 'Menu',
                       );
                     },
                   ),
@@ -157,9 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<Profile> checkProfile() async {
     User? user = FirebaseAuth.instance.currentUser;
     DocumentReference documentReference =
-        FirebaseFirestore.instance.collection("users").doc(user!.uid);
+        FirebaseFirestore.instance.collection('users').doc(user!.uid);
     DocumentSnapshot documentSnapshot = await documentReference.get();
-    debugPrint(GraphModel.blankGraphModel.toString());
     if (!documentSnapshot.exists) {
       documentReference.set({
         'name': user.displayName ?? '',

@@ -50,7 +50,7 @@ class RecaptchaService {
 
         _recaptchaResponse = RecaptchaResponse.fromJson(response.body);
       } catch (e) {
-        debugPrint("recaptchaService: $e");
+        debugPrint('recaptchaService: $e');
       }
     }
     return _recaptchaResponse;

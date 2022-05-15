@@ -36,7 +36,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
         googleSignInOthers();
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint("googleSignIn: $e");
+      debugPrint('googleSignIn: $e');
     }
   }
 

@@ -99,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 right: 8.0,
               ),
               child: Text(
-                "Or",
+                'Or',
                 style: TextStyle(
                   color: Colors.black45,
                 ),

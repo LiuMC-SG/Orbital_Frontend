@@ -21,16 +21,16 @@ class GoogleColors {
 
 // Sign In Text
 class SignInText {
-  static const google = "Sign in with Google";
-  static const facebook = "Sign in with Facebook";
+  static const google = 'Sign in with Google';
+  static const facebook = 'Sign in with Facebook';
 }
 
 // Routes
 class RoutesText {
-  static const signIn = "/sign_in";
-  static const forgetPassword = "/forget_password";
-  static const register = "/register";
-  static const home = "/home";
-  static const changePassword = "/change_password";
-  static const changePhoto = "/change_photo";
+  static const signIn = '/sign_in';
+  static const forgetPassword = '/forget_password';
+  static const register = '/register';
+  static const home = '/home';
+  static const changePassword = '/change_password';
+  static const changePhoto = '/change_photo';
 }

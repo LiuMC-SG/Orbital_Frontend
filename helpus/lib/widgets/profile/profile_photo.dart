@@ -11,7 +11,7 @@ class ProfilePhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (profile.photoURL == "") {
+    if (profile.photoURL == '') {
       return base;
     }
 
@@ -22,7 +22,7 @@ class ProfilePhoto extends StatelessWidget {
         radius: 75,
       );
     } catch (e) {
-      debugPrint("profilePhoto: $e");
+      debugPrint('profilePhoto: $e');
       return base;
     }
   }

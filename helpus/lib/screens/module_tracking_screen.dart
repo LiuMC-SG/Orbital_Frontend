@@ -10,7 +10,7 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Module Tracking"),
+      child: Text('Module Tracking'),
     );
   }
 }

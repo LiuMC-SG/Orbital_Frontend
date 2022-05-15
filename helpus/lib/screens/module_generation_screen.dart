@@ -10,7 +10,7 @@ class _ModuleGenerationScreenState extends State<ModuleGenerationScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Module Generation"),
+      child: Text('Module Generation'),
     );
   }
 }

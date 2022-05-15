@@ -45,11 +45,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           spacing: 20,
           children: [
             ElevatedButton(
-              child: const Text("Change Password"),
+              child: const Text('Change Password'),
               onPressed: changePassword,
             ),
             ElevatedButton(
-              child: const Text("Delete Account"),
+              child: const Text('Delete Account'),
               onPressed: deleteAccount,
             ),
           ],
@@ -67,16 +67,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       SetOptions(merge: true),
     );
     Fluttertoast.showToast(
-      msg: "Name has been updated",
+      msg: 'Name has been updated',
     );
   }
 
   void changePassword() {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user!.providerData[0].providerId != "password") {
+    if (user!.providerData[0].providerId != 'password') {
       Fluttertoast.showToast(
           msg:
-              "Account is from 3rd party authentication services. Password cannot be changed");
+              'Account is from 3rd party authentication services. Password cannot be changed');
     } else {
       Navigator.pushNamed(
         context,
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await FirebaseStorage.instance.ref().child('users/${user!.uid}').delete();
     } on FirebaseException catch (e) {
-      debugPrint("deleteAccount: ${e.message}");
+      debugPrint('deleteAccount: ${e.message}');
     }
     await user!.delete();
     await FirebaseAuth.instance.signOut();

@@ -1,14 +1,20 @@
+
 class GraphModel {
   final List<GraphNode> nodes = [];
   final List<GraphEdge> edges = [];
   static final GraphModel blankGraphModel = GraphModel({
-    'nodes': [],
+    'nodes': [
+      {
+        'id': -1,
+        'label': 'master',
+      },
+    ],
     'edges': [],
   });
 
   GraphModel(Map<String, dynamic> json) {
     var _nodes = json['nodes'];
-    for (Map<String, dynamic> _node in _nodes) {
+    for (var _node in _nodes) {
       GraphNode? generatedNode = GraphNode.generate(_node);
       if (generatedNode != null) {
         nodes.add(generatedNode);
@@ -16,7 +22,7 @@ class GraphModel {
     }
 
     var _edges = json['edges'];
-    for (Map<String, int> _edge in _edges) {
+    for (var _edge in _edges) {
       GraphEdge? generatedEdge = GraphEdge.generate(_edge);
       if (generatedEdge != null) {
         edges.add(generatedEdge);
@@ -26,7 +32,7 @@ class GraphModel {
 
   @override
   String toString() {
-    return "{nodes: $nodes, edges: $edges}";
+    return '{nodes: $nodes, edges: $edges}';
   }
 
   Map<String, dynamic> toJson() {
@@ -34,6 +40,11 @@ class GraphModel {
       'nodes': nodes.map((element) => element.toJson()),
       'edges': edges.map((element) => element.toJson()),
     };
+  }
+
+  void addNode(GraphNode graphNode) {
+    nodes.add(graphNode);
+    edges.add(GraphEdge(graphNode.id, -1));
   }
 }
 
@@ -57,7 +68,7 @@ class GraphNode {
 
   @override
   String toString() {
-    return "{id: $id, label: $label}";
+    return '{id: $id, label: $label}';
   }
 
   Map<String, dynamic> toJson() {
@@ -73,7 +84,7 @@ class GraphEdge {
   final int to;
   GraphEdge(this.from, this.to);
 
-  static GraphEdge? generate(Map<String, int> edge) {
+  static GraphEdge? generate(Map<String, dynamic> edge) {
     if (!edge.containsKey('from') || !edge.containsKey('to')) {
       return null;
     }
@@ -88,7 +99,7 @@ class GraphEdge {
 
   @override
   String toString() {
-    return "{from: $from, to: $to}";
+    return '{from: $from, to: $to}';
   }
 
   Map<String, int> toJson() {

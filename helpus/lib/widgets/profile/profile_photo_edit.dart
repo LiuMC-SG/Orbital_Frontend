@@ -83,7 +83,7 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
         await reference.putData(await image.readAsBytes());
         photoURL = await reference.getDownloadURL();
         DocumentReference documentReference =
-            FirebaseFirestore.instance.collection("users").doc(user.uid);
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
         documentReference.set(
           {'photoURL': photoURL},
           SetOptions(merge: true),
@@ -93,13 +93,13 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
           _profilePhoto = ProfilePhoto(profile: widget.profile);
         });
       } on FirebaseException catch (e) {
-        debugPrint("setPicture: ${e.message}");
+        debugPrint('setPicture: ${e.message}');
       } catch (e) {
         debugPrint(e.toString());
       }
     } else {
       Fluttertoast.showToast(
-        msg: "No image selected",
+        msg: 'No image selected',
       );
     }
   }

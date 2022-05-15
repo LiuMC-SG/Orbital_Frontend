@@ -18,7 +18,7 @@ class Profile {
     Object? data = documentSnapshot.data();
 
     if (data == null) {
-      debugPrint("profileGenerate: Object is null and cannot be parsed.");
+      debugPrint('profileGenerate: Object is null and cannot be parsed.');
       return Profile.blankProfile;
     } else {
       final mappedValue =
@@ -34,6 +34,6 @@ class Profile {
 
   @override
   String toString() {
-    return "name: $name, email: $email, photoURL: $photoURL, graphModel: $graphModel";
+    return 'name: $name, email: $email, photoURL: $photoURL, graphModel: $graphModel';
   }
 }
