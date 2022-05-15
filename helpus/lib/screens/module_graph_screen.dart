@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/models/profile_data.dart';
+import 'package:helpus/utilities/constants.dart';
 
 class ModuleGraphScreen extends StatefulWidget {
   final Profile profile;
@@ -24,11 +25,16 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     _configuration.levelSeparation = 20; // Y Separation
 
     _graphModel = widget.profile.graphModel;
+
+    Paint _transparent = Paint()..color = Colors.transparent;
+    Paint _standard = Paint()..color = Colors.black;
+
     // Add all edges
     for (GraphEdge _edge in _graphModel!.edges) {
       _graph.addEdge(
         Node.Id(_edge.from),
         Node.Id(_edge.to),
+        paint: _edge.to == -1 ? _transparent : _standard,
       );
     }
   }
@@ -44,6 +50,14 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
           children: [
             Expanded(
               child: generateGraph(),
+            ),
+            FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: FirebaseColors.firebaseNavy,
+              child: const Icon(
+                Icons.add,
+              ),
+              tooltip: 'Add module',
             ),
           ],
         ),
