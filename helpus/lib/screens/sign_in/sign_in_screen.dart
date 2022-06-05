@@ -118,15 +118,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void checkUser(User? user) async {
     if (user != null) {
-      if (kIsWeb) {
-        bool _isNotABot = await RecaptchaService.isNotABot();
+      // if (kIsWeb) {
+      //   bool _isNotABot = await RecaptchaService.isNotABot();
 
-        if (_isNotABot) {
-          login();
-        }
-      } else {
-        login();
-      }
+      //   if (_isNotABot) {
+      //     login();
+      //   }
+      // } else {
+      //   login();
+      // }
+      login();
     }
   }
 
