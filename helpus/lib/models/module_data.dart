@@ -1,34 +1,3 @@
-class Modules {
-  final List<CondensedModule> modules;
-
-  Modules(this.modules);
-
-  static Modules fromJson(List<dynamic> json) {
-    return Modules(
-        json.map((element) => CondensedModule.fromJson(element)).toList());
-  }
-
-  Modules filter(String filterText) {
-    return Modules(modules
-        .where((element) =>
-            element.moduleCode.toLowerCase().contains(filterText.toLowerCase()))
-        .toList());
-  }
-
-  int length() {
-    return modules.length;
-  }
-
-  CondensedModule get(int index) {
-    return modules[index];
-  }
-
-  @override
-  String toString() {
-    return 'Modules{modules: $modules}';
-  }
-}
-
 class CondensedModule {
   final String moduleCode;
   final String title;
@@ -42,6 +11,11 @@ class CondensedModule {
       json['title'],
       json['prerequisite'] ?? '',
     );
+  }
+
+  bool contains(String query) {
+    return moduleCode.toLowerCase().contains(query.toLowerCase()) ||
+        title.toLowerCase().contains(query.toLowerCase());
   }
 
   @override

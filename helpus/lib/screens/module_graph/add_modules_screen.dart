@@ -15,17 +15,14 @@ class AddModulesScreen extends StatefulWidget {
 
 class _AddModulesScreenState extends State<AddModulesScreen> {
   final TextEditingController _filter = TextEditingController();
-  Modules searchedModules = Modules([]);
-  late Modules allModules;
-  late Future<Modules> futureModules;
+  bool isInitialised = false;
+  var searchedModules = <CondensedModule>[];
+  late final List<CondensedModule> allModules;
   late DocumentReference documentReference;
-  Timer? debouncer;
 
   @override
   void initState() {
     super.initState();
-    _filter.addListener(filterModules);
-    futureModules = fetchModules();
     documentReference = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
@@ -56,37 +53,39 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
 
   Widget addModule() {
     return FutureBuilder(
-      future: futureModules,
+      future: fetchModules(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          allModules = snapshot.data as Modules;
-          searchedModules = allModules;
+          if (!isInitialised) {
+            allModules = snapshot.data as List<CondensedModule>;
+            searchedModules.addAll(allModules);
+            isInitialised = true;
+          }
           return generateScrollView();
         } else if (snapshot.hasError) {
+          debugPrint('Error');
           return Text('${snapshot.error}');
         }
 
-        return const CircularProgressIndicator();
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
 
-  Future<Modules> fetchModules() async {
+  Future<List<CondensedModule>> fetchModules() async {
     http.Response response = await http.get(Uri.parse(
         'https://helpus-backend.herokuapp.com/modules/condensed_info'));
-
     if (response.statusCode == 200) {
-      return Modules.fromJson(jsonDecode(response.body));
+      debugPrint(jsonDecode(response.body).runtimeType.toString());
+      return jsonDecode(response.body)
+          .map((element) => CondensedModule.fromJson(element))
+          .toList()
+          .cast<CondensedModule>();
     } else {
       throw Exception('Failed to load module info');
     }
-  }
-
-  Widget buildModule(CondensedModule module) {
-    return ListTile(
-      title: Text('${module.moduleCode}  ${module.title}'),
-      subtitle: Text(module.prerequisite),
-    );
   }
 
   Widget buildSearch() {
@@ -97,52 +96,75 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       ),
       height: 40,
       child: TextField(
+        onChanged: (value) {
+          filterModules(value);
+        },
         controller: _filter,
         decoration: const InputDecoration(
-          border: InputBorder.none,
-          icon: Icon(Icons.search_rounded),
-          hintText: 'Search Modules by Module Code',
+          labelText: 'Search',
+          hintText: 'Search',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          ),
         ),
       ),
     );
   }
 
   Widget generateScrollView() {
-    return Column(
-      children: <Widget>[
-        buildSearch(),
+    return Row(
+      children: [
         Expanded(
-          child: ListView.builder(
-            itemCount: searchedModules.length(),
-            itemBuilder: ((context, index) {
-              return buildModule(searchedModules.get(index));
-            }),
+          child: Column(
+            children: <Widget>[
+              buildSearch(),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: searchedModules.length,
+                  itemBuilder: ((context, index) {
+                    return ListTile(
+                      title: Text(
+                          '${searchedModules[index].moduleCode}  ${searchedModules[index].title}'),
+                      subtitle: Text(searchedModules[index].prerequisite),
+                    );
+                  }),
+                ),
+              ),
+            ],
           ),
         ),
+        const Text('Test'),
       ],
     );
   }
 
-  void filterModules() {
-    setState(() {
-      searchedModules = allModules.filter(_filter.text);
-    });
-    debugPrint(searchedModules.toString());
-    debugPrint('Called');
-  }
-
-  void debounce() {
-    debouncer?.cancel();
-    debouncer = Timer(
-      const Duration(milliseconds: 1000),
-      filterModules,
-    );
+  void filterModules(String query) {
+    List<CondensedModule> dummySearchList = <CondensedModule>[];
+    dummySearchList.addAll(allModules);
+    if (query.isNotEmpty) {
+      List<CondensedModule> dummyListData = <CondensedModule>[];
+      for (var item in dummySearchList) {
+        if (item.contains(query)) {
+          dummyListData.add(item);
+        }
+      }
+      setState(() {
+        searchedModules.clear();
+        searchedModules.addAll(dummyListData);
+      });
+    } else {
+      setState(() {
+        searchedModules.clear();
+        searchedModules.addAll(allModules);
+      });
+    }
   }
 
   @override
   void dispose() {
     _filter.dispose();
-    debouncer?.cancel();
     super.dispose();
   }
 }

@@ -54,23 +54,23 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
           ],
         ),
       ),
-      // floatingActionButton: Padding(
-      //   padding: const EdgeInsets.all(20),
-      //   child: FloatingActionButton(
-      //     onPressed: () {
-      //       Navigator.pushNamed(
-      //         context,
-      //         RoutesText.addModules,
-      //       );
-      //     },
-      //     backgroundColor: FirebaseColors.firebaseNavy,
-      //     child: const Icon(
-      //       Icons.add,
-      //     ),
-      //     tooltip: 'Add module',
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              RoutesText.addModules,
+            );
+          },
+          backgroundColor: FirebaseColors.firebaseNavy,
+          child: const Icon(
+            Icons.add,
+          ),
+          tooltip: 'Add module',
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 
