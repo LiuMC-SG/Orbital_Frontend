@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/module_data.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,6 +19,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   final TextEditingController _filter = TextEditingController();
   bool isInitialised = false;
   var searchedModules = <CondensedModule>[];
+  var selectedModules = <CondensedModule, List<String>>{};
   late final List<CondensedModule> allModules;
   late DocumentReference documentReference;
 
@@ -114,7 +117,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
 
   Widget generateScrollView() {
     return Row(
-      children: [
+      children: <Widget>[
         Expanded(
           child: Column(
             children: <Widget>[
@@ -128,6 +131,14 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
                       title: Text(
                           '${searchedModules[index].moduleCode}  ${searchedModules[index].title}'),
                       subtitle: Text(searchedModules[index].prerequisite),
+                      onTap: () {
+                        CondensedModule module = searchedModules[index];
+                        if (!selectedModules.containsKey(module)) {
+                          setState(() {
+                            selectedModules[module] = <String>[];
+                          });
+                        }
+                      },
                     );
                   }),
                 ),
@@ -135,7 +146,36 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
             ],
           ),
         ),
-        const Text('Test'),
+        Expanded(
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    child: const Text('Add Modules'),
+                    onPressed: submitModules,
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: selectedModules.length,
+                itemBuilder: ((context, index) {
+                  return ListTile(
+                    tileColor: getColor(index),
+                    title: Text(
+                      selectedModules.keys.elementAt(index).moduleCode,
+                    ),
+                    onTap: () {
+                      changeSelectedModule(index);
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -159,6 +199,58 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
         searchedModules.clear();
         searchedModules.addAll(allModules);
       });
+    }
+  }
+
+  Color getColor(int index) {
+    if (selectedModules.keys.elementAt(index).prerequisite == '') {
+      return Colors.green;
+    }
+    if (selectedModules.values.elementAt(index).isNotEmpty) {
+      return Colors.green;
+    }
+    return Colors.red;
+  }
+
+  void changeSelectedModule(int index) {
+    if (selectedModules.keys.elementAt(index).prerequisite != '') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Select Prerequisite'),
+            content: const Text('This module has a prerequisite'),
+            actions: <Widget>[
+              Center(
+                child: TextButton(
+                  child: const Text('Completed'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void submitModules() async {
+    if (selectedModules.containsValue(false)) {
+      Fluttertoast.showToast(msg: 'Not all Modules Perequisites are satisfied');
+    } else {
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      Map<String, List<dynamic>> updatedGraphModel =
+          documentSnapshot['graphModel'];
+      debugPrint(updatedGraphModel.toString());
+      final int? maxId = updatedGraphModel['nodes']?.fold(
+          -1, (previousValue, element) => max(previousValue!, element['id']));
+
+      documentReference.set(
+        {'graphModel': updatedGraphModel},
+        SetOptions(merge: true),
+      );
     }
   }
 
