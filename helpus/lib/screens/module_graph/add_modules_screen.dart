@@ -72,8 +72,8 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   }
 
   Future<Modules> fetchModules() async {
-    http.Response response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/modules/condensed_info'));
+    http.Response response = await http.get(Uri.parse(
+        'https://helpus-backend.herokuapp.com/modules/condensed_info'));
 
     if (response.statusCode == 200) {
       return Modules.fromJson(jsonDecode(response.body));
