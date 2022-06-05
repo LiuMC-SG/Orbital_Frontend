@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/screens/module_generation_screen.dart';
-import 'package:helpus/screens/module_graph_screen.dart';
+import 'package:helpus/screens/module_graph/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
 import 'package:helpus/screens/profile/profile_screen.dart';
 import 'package:helpus/screens/settings_screen.dart';

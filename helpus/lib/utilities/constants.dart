@@ -33,4 +33,5 @@ class RoutesText {
   static const home = '/home';
   static const changePassword = '/change_password';
   static const changePhoto = '/change_photo';
+  static const addModules = '/add_modules';
 }
