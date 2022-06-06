@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class GraphModel {
   final List<GraphNode> nodes = [];
   final List<GraphEdge> edges = [];
@@ -74,7 +77,21 @@ class GraphModel {
     return -1;
   }
 
-  void removeMod(String moduleCode) {}
+  void removeMod(String moduleCode) {
+    int id = getNodeId(moduleCode);
+    if (id != -1) {
+      nodes.removeWhere((element) => element.id == id);
+      edges.removeWhere((element) => element.from == id || element.to == id);
+
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+      documentReference.set(
+        {'graphModel': toJson()},
+        SetOptions(merge: true),
+      );
+    }
+  }
 
   int maxId() {
     return nodes.fold(

@@ -114,7 +114,9 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
 
   Widget nodeWidget(String value) {
     return ElevatedButton(
-      onPressed: nodeOnPressed,
+      onPressed: () {
+        nodeOnPressed(value);
+      },
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -125,5 +127,40 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     );
   }
 
-  void nodeOnPressed() {}
+  void nodeOnPressed(String moduleCode) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Do you want to remove this module'),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: TextButton(
+                    child: const Text('Yes'),
+                    onPressed: () {
+                      widget.profile.graphModel.removeMod(moduleCode);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: TextButton(
+                    child: const Text('No'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
