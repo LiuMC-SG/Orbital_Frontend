@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/models/module_data.dart';
+import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/widgets/add_modules_dialog.dart';
 import 'package:http/http.dart' as http;
 
 class AddModulesScreen extends StatefulWidget {
-  const AddModulesScreen({Key? key}) : super(key: key);
+  final Profile profile;
+  const AddModulesScreen({
+    Key? key,
+    required this.profile,
+  }) : super(key: key);
   @override
   _AddModulesScreenState createState() => _AddModulesScreenState();
 }
@@ -22,6 +27,11 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   var searchedModules = <CondensedModule>[];
   var selectedModules = <CondensedModule, List<String>>{};
   late final List<CondensedModule> allModules;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +87,6 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       },
     );
     if (response.statusCode == 200) {
-      debugPrint(jsonDecode(response.body).runtimeType.toString());
       return jsonDecode(response.body)
           .map((element) => CondensedModule.fromJson(element))
           .toList()
@@ -285,23 +294,45 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   }
 
   void submitModules() async {
-    if (selectedModules.containsValue(false)) {
+    bool havePrerequisite = false;
+    for (var i = 0; i < selectedModules.length; i++) {
+      if (selectedModules.keys.elementAt(i).prerequisite != '' &&
+          selectedModules.values.elementAt(i).isEmpty) {
+        havePrerequisite = true;
+      }
+    }
+    if (havePrerequisite) {
       Fluttertoast.showToast(msg: 'Not all Modules Perequisites are satisfied');
     } else {
       DocumentReference documentReference = FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid);
       DocumentSnapshot documentSnapshot = await documentReference.get();
-      Map<String, List<dynamic>> updatedGraphModel =
-          documentSnapshot['graphModel'];
-      debugPrint(updatedGraphModel.toString());
-      final int? maxId = updatedGraphModel['nodes']?.fold(
-          -1, (previousValue, element) => max(previousValue!, element['id']));
-      debugPrint(maxId.toString());
+      final mappedValue = Map<String, dynamic>.from(
+          documentSnapshot.data() as Map<Object?, Object?>);
+      GraphModel updatedGraphModel = GraphModel(mappedValue['graphModel']);
+      final int startId = updatedGraphModel.maxId() + 1;
+      for (var i = 0; i < selectedModules.length; i++) {
+        updatedGraphModel.addNode(GraphNode(
+          i + startId,
+          selectedModules.keys.elementAt(i).moduleCode,
+        ));
+      }
+      for (var i = 0; i < selectedModules.length; i++) {
+        final currId = i + startId;
+        for (var prereq in selectedModules.values.elementAt(i)) {
+          updatedGraphModel.addEdge(GraphEdge(
+            currId,
+            updatedGraphModel.getNodeId(prereq),
+          ));
+        }
+      }
       documentReference.set(
-        {'graphModel': updatedGraphModel},
+        {'graphModel': updatedGraphModel.toJson()},
         SetOptions(merge: true),
       );
+      widget.profile.graphModel = updatedGraphModel;
+      Navigator.pop(context);
     }
   }
 

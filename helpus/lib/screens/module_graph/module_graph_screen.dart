@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/models/profile_data.dart';
+import 'package:helpus/screens/module_graph/add_modules_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 
 class ModuleGraphScreen extends StatefulWidget {
@@ -58,10 +59,15 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         padding: const EdgeInsets.all(20),
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              RoutesText.addModules,
-            );
+              MaterialPageRoute(
+                  builder: (context) => AddModulesScreen(
+                        profile: widget.profile,
+                      )),
+            ).then((value) {
+              setState(() {});
+            });
           },
           backgroundColor: FirebaseColors.firebaseNavy,
           child: const Icon(
@@ -75,7 +81,6 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   }
 
   Widget generateGraph() {
-    debugPrint(_graphModel.toString());
     if (_graphModel!.nodes.isNotEmpty && _graphModel!.edges.isNotEmpty) {
       return InteractiveViewer(
         constrained: false,

@@ -1,3 +1,4 @@
+import 'dart:math';
 
 class GraphModel {
   final List<GraphNode> nodes = [];
@@ -43,8 +44,41 @@ class GraphModel {
   }
 
   void addNode(GraphNode graphNode) {
-    nodes.add(graphNode);
-    edges.add(GraphEdge(graphNode.id, -1));
+    if (getNodeId(graphNode.label) == -1) {
+      nodes.add(graphNode);
+      edges.add(GraphEdge(graphNode.id, -1));
+    }
+  }
+
+  void addEdge(GraphEdge graphEdge) {
+    if (getEdgeId(graphEdge.from, graphEdge.to) == -1) {
+      edges.add(graphEdge);
+    }
+  }
+
+  int getNodeId(String moduleCode) {
+    for (var node in nodes) {
+      if (node.label == moduleCode) {
+        return node.id;
+      }
+    }
+    return -1;
+  }
+
+  int getEdgeId(int from, int to) {
+    for (var edge in edges) {
+      if (edge.from == from && edge.to == to) {
+        return 1;
+      }
+    }
+    return -1;
+  }
+
+  void removeMod(String moduleCode) {}
+
+  int maxId() {
+    return nodes.fold(
+        -1, (previousValue, element) => max(previousValue, element.id));
   }
 }
 
