@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/module_data.dart';
+import 'package:helpus/widgets/add_modules_dialog.dart';
 import 'package:http/http.dart' as http;
 
 class AddModulesScreen extends StatefulWidget {
@@ -78,8 +79,12 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   }
 
   Future<List<CondensedModule>> fetchModules() async {
-    http.Response response = await http.get(Uri.parse(
-        'https://helpus-backend.herokuapp.com/modules/condensed_info'));
+    http.Response response = await http.get(
+      Uri.parse('https://helpus-backend.herokuapp.com/modules/condensed_info'),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    );
     if (response.statusCode == 200) {
       debugPrint(jsonDecode(response.body).runtimeType.toString());
       return jsonDecode(response.body)
@@ -217,23 +222,27 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Select Prerequisite'),
-            content: const Text('This module has a prerequisite'),
-            actions: <Widget>[
-              Center(
-                child: TextButton(
-                  child: const Text('Completed'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
+          return AddModulesDialog(
+            onAdd: onAdd(index),
+            initialModules:
+                selectedModules[selectedModules.keys.elementAt(index)] ??
+                    <String>[],
+            allModules: selectedModules.keys.map((e) => e.moduleCode).toList(),
+            currModule: selectedModules.keys.elementAt(index).moduleCode,
           );
         },
       );
     }
+  }
+
+  Function(List<String>?) onAdd(int index) {
+    return (List<String>? modules) {
+      setState(() {
+        selectedModules[selectedModules.keys.elementAt(index)]?.clear();
+        selectedModules[selectedModules.keys.elementAt(index)]
+            ?.addAll(modules ?? <String>[]);
+      });
+    };
   }
 
   void submitModules() async {
