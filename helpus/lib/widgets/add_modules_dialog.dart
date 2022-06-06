@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class AddModulesDialog extends StatefulWidget {
   final Function(List<String>?) onAdd;
+  final Function() removeMod;
   final List<String> initialModules;
   final List<String> allModules;
   final String currModule;
   const AddModulesDialog({
     Key? key,
     required this.onAdd,
+    required this.removeMod,
     required this.initialModules,
     required this.allModules,
     required this.currModule,
@@ -36,14 +38,30 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
       title: const Text('Select Prerequisite'),
       content: dialogBody(),
       actions: <Widget>[
-        Center(
-          child: TextButton(
-            child: const Text('Completed'),
-            onPressed: () {
-              widget.onAdd(prereqModules);
-              Navigator.of(context).pop();
-            },
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextButton(
+                child: const Text('Remove Module'),
+                onPressed: () {
+                  widget.removeMod();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextButton(
+                child: const Text('Completed'),
+                onPressed: () {
+                  widget.onAdd(prereqModules);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -71,7 +89,10 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
               }),
             ),
           ),
-          const Icon(Icons.compare_arrows_rounded),
+          const Padding(
+            padding: EdgeInsets.all(20),
+            child: Icon(Icons.compare_arrows_rounded),
+          ),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,

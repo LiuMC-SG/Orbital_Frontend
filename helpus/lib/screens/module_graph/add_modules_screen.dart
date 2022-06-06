@@ -22,15 +22,6 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   var searchedModules = <CondensedModule>[];
   var selectedModules = <CondensedModule, List<String>>{};
   late final List<CondensedModule> allModules;
-  late DocumentReference documentReference;
-
-  @override
-  void initState() {
-    super.initState();
-    documentReference = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,29 +145,41 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
         Expanded(
           child: Column(
             children: <Widget>[
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    child: const Text('Add Modules'),
-                    onPressed: submitModules,
-                  ),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: selectedModules.length,
-                itemBuilder: ((context, index) {
-                  return ListTile(
-                    tileColor: getColor(index),
-                    title: Text(
-                      selectedModules.keys.elementAt(index).moduleCode,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ElevatedButton(
+                      child: const Text('Add Modules'),
+                      onPressed: submitModules,
                     ),
-                    onTap: () {
-                      changeSelectedModule(index);
-                    },
-                  );
-                }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ElevatedButton(
+                      child: const Text('Remove All'),
+                      onPressed: removeAllModules,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: selectedModules.length,
+                  itemBuilder: ((context, index) {
+                    return ListTile(
+                      tileColor: getColor(index),
+                      title: Text(
+                        selectedModules.keys.elementAt(index).moduleCode,
+                      ),
+                      onTap: () {
+                        changeSelectedModule(index);
+                      },
+                    );
+                  }),
+                ),
               ),
             ],
           ),
@@ -224,11 +227,35 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
         builder: (BuildContext context) {
           return AddModulesDialog(
             onAdd: onAdd(index),
+            removeMod: () {
+              removeModule(index);
+            },
             initialModules:
                 selectedModules[selectedModules.keys.elementAt(index)] ??
                     <String>[],
             allModules: selectedModules.keys.map((e) => e.moduleCode).toList(),
             currModule: selectedModules.keys.elementAt(index).moduleCode,
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('No Prerequisite'),
+            content: const Text('This module has no prerequisite'),
+            actions: <Widget>[
+              Center(
+                child: TextButton(
+                  child: const Text('Remove Module'),
+                  onPressed: () {
+                    removeModule(index);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
           );
         },
       );
@@ -245,17 +272,32 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     };
   }
 
+  void removeModule(int index) {
+    setState(() {
+      selectedModules.remove(selectedModules.keys.elementAt(index));
+    });
+  }
+
+  void removeAllModules() {
+    setState(() {
+      selectedModules.clear();
+    });
+  }
+
   void submitModules() async {
     if (selectedModules.containsValue(false)) {
       Fluttertoast.showToast(msg: 'Not all Modules Perequisites are satisfied');
     } else {
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid);
       DocumentSnapshot documentSnapshot = await documentReference.get();
       Map<String, List<dynamic>> updatedGraphModel =
           documentSnapshot['graphModel'];
       debugPrint(updatedGraphModel.toString());
       final int? maxId = updatedGraphModel['nodes']?.fold(
           -1, (previousValue, element) => max(previousValue!, element['id']));
-
+      debugPrint(maxId.toString());
       documentReference.set(
         {'graphModel': updatedGraphModel},
         SetOptions(merge: true),
