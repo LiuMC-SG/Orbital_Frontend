@@ -337,9 +337,9 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       for (var i = 0; i < selectedModules.length; i++) {
         for (var prereq in selectedModules.values.elementAt(i)) {
           updatedGraphModel.addEdge(GraphEdge(
+            updatedGraphModel.getNodeId(prereq),
             updatedGraphModel
                 .getNodeId(selectedModules.keys.elementAt(i).moduleCode),
-            updatedGraphModel.getNodeId(prereq),
           ));
         }
       }
