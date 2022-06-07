@@ -15,7 +15,6 @@ class ModuleGraphScreen extends StatefulWidget {
 class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   Graph graph = Graph();
   final SugiyamaConfiguration _configuration = SugiyamaConfiguration();
-  GraphModel? _graphModel;
   Profile profile = Profile.blankProfile();
 
   @override
@@ -74,16 +73,14 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   Future<bool> setInitial() async {
     await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
 
-    _configuration.nodeSeparation = 20; // X Separation
+    _configuration.nodeSeparation = 10; // X Separation
     _configuration.levelSeparation = 20; // Y Separation
-
-    _graphModel = profile.graphModel;
 
     Paint _transparent = Paint()..color = Colors.transparent;
     Paint _standard = Paint()..color = Colors.black;
 
     // Add all edges
-    for (GraphEdge _edge in _graphModel!.edges) {
+    for (GraphEdge _edge in profile.graphModel.edges) {
       graph.addEdge(
         Node.Id(_edge.from),
         Node.Id(_edge.to),
@@ -95,7 +92,8 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   }
 
   Widget generateGraph() {
-    if (_graphModel!.nodes.isNotEmpty && _graphModel!.edges.isNotEmpty) {
+    if (profile.graphModel.nodes.isNotEmpty &&
+        profile.graphModel.edges.isNotEmpty) {
       return InteractiveViewer(
         constrained: false,
         minScale: 0.01,
@@ -118,7 +116,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     if (id == -1) {
       return masterNodeWidget();
     }
-    List<GraphNode> nodes = _graphModel!.nodes;
+    List<GraphNode> nodes = profile.graphModel.nodes;
     String nodeValue =
         nodes.firstWhere((graphNode) => graphNode.id == id).label;
     return nodeWidget(nodeValue);
@@ -181,7 +179,18 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   }
 
   void removeModule(String moduleCode) {
+    int nodeId = profile.graphModel.getNodeId(moduleCode);
     profile.graphModel.removeMod(moduleCode);
-    graph.removeNode(Node.Id(profile.graphModel.getNodeId(moduleCode)));
+    setState(() {
+      graph.removeNode(Node.Id(nodeId));
+      for (GraphEdge _edge in profile.graphModel.edges) {
+        if (_edge.from == nodeId || _edge.to == nodeId) {
+          graph.removeEdge(Edge(
+            Node.Id(_edge.from),
+            Node.Id(_edge.to),
+          ));
+        }
+      }
+    });
   }
 }
