@@ -5,14 +5,16 @@ class AddModulesDialog extends StatefulWidget {
   final Function() removeMod;
   final List<String> initialModules;
   final List<String> allModules;
-  final String currModule;
+  final String selectedModule;
+  final List<String> currModules;
   const AddModulesDialog({
     Key? key,
     required this.onAdd,
     required this.removeMod,
     required this.initialModules,
     required this.allModules,
-    required this.currModule,
+    required this.selectedModule,
+    required this.currModules,
   }) : super(key: key);
   @override
   _AddModulesDialogState createState() => _AddModulesDialogState();
@@ -27,7 +29,8 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
     super.initState();
     prereqModules.addAll(widget.initialModules);
     otherModules.addAll(widget.allModules);
-    otherModules.remove(widget.currModule);
+    otherModules.addAll(widget.currModules);
+    otherModules.remove(widget.selectedModule);
     otherModules
         .removeWhere((element) => widget.initialModules.contains(element));
   }

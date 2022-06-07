@@ -27,10 +27,16 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   var searchedModules = <CondensedModule>[];
   var selectedModules = <CondensedModule, List<String>>{};
   late final List<CondensedModule> allModules;
+  late final List<String> currModules;
 
   @override
   void initState() {
     super.initState();
+
+    List<String> nodeLabels =
+        widget.profile.graphModel.nodes.map((e) => e.label).toList();
+    nodeLabels.remove('master');
+    currModules = nodeLabels;
   }
 
   @override
@@ -243,7 +249,8 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
                 selectedModules[selectedModules.keys.elementAt(index)] ??
                     <String>[],
             allModules: selectedModules.keys.map((e) => e.moduleCode).toList(),
-            currModule: selectedModules.keys.elementAt(index).moduleCode,
+            selectedModule: selectedModules.keys.elementAt(index).moduleCode,
+            currModules: currModules,
           );
         },
       );
