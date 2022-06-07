@@ -93,10 +93,13 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       },
     );
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)
+      List<CondensedModule> modules = jsonDecode(response.body)
           .map((element) => CondensedModule.fromJson(element))
           .toList()
           .cast<CondensedModule>();
+      modules
+          .removeWhere((element) => currModules.contains(element.moduleCode));
+      return modules;
     } else {
       throw Exception('Failed to load module info');
     }
