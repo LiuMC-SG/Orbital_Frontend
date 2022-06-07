@@ -7,9 +7,12 @@ class Profile {
   String email;
   String photoURL;
   GraphModel graphModel;
-  static final blankProfile = Profile('', '', '', GraphModel.blankGraphModel);
 
   Profile(this.name, this.email, this.photoURL, this.graphModel);
+
+  static blankProfile() {
+    return Profile('', '', '', GraphModel.blankGraphModel);
+  }
 
   static generate(String userUID, Profile profile) async {
     DocumentReference _documentReference =

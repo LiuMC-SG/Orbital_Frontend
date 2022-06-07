@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:helpus/models/graph_model.dart';
@@ -6,11 +7,7 @@ import 'package:helpus/screens/module_graph/add_modules_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 
 class ModuleGraphScreen extends StatefulWidget {
-  final Profile profile;
-  const ModuleGraphScreen({
-    Key? key,
-    required this.profile,
-  }) : super(key: key);
+  const ModuleGraphScreen({Key? key}) : super(key: key);
   @override
   _ModuleGraphScreenState createState() => _ModuleGraphScreenState();
 }
@@ -19,13 +16,68 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   final Graph _graph = Graph();
   final SugiyamaConfiguration _configuration = SugiyamaConfiguration();
   GraphModel? _graphModel;
+  Profile profile = Profile.blankProfile();
+
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: setInitial(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: generateGraph(),
+                  ),
+                ],
+              ),
+            ),
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.all(20),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddModulesScreen(
+                              profile: profile,
+                            )),
+                  ).then((value) {
+                    setState(() {});
+                  });
+                },
+                backgroundColor: FirebaseColors.firebaseNavy,
+                child: const Icon(
+                  Icons.add,
+                ),
+                tooltip: 'Add module',
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  Future<bool> setInitial() async {
+    await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
+
     _configuration.nodeSeparation = 20; // X Separation
     _configuration.levelSeparation = 20; // Y Separation
 
-    _graphModel = widget.profile.graphModel;
+    _graphModel = profile.graphModel;
 
     Paint _transparent = Paint()..color = Colors.transparent;
     Paint _standard = Paint()..color = Colors.black;
@@ -38,46 +90,8 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         paint: _edge.to == -1 ? _transparent : _standard,
       );
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: generateGraph(),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20),
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddModulesScreen(
-                        profile: widget.profile,
-                      )),
-            ).then((value) {
-              setState(() {});
-            });
-          },
-          backgroundColor: FirebaseColors.firebaseNavy,
-          child: const Icon(
-            Icons.add,
-          ),
-          tooltip: 'Add module',
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-    );
+    return true;
   }
 
   Widget generateGraph() {
@@ -142,7 +156,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
                   child: TextButton(
                     child: const Text('Yes'),
                     onPressed: () {
-                      widget.profile.graphModel.removeMod(moduleCode);
+                      profile.graphModel.removeMod(moduleCode);
                       Navigator.of(context).pop();
                     },
                   ),

@@ -43,7 +43,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedDrawerIndex = 0;
   // ignore: prefer_final_fields
-  Profile _profile = Profile('', '', '', GraphModel.blankGraphModel);
+  Profile _profile = Profile.blankProfile();
 
   void _onItemSelect(int index) {
     setState(() {
@@ -61,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const SettingsScreen();
       case 2:
-        return ModuleGraphScreen(
-          profile: profile,
-        );
+        return const ModuleGraphScreen();
       case 3:
         return const ModuleTrackingScreen();
       case 4:
@@ -110,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       future: checkProfile(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
-            !_profile.equals(Profile.blankProfile)) {
+            !_profile.equals(Profile.blankProfile())) {
           return Scaffold(
             drawer: Drawer(
               child: ListView(
