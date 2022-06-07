@@ -27,13 +27,18 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
   @override
   void initState() {
     super.initState();
+
     prereqModules.addAll(widget.initialModules);
     prereqModules.remove('master');
+
     otherModules.addAll(widget.allModules);
     otherModules.addAll(widget.currModules);
     otherModules.remove(widget.selectedModule);
     otherModules
         .removeWhere((element) => widget.initialModules.contains(element));
+
+    prereqModules.sort();
+    otherModules.sort();
   }
 
   @override
@@ -142,6 +147,8 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
     setState(() {
       prereqModules.add(module);
       otherModules.remove(module);
+
+      prereqModules.sort();
     });
   }
 
@@ -149,6 +156,8 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
     setState(() {
       prereqModules.remove(module);
       otherModules.add(module);
+
+      otherModules.sort();
     });
   }
 }
