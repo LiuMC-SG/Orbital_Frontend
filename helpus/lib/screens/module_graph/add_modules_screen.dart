@@ -282,8 +282,12 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   }
 
   void removeModule(int index) {
+    CondensedModule module = selectedModules.keys.elementAt(index);
     setState(() {
-      selectedModules.remove(selectedModules.keys.elementAt(index));
+      selectedModules.remove(module);
+      selectedModules.forEach((key, value) {
+        value.remove(module.moduleCode);
+      });
     });
   }
 

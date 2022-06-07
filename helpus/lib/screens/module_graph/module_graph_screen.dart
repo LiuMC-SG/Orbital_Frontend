@@ -13,7 +13,7 @@ class ModuleGraphScreen extends StatefulWidget {
 }
 
 class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
-  final Graph _graph = Graph();
+  Graph graph = Graph();
   final SugiyamaConfiguration _configuration = SugiyamaConfiguration();
   GraphModel? _graphModel;
   Profile profile = Profile.blankProfile();
@@ -84,7 +84,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
 
     // Add all edges
     for (GraphEdge _edge in _graphModel!.edges) {
-      _graph.addEdge(
+      graph.addEdge(
         Node.Id(_edge.from),
         Node.Id(_edge.to),
         paint: _edge.to == -1 ? _transparent : _standard,
@@ -101,13 +101,15 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         minScale: 0.01,
         maxScale: 6,
         child: GraphView(
-          graph: _graph,
+          graph: graph,
           algorithm: SugiyamaAlgorithm(_configuration),
           builder: builder,
         ),
       );
     } else {
-      return const Text('No graph detected');
+      return const Center(
+        child: Text('No graph detected'),
+      );
     }
   }
 
@@ -156,7 +158,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
                   child: TextButton(
                     child: const Text('Yes'),
                     onPressed: () {
-                      profile.graphModel.removeMod(moduleCode);
+                      removeModule(moduleCode);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -176,5 +178,10 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         );
       },
     );
+  }
+
+  void removeModule(String moduleCode) {
+    profile.graphModel.removeMod(moduleCode);
+    graph.removeNode(Node.Id(profile.graphModel.getNodeId(moduleCode)));
   }
 }
