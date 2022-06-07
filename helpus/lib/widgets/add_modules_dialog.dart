@@ -28,6 +28,7 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
   void initState() {
     super.initState();
     prereqModules.addAll(widget.initialModules);
+    prereqModules.remove('master');
     otherModules.addAll(widget.allModules);
     otherModules.addAll(widget.currModules);
     otherModules.remove(widget.selectedModule);
@@ -60,6 +61,26 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
                 child: const Text('Completed'),
                 onPressed: () {
                   widget.onAdd(prereqModules);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextButton(
+                child: const Text('Waive Prereq'),
+                onPressed: () {
+                  widget.onAdd(['master']);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextButton(
+                child: const Text('Clear Prereq'),
+                onPressed: () {
+                  widget.onAdd(<String>[]);
                   Navigator.of(context).pop();
                 },
               ),
