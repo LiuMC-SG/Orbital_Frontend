@@ -316,17 +316,22 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
           documentSnapshot.data() as Map<Object?, Object?>);
       GraphModel updatedGraphModel = GraphModel(mappedValue['graphModel']);
       final int startId = updatedGraphModel.maxId() + 1;
+      int counter = startId;
       for (var i = 0; i < selectedModules.length; i++) {
-        updatedGraphModel.addNode(GraphNode(
-          i + startId,
-          selectedModules.keys.elementAt(i).moduleCode,
-        ));
+        String moduleCode = selectedModules.keys.elementAt(i).moduleCode;
+        if (updatedGraphModel.getNodeId(moduleCode) == -1) {
+          updatedGraphModel.addNode(GraphNode(
+            counter,
+            selectedModules.keys.elementAt(i).moduleCode,
+          ));
+          counter++;
+        }
       }
       for (var i = 0; i < selectedModules.length; i++) {
-        final currId = i + startId;
         for (var prereq in selectedModules.values.elementAt(i)) {
           updatedGraphModel.addEdge(GraphEdge(
-            currId,
+            updatedGraphModel
+                .getNodeId(selectedModules.keys.elementAt(i).moduleCode),
             updatedGraphModel.getNodeId(prereq),
           ));
         }
