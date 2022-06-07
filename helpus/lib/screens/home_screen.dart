@@ -55,9 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getDrawerItemWidget(int index, Profile profile) {
     switch (index) {
       case 0:
-        return ProfileScreen(
-          profile: profile,
-        );
+        return const ProfileScreen();
       case 1:
         return const SettingsScreen();
       case 2:

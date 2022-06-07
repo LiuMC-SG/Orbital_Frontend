@@ -10,52 +10,68 @@ import 'package:helpus/widgets/profile/profile_info_static.dart';
 import 'package:helpus/widgets/profile/profile_photo_edit.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final Profile profile;
-  const ProfileScreen({
-    Key? key,
-    required this.profile,
-  }) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Profile profile = Profile.blankProfile();
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ProfilePhotoEdit(
-          profile: widget.profile,
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        ProfileInfoEdit(
-          title: 'Name',
-          value: widget.profile.name,
-          submission: setName,
-        ),
-        ProfileInfoStatic(
-          title: 'Email',
-          value: widget.profile.email,
-        ),
-        Wrap(
-          alignment: WrapAlignment.spaceEvenly,
-          spacing: 20,
-          children: [
-            ElevatedButton(
-              child: const Text('Change Password'),
-              onPressed: changePassword,
-            ),
-            ElevatedButton(
-              child: const Text('Delete Account'),
-              onPressed: deleteAccount,
-            ),
-          ],
-        ),
-      ],
+    return FutureBuilder(
+      future: setInitial(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ProfilePhotoEdit(
+                profile: profile,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              ProfileInfoEdit(
+                title: 'Name',
+                value: profile.name,
+                submission: setName,
+              ),
+              ProfileInfoStatic(
+                title: 'Email',
+                value: profile.email,
+              ),
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                spacing: 20,
+                children: [
+                  ElevatedButton(
+                    child: const Text('Change Password'),
+                    onPressed: changePassword,
+                  ),
+                  ElevatedButton(
+                    child: const Text('Delete Account'),
+                    onPressed: deleteAccount,
+                  ),
+                ],
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
+  }
+
+  Future<bool> setInitial() async {
+    await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
+    return true;
   }
 
   void setName(String name) {
