@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/models/module_data.dart';
@@ -14,11 +15,18 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
   Profile profile = Profile.blankProfile();
   late List<String> moduleInfo;
   late List<ModuleGrading> moduleGrading;
+  late Future<bool> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = setInitial();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: setInitial(),
+      future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return moduleTrackingWidget();
@@ -43,6 +51,21 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
     return true;
   }
 
+  // Update module info
+  void updateModuleInfo() {
+    setState(() {
+      moduleInfo = ModuleGrading.calcModules(moduleGrading);
+    });
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    documentReference.set(
+      {'moduleGrading': moduleGrading.map((e) => e.toJson())},
+      SetOptions(merge: true),
+    );
+  }
+
+  // Main display
   Widget moduleTrackingWidget() {
     return Column(
       children: <Widget>[
@@ -136,8 +159,17 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           ),
           DataCell(
             Container(
-              child: Text(
-                moduleGrading[i].grade,
+              child: DropdownButton<String>(
+                items: ModuleGrading.grades
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    moduleGrading[i].grade = value!;
+                    updateModuleInfo();
+                  });
+                },
+                value: moduleGrading[i].grade,
               ),
               alignment: Alignment.center,
             ),
@@ -149,7 +181,7 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
                 onChanged: (bool? value) {
                   setState(() {
                     moduleGrading[i].changeSU();
-                    debugPrint(moduleGrading.toString());
+                    updateModuleInfo();
                   });
                 },
               ),

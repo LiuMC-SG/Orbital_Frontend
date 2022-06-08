@@ -42,6 +42,7 @@ class ModuleGrading {
     'D',
     'F',
   ];
+  static final ModuleGrading empty = ModuleGrading('', 0, '', true);
 
   final String moduleCode;
   final int mc;
@@ -110,6 +111,16 @@ class ModuleGrading {
       json['grade'],
       json['isSU'],
     );
+  }
+
+  // Generate json data from module grading
+  Map<String, dynamic> toJson() {
+    return {
+      'moduleCode': moduleCode,
+      'mc': mc,
+      'grade': grade,
+      'isSU': isSU,
+    };
   }
 
   @override
