@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:helpus/models/graph_model.dart';
+import 'package:helpus/models/module_data.dart';
 
 // Profile class to store user profile data
 class Profile {
@@ -8,12 +9,19 @@ class Profile {
   String email;
   String photoURL;
   GraphModel graphModel;
+  List<ModuleGrading> moduleGrading;
 
-  Profile(this.name, this.email, this.photoURL, this.graphModel);
+  Profile(
+    this.name,
+    this.email,
+    this.photoURL,
+    this.graphModel,
+    this.moduleGrading,
+  );
 
   // Generate blank profile
   static blankProfile() {
-    return Profile('', '', '', GraphModel.blankGraphModel);
+    return Profile('', '', '', GraphModel.blankGraphModel, <ModuleGrading>[]);
   }
 
   // Generate profile from firestore using firebase userid
@@ -47,13 +55,22 @@ class Profile {
         ..name = mappedValue['name']
         ..email = mappedValue['email']
         ..photoURL = mappedValue['photoURL']
-        ..graphModel = GraphModel(mappedValue['graphModel']);
+        ..graphModel = GraphModel(mappedValue['graphModel'])
+        ..moduleGrading = mappedValue['moduleGrading']
+            .map((e) => ModuleGrading.fromJson(e))
+            .toList()
+            .cast<ModuleGrading>();
     }
   }
 
   @override
   String toString() {
-    return 'name: $name, email: $email, photoURL: $photoURL, graphModel: $graphModel';
+    String _name = 'name: $name';
+    String _email = 'email: $email';
+    String _photoURL = 'photoURL: $photoURL';
+    String _graphModel = 'graphModel: $graphModel';
+    String _moduleGrading = 'moduleGrading: $moduleGrading';
+    return [_name, _email, _photoURL, _graphModel, _moduleGrading].join(', ');
   }
 
   // Check if profiles are identical
