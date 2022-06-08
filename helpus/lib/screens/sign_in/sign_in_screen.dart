@@ -5,6 +5,7 @@ import 'package:helpus/widgets/sign_in/facebook_sign_in_button.dart';
 import 'package:helpus/widgets/sign_in/google_sign_in_button.dart';
 import 'package:helpus/widgets/sign_in/email_sign_in.dart';
 
+// Sign in screen
 class SignInScreen extends StatefulWidget {
   final User? user;
   const SignInScreen({
@@ -80,6 +81,8 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  // Divider of line and text between normal email password sign in and 3rd
+  // party authentication
   Widget buildRowDivider({required Size size}) {
     return Padding(
       padding: const EdgeInsets.all(18),
@@ -114,6 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  // Check user then perform login function.
   void checkUser(User? user) async {
     if (user != null) {
       // if (kIsWeb) {
@@ -129,6 +133,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  // Login with email and password. If successful, navigate to home screen.
   void login() {
     Future.delayed(
       Duration.zero,

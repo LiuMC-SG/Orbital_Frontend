@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpus/models/profile_data.dart';
 
+// Profile photo display widget
 class ProfilePhoto extends StatelessWidget {
   final Profile profile;
   final Icon base = const Icon(Icons.perm_identity_rounded);
@@ -9,6 +10,7 @@ class ProfilePhoto extends StatelessWidget {
     required this.profile,
   }) : super(key: key);
 
+  // Profile photo is default if no photo is set
   @override
   Widget build(BuildContext context) {
     if (profile.photoURL == '') {

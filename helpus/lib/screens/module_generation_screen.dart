@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Module generation screen
 class ModuleGenerationScreen extends StatefulWidget {
   const ModuleGenerationScreen({Key? key}) : super(key: key);
   @override

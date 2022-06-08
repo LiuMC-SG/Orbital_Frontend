@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Module tracking screen
 class ModuleTrackingScreen extends StatefulWidget {
   const ModuleTrackingScreen({Key? key}) : super(key: key);
   @override

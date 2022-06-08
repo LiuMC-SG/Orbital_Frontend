@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Side menu item model
 class SideMenuItem {
   static int id = 0;
 
@@ -11,6 +12,7 @@ class SideMenuItem {
     SideMenuItem.id++;
   }
 
+  // Generate side menu item from data
   generateListTile(Function(int) selectedCheck, Function() onTap) {
     return ListTile(
       leading: Icon(icon),

@@ -10,13 +10,19 @@ import 'package:helpus/utilities/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialise firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialise recaptcha
   await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: Config.siteKey);
   if (kIsWeb) {
     await RecaptchaService.initiate();
   }
+
+  // Enable persistence of firebase data
   if (kIsWeb) {
     await FirebaseFirestore.instance.enablePersistence(
       const PersistenceSettings(

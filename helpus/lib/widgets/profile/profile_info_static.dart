@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Profile static information widget
 class ProfileInfoStatic extends StatelessWidget {
   final String title;
   final String value;

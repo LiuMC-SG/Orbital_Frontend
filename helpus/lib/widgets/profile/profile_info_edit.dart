@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Profile information edit widget
 class ProfileInfoEdit extends StatefulWidget {
   final String title;
   final String value;

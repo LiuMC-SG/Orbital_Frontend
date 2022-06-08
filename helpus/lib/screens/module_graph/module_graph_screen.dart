@@ -6,6 +6,7 @@ import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/screens/module_graph/add_modules_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 
+// Module graph screen
 class ModuleGraphScreen extends StatefulWidget {
   const ModuleGraphScreen({Key? key}) : super(key: key);
   @override
@@ -70,6 +71,8 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     );
   }
 
+  // Obtain profile information from firestore. Then, set the graph to the data
+  // obtained.
   Future<bool> setInitial() async {
     await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
 
@@ -91,6 +94,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     return true;
   }
 
+  // Generate graph that is displayed
   Widget generateGraph() {
     if (profile.graphModel.nodes.isNotEmpty &&
         profile.graphModel.edges.isNotEmpty) {
@@ -111,6 +115,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     }
   }
 
+  // Build the node
   Widget builder(Node node) {
     int id = node.key!.value;
     if (id == -1) {
@@ -122,10 +127,12 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     return nodeWidget(nodeValue);
   }
 
+  // Blank node widget
   Widget masterNodeWidget() {
     return const Text('');
   }
 
+  // Standard node widget
   Widget nodeWidget(String value) {
     return ElevatedButton(
       onPressed: () {
@@ -141,6 +148,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     );
   }
 
+  // Dialog box to prompt user on whether they want to delete the module.
   void nodeOnPressed(String moduleCode) {
     showDialog(
       context: context,
@@ -178,6 +186,7 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     );
   }
 
+  // Remove module from graph
   void removeModule(String moduleCode) {
     int nodeId = profile.graphModel.getNodeId(moduleCode);
     profile.graphModel.removeMod(moduleCode);

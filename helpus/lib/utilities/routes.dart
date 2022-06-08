@@ -6,6 +6,7 @@ import 'package:helpus/screens/sign_in/register_screen.dart';
 import 'package:helpus/screens/sign_in/sign_in_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 
+// Routes url and equivalent screens
 class Routes {
   static Map<String, Widget Function(BuildContext)> routes = {
     RoutesText.signIn: (context) => const SignInScreen(

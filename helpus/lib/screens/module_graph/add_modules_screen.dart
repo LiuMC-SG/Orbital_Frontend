@@ -11,6 +11,7 @@ import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/widgets/add_modules_dialog.dart';
 import 'package:http/http.dart' as http;
 
+// Add module to module graph screen
 class AddModulesScreen extends StatefulWidget {
   final Profile profile;
   const AddModulesScreen({
@@ -29,6 +30,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
   late final List<CondensedModule> allModules;
   late final List<String> currModules;
 
+  // Obtain all modules from the database.
   @override
   void initState() {
     super.initState();
@@ -62,6 +64,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     );
   }
 
+  // Future builder for loading modules from database and displaying them.
   Widget addModule() {
     return FutureBuilder(
       future: fetchModules(),
@@ -85,12 +88,11 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     );
   }
 
+  // Obtain all modules from the database and remove those already added to the
+  // profile.
   Future<List<CondensedModule>> fetchModules() async {
     http.Response response = await http.get(
       Uri.parse('https://helpus-backend.herokuapp.com/modules/condensed_info'),
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
     );
     if (response.statusCode == 200) {
       List<CondensedModule> modules = jsonDecode(response.body)
@@ -105,6 +107,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     }
   }
 
+  // Search field widget
   Widget buildSearch() {
     return Container(
       margin: const EdgeInsets.all(20),
@@ -129,6 +132,8 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     );
   }
 
+  // Main display widget. Left side has search field with all available modules.
+  // Right side has selected modules.
   Widget generateScrollView() {
     return Row(
       children: <Widget>[
@@ -206,6 +211,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     );
   }
 
+  // Search function to filter the list of modules
   void filterModules(String query) {
     List<CondensedModule> dummySearchList = <CondensedModule>[];
     dummySearchList.addAll(allModules);
@@ -228,6 +234,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     }
   }
 
+  // Color of selected modules depending on whether it has prerequisites
   Color getColor(int index) {
     if (selectedModules.keys.elementAt(index).prerequisite == '') {
       return Colors.green;
@@ -238,6 +245,9 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     return Colors.red;
   }
 
+  // If the selected module has no prerequisites, then it prompts to remove the
+  // selected module only. Otherwise, then it would prompt dialog to add
+  // prerequisite to the module.
   void changeSelectedModule(int index) {
     if (selectedModules.keys.elementAt(index).prerequisite != '') {
       showDialog(
@@ -281,6 +291,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     }
   }
 
+  // Add modules to the selected modules
   Function(List<String>?) onAdd(int index) {
     return (List<String>? modules) {
       setState(() {
@@ -291,6 +302,7 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     };
   }
 
+  // Remove selected module and all other modules that depend on it
   void removeModule(int index) {
     CondensedModule module = selectedModules.keys.elementAt(index);
     setState(() {
@@ -301,12 +313,15 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
     });
   }
 
+  // Remove all selected modules
   void removeAllModules() {
     setState(() {
       selectedModules.clear();
     });
   }
 
+  // Submit selected modules to the database. Each module is a node and edge is
+  // from prereq module to the selected module.
   void submitModules() async {
     bool havePrerequisite = false;
     for (var i = 0; i < selectedModules.length; i++) {

@@ -4,6 +4,7 @@ import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/email_text_field.dart';
 import 'package:helpus/widgets/sign_in/password_text_field.dart';
 
+// Email sign in widget
 class EmailPasswordForm extends StatefulWidget {
   final Function(User?) checkUser;
   const EmailPasswordForm({
@@ -97,8 +98,11 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
     );
   }
 
+  // Sign in with email and password.
   void _signInWithEmailAndPassword() async {
     User? user;
+
+    // Attempt to sign in with email and password
     try {
       user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
@@ -114,6 +118,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
       }
     }
 
+    // Check if user is signed in. If so, navigate to home.
     if (user != null) {
       setState(() {
         _success = true;

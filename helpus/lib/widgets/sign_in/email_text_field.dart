@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
+// Email text field widget
 class EmailTextField extends StatelessWidget {
   final TextEditingController emailController;
   final String? Function(String?)? validator;
@@ -21,6 +22,7 @@ class EmailTextField extends StatelessWidget {
     );
   }
 
+  // Check if text is of email format
   String? defaultValidator(String? value) {
     final bool isValid = EmailValidator.validate(value!.trim());
     if (!isValid) {

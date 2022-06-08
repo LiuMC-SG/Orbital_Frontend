@@ -4,6 +4,7 @@ import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/email_text_field.dart';
 import 'package:helpus/widgets/sign_in/password_text_field.dart';
 
+// Register new user screen
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
   @override
@@ -114,6 +115,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  // Attempt to register with provided email and password. If successful, sign
+  // in with the user credentials. Otherwise, display error message.
   void _registerWithEmailAndPassword() async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(

@@ -12,7 +12,9 @@ import 'package:helpus/models/drawer_item.dart';
 import 'package:helpus/widgets/profile/profile_photo.dart';
 import 'package:helpus/models/profile_data.dart';
 
+// Home screen [After login]
 class HomeScreen extends StatefulWidget {
+  // Side bar drawer items
   final List<SideMenuItem> sideMenuItems = [
     SideMenuItem(
       'Profile',
@@ -42,8 +44,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedDrawerIndex = 0;
-  // ignore: prefer_final_fields
-  Profile _profile = Profile.blankProfile();
+  Profile profile = Profile.blankProfile();
 
   void _onItemSelect(int index) {
     setState(() {
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Side bar generator
     List<ListTile> sideMenuOptions = <ListTile>[];
     for (int i = 0; i < widget.sideMenuItems.length; i++) {
       SideMenuItem sideMenuItem = widget.sideMenuItems[i];
@@ -106,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       future: checkProfile(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
-            !_profile.equals(Profile.blankProfile())) {
+            !profile.equals(Profile.blankProfile())) {
           return Scaffold(
             drawer: Drawer(
               child: ListView(
@@ -116,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: FittedBox(
                       fit: BoxFit.fitHeight,
                       child: ProfilePhoto(
-                        profile: _profile,
+                        profile: profile,
                       ),
                     ),
                   ),
@@ -142,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             body: _getDrawerItemWidget(
               _selectedDrawerIndex,
-              _profile,
+              profile,
             ),
           );
         }
@@ -161,6 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Checks if user already has profile. If it doesn't, creates a new one. Else,
+  // obtain data from firestore.
   Future<bool> checkProfile() async {
     User? user = FirebaseAuth.instance.currentUser;
     DocumentReference documentReference =
@@ -174,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'graphModel': GraphModel.blankGraphModel.toJson(),
       });
     }
-    await Profile.generate(user.uid, _profile);
+    await Profile.generate(user.uid, profile);
     return true;
   }
 }

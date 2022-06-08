@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/utilities/constants.dart';
 
+// Forget password screen
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
   @override
@@ -83,6 +84,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     );
   }
 
+  // Attempt to send password reset email. If successful, show success message.
+  // Otherwise, show error message.
   Future<void> resetPassword() async {
     String message = 'Email sent if it is one of the registered users.';
     try {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpus/utilities/constants.dart';
 
+// Sign in button widget
 class SignInButton extends StatefulWidget {
   final Image image;
   final String textLabel;

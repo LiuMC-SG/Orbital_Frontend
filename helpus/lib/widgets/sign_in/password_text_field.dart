@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Password text field widget
 class PasswordTextField extends StatelessWidget {
   final TextEditingController passwordController;
   final String? Function(String?)? validator;
@@ -25,6 +26,7 @@ class PasswordTextField extends StatelessWidget {
     );
   }
 
+  // Check if text is of password format
   String? defaultValidator(String? value) {
     if (value!.trim().isEmpty) {
       return 'Please enter password';

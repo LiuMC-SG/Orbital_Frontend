@@ -24,6 +24,8 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
   var prereqModules = <String>[];
   var otherModules = <String>[];
 
+  // Initialise the lists of prereq modules already added and modules not added
+  // in
   @override
   void initState() {
     super.initState();
@@ -143,6 +145,7 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
     );
   }
 
+  // Adds a module to the prereq list
   void addModule(String module) {
     setState(() {
       prereqModules.add(module);
@@ -152,6 +155,7 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
     });
   }
 
+  // Remove module in prereq list
   void removeModule(String module) {
     setState(() {
       prereqModules.remove(module);

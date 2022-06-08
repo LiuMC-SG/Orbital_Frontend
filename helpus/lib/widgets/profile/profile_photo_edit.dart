@@ -8,6 +8,7 @@ import 'package:helpus/widgets/profile/profile_photo.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:image_picker/image_picker.dart';
 
+// Profile photo editting widget
 class ProfilePhotoEdit extends StatefulWidget {
   final Profile profile;
   const ProfilePhotoEdit({
@@ -38,7 +39,7 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
     );
   }
 
-  // Builds Profile Image which border color and thickness 5
+  // Builds Profile Image which border color and thickness 3
   Widget profilePhoto(Color color) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -71,12 +72,17 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
     );
   }
 
+  // Sets Profile Picture
   void setPicture() async {
     User? user = FirebaseAuth.instance.currentUser;
     Reference reference =
         FirebaseStorage.instance.ref().child('users/${user!.uid}');
+
+    // Pick image
     final ImagePicker _picker = ImagePicker();
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    // Set image
     if (image != null) {
       try {
         String photoURL;

@@ -9,6 +9,7 @@ import 'package:helpus/widgets/profile/profile_info_edit.dart';
 import 'package:helpus/widgets/profile/profile_info_static.dart';
 import 'package:helpus/widgets/profile/profile_photo_edit.dart';
 
+// Profile screen
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   @override
@@ -69,11 +70,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Obtain the profile information from firestore
   Future<bool> setInitial() async {
     await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
     return true;
   }
 
+  // Change the users name
   void setName(String name) {
     DocumentReference documentReference = FirebaseFirestore.instance
         .collection('users')
@@ -87,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Navigate to change password screen
   void changePassword() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user!.providerData[0].providerId != 'password') {
@@ -101,6 +105,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Delete account and all data associated with it. Then, navigate to login
+  // screen.
   void deleteAccount() async {
     User? user = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance

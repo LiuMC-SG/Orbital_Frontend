@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:helpus/models/graph_model.dart';
 
+// Profile class to store user profile data
 class Profile {
   String name;
   String email;
@@ -10,10 +11,12 @@ class Profile {
 
   Profile(this.name, this.email, this.photoURL, this.graphModel);
 
+  // Generate blank profile
   static blankProfile() {
     return Profile('', '', '', GraphModel.blankGraphModel);
   }
 
+  // Generate profile from firestore using firebase userid
   static generate(String userUID, Profile profile) async {
     DocumentReference _documentReference =
         FirebaseFirestore.instance.collection('users').doc(userUID);
@@ -33,6 +36,7 @@ class Profile {
     return profile;
   }
 
+  // Set profile from firestore data
   static Future<void> setProfile(Object? data, Profile profile) async {
     if (data == null) {
       debugPrint('profileGenerate: Object is null and cannot be parsed.');
@@ -52,6 +56,7 @@ class Profile {
     return 'name: $name, email: $email, photoURL: $photoURL, graphModel: $graphModel';
   }
 
+  // Check if profiles are identical
   bool equals(Profile profile) {
     return email == profile.email;
   }

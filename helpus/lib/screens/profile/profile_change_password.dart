@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// Change password screen
 class ProfileChangePasswordScreen extends StatefulWidget {
   const ProfileChangePasswordScreen({Key? key}) : super(key: key);
   @override
@@ -39,6 +40,7 @@ class _ProfileChangePasswordScreenState
     );
   }
 
+  // Password input form
   Widget passwordForm() {
     return Form(
       key: _formKey,
@@ -111,6 +113,8 @@ class _ProfileChangePasswordScreenState
     );
   }
 
+  // Attempt to change password. If successful, navigate back to home page. If
+  // unsuccessful, display an error message.
   void _changePassword() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;

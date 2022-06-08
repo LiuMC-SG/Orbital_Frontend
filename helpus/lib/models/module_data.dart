@@ -1,3 +1,4 @@
+// Module class that stores condensed data for a module.
 class CondensedModule {
   final String moduleCode;
   final String title;
@@ -5,6 +6,7 @@ class CondensedModule {
 
   CondensedModule(this.moduleCode, this.title, this.prerequisite);
 
+  // Generate condensed module from json data
   static CondensedModule fromJson(Map<String, dynamic> json) {
     return CondensedModule(
       json['moduleCode'],
@@ -13,6 +15,7 @@ class CondensedModule {
     );
   }
 
+  // Check if the module code or title contains the query text
   bool contains(String query) {
     return moduleCode.toLowerCase().contains(query.toLowerCase()) ||
         title.toLowerCase().contains(query.toLowerCase());

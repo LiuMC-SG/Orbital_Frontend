@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/sign_in_button.dart';
 
+// Google sign in widget
 class GoogleSignInButton extends StatefulWidget {
   final Function(User?) checkUser;
   const GoogleSignInButton({
@@ -28,6 +29,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     );
   }
 
+  // Sign in with Google
   void googleSignIn() async {
     try {
       if (kIsWeb) {
@@ -40,6 +42,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     }
   }
 
+  // Sign in with Google on web
   void googleSignInWeb() async {
     // Create a new provider
     GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -58,6 +61,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     widget.checkUser(userCredential.user);
   }
 
+  // Sign in with Google on mobile
   void googleSignInOthers() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();

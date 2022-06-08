@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/sign_in/sign_in_button.dart';
 
+// Facebook sign in widget
 class FacebookSignInButton extends StatefulWidget {
   final Function(User?) checkUser;
   const FacebookSignInButton({
@@ -33,6 +34,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
     );
   }
 
+  // Sign in with Facebook
   void facebookSignIn() async {
     try {
       if (kIsWeb) {
@@ -45,6 +47,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
     }
   }
 
+  // Sign in with Facebook on web
   void facebookSignInWeb() async {
     // Create a new provider
     FacebookAuthProvider facebookProvider = FacebookAuthProvider();
@@ -64,6 +67,7 @@ class _FacebookSignInButtonState extends State<FacebookSignInButton> {
     widget.checkUser(userCredential.user);
   }
 
+  // Sign in with Facebook on mobile
   void facebookSignInOthers() async {
     // Trigger the sign-in flow
     final LoginResult loginResult = await FacebookAuth.instance.login();
