@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Add module dialog
 class AddModulesDialog extends StatefulWidget {
   final Function(List<String>?) onAdd;
   final Function() removeMod;
