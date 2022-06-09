@@ -74,7 +74,11 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Total MC: ${moduleInfo[1]}'),
+              child: Text('Total MC: ${moduleInfo[2]}'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text('Included MC: ${moduleInfo[1]}'),
             ),
             Padding(
               padding: const EdgeInsets.all(20),

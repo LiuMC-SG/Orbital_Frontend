@@ -3,8 +3,9 @@ class CondensedModule {
   final String moduleCode;
   final String title;
   final String prerequisite;
+  final double mc;
 
-  CondensedModule(this.moduleCode, this.title, this.prerequisite);
+  CondensedModule(this.moduleCode, this.title, this.prerequisite, this.mc);
 
   // Generate condensed module from json data
   static CondensedModule fromJson(Map<String, dynamic> json) {
@@ -12,6 +13,7 @@ class CondensedModule {
       json['moduleCode'],
       json['title'],
       json['prerequisite'] ?? '',
+      double.parse(json['moduleCredit']),
     );
   }
 
@@ -23,7 +25,11 @@ class CondensedModule {
 
   @override
   String toString() {
-    return 'moduleCode: $moduleCode, title: $title, prerequisite: $prerequisite';
+    String _moduleCode = 'moduleCode: $moduleCode';
+    String _title = 'title: $title';
+    String _prerequisite = 'prerequisite: $prerequisite';
+    String _mc = 'mc: $mc';
+    return '{$_moduleCode, $_title, $_prerequisite, $_mc}';
   }
 }
 
@@ -41,11 +47,12 @@ class ModuleGrading {
     'D+',
     'D',
     'F',
+    '',
   ];
   static final ModuleGrading empty = ModuleGrading('', 0, '', true);
 
   final String moduleCode;
-  final int mc;
+  final double mc;
   String grade;
   bool isSU;
 
@@ -74,7 +81,7 @@ class ModuleGrading {
     } else if (grade == grades[10]) {
       return 0;
     }
-    return -1;
+    return 0;
   }
 
   // Change SU status
@@ -93,14 +100,20 @@ class ModuleGrading {
   // Calculate the overall CAP and MC count with given list of moduleGrading
   static List<String> calcModules(List<ModuleGrading> modules) {
     double cap = 0;
-    int totalMC = 0;
+    double totalMC = 0;
+    double includedMC = 0;
     for (ModuleGrading module in modules) {
-      if (!module.isSU) {
+      if (!module.isSU && module.grade != '') {
         cap += module.getGrade() * module.mc;
-        totalMC += module.mc;
+        includedMC += module.mc;
       }
+      totalMC += module.mc;
     }
-    return [(cap / totalMC).toStringAsFixed(2), totalMC.toString()];
+    return [
+      (cap / includedMC).toStringAsFixed(2),
+      includedMC.toString(),
+      totalMC.toString(),
+    ];
   }
 
   // Generate module grading from json data

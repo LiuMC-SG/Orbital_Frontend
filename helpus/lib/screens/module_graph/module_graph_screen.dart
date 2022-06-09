@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:helpus/models/graph_model.dart';
+import 'package:helpus/models/module_data.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/screens/module_graph/add_modules_screen.dart';
 import 'package:helpus/utilities/constants.dart';
@@ -201,5 +203,21 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
         }
       }
     });
+
+    List<ModuleGrading> moduleGrading = profile.moduleGrading;
+    moduleGrading.removeWhere((element) => element.moduleCode == moduleCode);
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    documentReference.set(
+      {
+        'moduleGrading': moduleGrading
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList()
+      },
+      SetOptions(merge: true),
+    );
   }
 }

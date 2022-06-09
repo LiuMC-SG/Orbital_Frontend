@@ -176,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'email': user.email ?? '',
         'photoURL': user.photoURL ?? '',
         'graphModel': GraphModel.blankGraphModel.toJson(),
+        'moduleGrading': [],
       });
     }
     await Profile.generate(user.uid, profile);

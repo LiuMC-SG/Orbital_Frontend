@@ -339,6 +339,8 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
       DocumentSnapshot documentSnapshot = await documentReference.get();
       final mappedValue = Map<String, dynamic>.from(
           documentSnapshot.data() as Map<Object?, Object?>);
+
+      // Update firestore graph model
       GraphModel updatedGraphModel = GraphModel(mappedValue['graphModel']);
       final int startId = updatedGraphModel.maxId() + 1;
       int counter = startId;
@@ -368,6 +370,37 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
         SetOptions(merge: true),
       );
       widget.profile.graphModel = updatedGraphModel;
+
+      // Update firestore moduleGrading
+      List<ModuleGrading> updatedModuleGrading = mappedValue['moduleGrading']
+          .map<ModuleGrading>((e) => ModuleGrading.fromJson(e))
+          .toList();
+      List<String> updatedModuleGradingString =
+          updatedModuleGrading.map((e) => e.moduleCode).toList();
+      for (var module in selectedModules.keys) {
+        if (!updatedModuleGradingString.contains(module.moduleCode)) {
+          updatedModuleGrading.add(ModuleGrading(
+            module.moduleCode,
+            allModules
+                .where((element) => element.moduleCode == module.moduleCode)
+                .first
+                .mc,
+            '',
+            false,
+          ));
+        }
+      }
+      documentReference.set(
+        {
+          'moduleGrading': updatedModuleGrading
+              .map(
+                (e) => e.toJson(),
+              )
+              .toList()
+        },
+        SetOptions(merge: true),
+      );
+
       Navigator.pop(context);
     }
   }
