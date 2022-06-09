@@ -19,10 +19,10 @@ class AddModulesScreen extends StatefulWidget {
     required this.profile,
   }) : super(key: key);
   @override
-  _AddModulesScreenState createState() => _AddModulesScreenState();
+  AddModulesScreenState createState() => AddModulesScreenState();
 }
 
-class _AddModulesScreenState extends State<AddModulesScreen> {
+class AddModulesScreenState extends State<AddModulesScreen> {
   final TextEditingController _filter = TextEditingController();
   bool isInitialised = false;
   var searchedModules = <CondensedModule>[];
@@ -168,21 +168,24 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
         Expanded(
           child: Column(
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
                     child: ElevatedButton(
-                      child: const Text('Add Modules'),
                       onPressed: submitModules,
+                      child: const Text('Add Modules'),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
                     child: ElevatedButton(
-                      child: const Text('Remove All'),
                       onPressed: removeAllModules,
+                      child: const Text('Remove All'),
                     ),
                   ),
                 ],
@@ -365,16 +368,10 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
           }
         }
       }
-      documentReference.set(
-        {'graphModel': updatedGraphModel.toJson()},
-        SetOptions(merge: true),
-      );
-      widget.profile.graphModel = updatedGraphModel;
 
       // Update firestore moduleGrading
-      List<ModuleGrading> updatedModuleGrading = mappedValue['moduleGrading']
-          .map<ModuleGrading>((e) => ModuleGrading.fromJson(e))
-          .toList();
+      List<ModuleGrading> updatedModuleGrading =
+          ModuleGrading.fromJsonList(mappedValue['moduleGrading']);
       List<String> updatedModuleGradingString =
           updatedModuleGrading.map((e) => e.moduleCode).toList();
       for (var module in selectedModules.keys) {
@@ -390,17 +387,20 @@ class _AddModulesScreenState extends State<AddModulesScreen> {
           ));
         }
       }
-      documentReference.set(
+
+      await documentReference.set(
         {
           'moduleGrading': updatedModuleGrading
               .map(
                 (e) => e.toJson(),
               )
-              .toList()
+              .toList(),
+          'graphModel': updatedGraphModel.toJson(),
         },
         SetOptions(merge: true),
       );
 
+      if (!mounted) return;
       Navigator.pop(context);
     }
   }

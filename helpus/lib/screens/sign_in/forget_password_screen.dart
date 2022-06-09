@@ -6,10 +6,10 @@ import 'package:helpus/utilities/constants.dart';
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
   @override
-  _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();
+  ForgetPasswordScreenState createState() => ForgetPasswordScreenState();
 }
 
-class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+class ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool? _sent;
   String? _message;
@@ -58,10 +58,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      onPressed: resetPassword,
                       child: const Text(
                         'Send Email',
                       ),
-                      onPressed: resetPassword,
                     ),
                     ElevatedButton(
                       child: const Text(

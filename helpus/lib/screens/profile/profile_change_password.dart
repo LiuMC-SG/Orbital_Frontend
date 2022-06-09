@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 class ProfileChangePasswordScreen extends StatefulWidget {
   const ProfileChangePasswordScreen({Key? key}) : super(key: key);
   @override
-  _ProfileChangePasswordScreenState createState() =>
-      _ProfileChangePasswordScreenState();
+  ProfileChangePasswordScreenState createState() =>
+      ProfileChangePasswordScreenState();
 }
 
-class _ProfileChangePasswordScreenState
+class ProfileChangePasswordScreenState
     extends State<ProfileChangePasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
@@ -48,13 +48,13 @@ class _ProfileChangePasswordScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: const Text(
-              'Change your password',
-            ),
             padding: const EdgeInsets.all(
               16,
             ),
             alignment: Alignment.center,
+            child: const Text(
+              'Change your password',
+            ),
           ),
           TextFormField(
             controller: _passwordController,
@@ -119,6 +119,7 @@ class _ProfileChangePasswordScreenState
     try {
       User? user = FirebaseAuth.instance.currentUser;
       await user?.updatePassword(_passwordController.text);
+      if (!mounted) return;
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

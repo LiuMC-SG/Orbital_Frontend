@@ -17,10 +17,10 @@ class ProfilePhotoEdit extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProfilePhotoEditState createState() => _ProfilePhotoEditState();
+  ProfilePhotoEditState createState() => ProfilePhotoEditState();
 }
 
-class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
+class ProfilePhotoEditState extends State<ProfilePhotoEdit> {
   ProfilePhoto _profilePhoto = ProfilePhoto(profile: Profile.blankProfile());
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,9 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
         children: [
           profilePhoto(FirebaseColors.firebaseBlue),
           Positioned(
-            child: editIcon(FirebaseColors.firebaseBlue),
             right: 10,
             top: 10,
+            child: editIcon(FirebaseColors.firebaseBlue),
           ),
         ],
       ),
@@ -79,8 +79,8 @@ class _ProfilePhotoEditState extends State<ProfilePhotoEdit> {
         FirebaseStorage.instance.ref().child('users/${user!.uid}');
 
     // Pick image
-    final ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     // Set image
     if (image != null) {

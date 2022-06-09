@@ -13,10 +13,10 @@ import 'package:helpus/widgets/profile/profile_photo_edit.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
   Profile profile = Profile.blankProfile();
 
   @override
@@ -48,12 +48,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 spacing: 20,
                 children: [
                   ElevatedButton(
-                    child: const Text('Change Password'),
                     onPressed: changePassword,
+                    child: const Text('Change Password'),
                   ),
                   ElevatedButton(
-                    child: const Text('Delete Account'),
                     onPressed: deleteAccount,
+                    child: const Text('Delete Account'),
                   ),
                 ],
               ),
@@ -120,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     await user!.delete();
     await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
       RoutesText.signIn,

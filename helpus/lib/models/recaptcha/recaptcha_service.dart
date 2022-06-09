@@ -20,8 +20,8 @@ class RecaptchaService {
   /// Checks whether the form submission is done by a human or bot.
   static Future<bool> isNotABot() async {
     var verificationResponse = await _getVerificationResponse();
-    var _score = verificationResponse?.score ?? 0.0;
-    return _score >= 0.5 && _score < 1 ? true : false;
+    var score = verificationResponse?.score ?? 0.0;
+    return score >= 0.5 && score < 1 ? true : false;
   }
 
   /// Verifies the client's response using HTTP POST method.
@@ -30,29 +30,29 @@ class RecaptchaService {
   static Future<RecaptchaResponse?> _getVerificationResponse() async {
     _token = await GRecaptchaV3.execute('submit') ?? '';
 
-    RecaptchaResponse? _recaptchaResponse;
+    RecaptchaResponse? recaptchaResponse;
 
     if (_token.isNotEmpty) {
       try {
         /// Holds the body parameter for the HTTP request.
-        final _bodyParameters = {
+        final bodyParameters = {
           'secret': Config.secretKey,
           'response': _token,
         };
 
         var response = await http.post(
           Config.verificationURL,
-          body: _bodyParameters,
+          body: bodyParameters,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
         );
 
-        _recaptchaResponse = RecaptchaResponse.fromJson(response.body);
+        recaptchaResponse = RecaptchaResponse.fromJson(response.body);
       } catch (e) {
         debugPrint('recaptchaService: $e');
       }
     }
-    return _recaptchaResponse;
+    return recaptchaResponse;
   }
 }

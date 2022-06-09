@@ -8,10 +8,10 @@ import 'package:helpus/widgets/sign_in/password_text_field.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -32,13 +32,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  child: const Text(
-                    'Register with email and password',
-                  ),
                   padding: const EdgeInsets.all(
                     16,
                   ),
                   alignment: Alignment.center,
+                  child: const Text(
+                    'Register with email and password',
+                  ),
                 ),
                 EmailTextField(
                   emailController: _emailController,
@@ -123,6 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      if (!mounted) return;
       Navigator.pushNamed(
         context,
         RoutesText.signIn,

@@ -13,10 +13,10 @@ class ProfileInfoEdit extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProfileInfoEditState createState() => _ProfileInfoEditState();
+  ProfileInfoEditState createState() => ProfileInfoEditState();
 }
 
-class _ProfileInfoEditState extends State<ProfileInfoEdit> {
+class ProfileInfoEditState extends State<ProfileInfoEdit> {
   TextEditingController? _textController;
   @override
   Widget build(BuildContext context) {

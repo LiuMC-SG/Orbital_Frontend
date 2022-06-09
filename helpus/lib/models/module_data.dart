@@ -3,7 +3,7 @@ class CondensedModule {
   final String moduleCode;
   final String title;
   final String prerequisite;
-  final double mc;
+  final num mc;
 
   CondensedModule(this.moduleCode, this.title, this.prerequisite, this.mc);
 
@@ -25,11 +25,11 @@ class CondensedModule {
 
   @override
   String toString() {
-    String _moduleCode = 'moduleCode: $moduleCode';
-    String _title = 'title: $title';
-    String _prerequisite = 'prerequisite: $prerequisite';
-    String _mc = 'mc: $mc';
-    return '{$_moduleCode, $_title, $_prerequisite, $_mc}';
+    String moduleCodeString = 'moduleCode: $moduleCode';
+    String titleString = 'title: $title';
+    String prerequisiteString = 'prerequisite: $prerequisite';
+    String mcString = 'mc: $mc';
+    return '{$moduleCodeString, $titleString, $prerequisiteString, $mcString}';
   }
 }
 
@@ -52,14 +52,14 @@ class ModuleGrading {
   static final ModuleGrading empty = ModuleGrading('', 0, '', true);
 
   final String moduleCode;
-  final double mc;
+  final num mc;
   String grade;
   bool isSU;
 
   ModuleGrading(this.moduleCode, this.mc, this.grade, this.isSU);
 
   // Obtain grade number from letter grade
-  double getGrade() {
+  num getGrade() {
     if (grade == grades[0] || grade == grades[1]) {
       return 5;
     } else if (grade == grades[2]) {
@@ -99,9 +99,9 @@ class ModuleGrading {
 
   // Calculate the overall CAP and MC count with given list of moduleGrading
   static List<String> calcModules(List<ModuleGrading> modules) {
-    double cap = 0;
-    double totalMC = 0;
-    double includedMC = 0;
+    num cap = 0;
+    num totalMC = 0;
+    num includedMC = 0;
     for (ModuleGrading module in modules) {
       if (!module.isSU && module.grade != '') {
         cap += module.getGrade() * module.mc;
@@ -124,6 +124,17 @@ class ModuleGrading {
       json['grade'],
       json['isSU'],
     );
+  }
+
+  // Generate module grading from json data
+  static List<ModuleGrading> fromJsonList(List<dynamic>? json) {
+    if (json == null) {
+      return [];
+    }
+    return json
+        .map((e) => ModuleGrading.fromJson(e))
+        .toList()
+        .cast<ModuleGrading>();
   }
 
   // Generate json data from module grading

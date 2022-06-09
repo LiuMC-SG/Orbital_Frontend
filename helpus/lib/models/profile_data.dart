@@ -26,10 +26,10 @@ class Profile {
 
   // Generate profile from firestore using firebase userid
   static generate(String userUID, Profile profile) async {
-    DocumentReference _documentReference =
+    DocumentReference documentReference =
         FirebaseFirestore.instance.collection('users').doc(userUID);
 
-    _documentReference.snapshots().listen(
+    documentReference.snapshots().listen(
       (event) {
         setProfile(event.data(), profile);
       },
@@ -38,7 +38,7 @@ class Profile {
       },
     );
 
-    DocumentSnapshot documentSnapshot = await _documentReference.get();
+    DocumentSnapshot documentSnapshot = await documentReference.get();
 
     await setProfile(documentSnapshot.data(), profile);
     return profile;
@@ -52,25 +52,29 @@ class Profile {
       final mappedValue =
           Map<String, dynamic>.from(data as Map<Object?, Object?>);
       profile
-        ..name = mappedValue['name']
-        ..email = mappedValue['email']
-        ..photoURL = mappedValue['photoURL']
+        ..name = mappedValue['name'] ?? ''
+        ..email = mappedValue['email'] ?? ''
+        ..photoURL = mappedValue['photoURL'] ?? ''
         ..graphModel = GraphModel(mappedValue['graphModel'])
-        ..moduleGrading = mappedValue['moduleGrading']
-            .map((e) => ModuleGrading.fromJson(e))
-            .toList()
-            .cast<ModuleGrading>();
+        ..moduleGrading =
+            ModuleGrading.fromJsonList(mappedValue['moduleGrading']);
     }
   }
 
   @override
   String toString() {
-    String _name = 'name: $name';
-    String _email = 'email: $email';
-    String _photoURL = 'photoURL: $photoURL';
-    String _graphModel = 'graphModel: $graphModel';
-    String _moduleGrading = 'moduleGrading: $moduleGrading';
-    return [_name, _email, _photoURL, _graphModel, _moduleGrading].join(', ');
+    String nameString = 'name: $name';
+    String emailString = 'email: $email';
+    String photoURLString = 'photoURL: $photoURL';
+    String graphModelString = 'graphModel: $graphModel';
+    String moduleGradingString = 'moduleGrading: $moduleGrading';
+    return [
+      nameString,
+      emailString,
+      photoURLString,
+      graphModelString,
+      moduleGradingString,
+    ].join(', ');
   }
 
   // Check if profiles are identical

@@ -13,10 +13,10 @@ class SignInScreen extends StatefulWidget {
     required this.user,
   }) : super(key: key);
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  SignInScreenState createState() => SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class SignInScreenState extends State<SignInScreen> {
   bool isForgetPassword = false;
   bool isRegister = false;
   User? _user;

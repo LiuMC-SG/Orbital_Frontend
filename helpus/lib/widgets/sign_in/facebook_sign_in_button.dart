@@ -14,10 +14,10 @@ class FacebookSignInButton extends StatefulWidget {
     required this.checkUser,
   }) : super(key: key);
   @override
-  _FacebookSignInButtonState createState() => _FacebookSignInButtonState();
+  FacebookSignInButtonState createState() => FacebookSignInButtonState();
 }
 
-class _FacebookSignInButtonState extends State<FacebookSignInButton> {
+class FacebookSignInButtonState extends State<FacebookSignInButton> {
   @override
   Widget build(BuildContext context) {
     return SignInButton(

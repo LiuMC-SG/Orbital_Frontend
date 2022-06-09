@@ -19,17 +19,17 @@ class GraphModel {
 
   // Generate graph model from json data
   GraphModel(Map<String, dynamic> json) {
-    var _nodes = json['nodes'];
-    for (var _node in _nodes) {
-      GraphNode? generatedNode = GraphNode.generate(_node);
+    var currNodes = json['nodes'];
+    for (var node in currNodes) {
+      GraphNode? generatedNode = GraphNode.generate(node);
       if (generatedNode != null) {
         nodes.add(generatedNode);
       }
     }
 
-    var _edges = json['edges'];
-    for (var _edge in _edges) {
-      GraphEdge? generatedEdge = GraphEdge.generate(_edge);
+    var currEdges = json['edges'];
+    for (var edge in currEdges) {
+      GraphEdge? generatedEdge = GraphEdge.generate(edge);
       if (generatedEdge != null) {
         edges.add(generatedEdge);
       }
@@ -44,8 +44,8 @@ class GraphModel {
   // Output all nodes and edges to json
   Map<String, dynamic> toJson() {
     return {
-      'nodes': nodes.map((element) => element.toJson()),
-      'edges': edges.map((element) => element.toJson()),
+      'nodes': nodes.map((element) => element.toJson()).toList(),
+      'edges': edges.map((element) => element.toJson()).toList(),
     };
   }
 

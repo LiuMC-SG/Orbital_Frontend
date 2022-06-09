@@ -12,10 +12,10 @@ class EmailPasswordForm extends StatefulWidget {
     required this.checkUser,
   }) : super(key: key);
   @override
-  _EmailPasswordFormState createState() => _EmailPasswordFormState();
+  EmailPasswordFormState createState() => EmailPasswordFormState();
 }
 
-class _EmailPasswordFormState extends State<EmailPasswordForm> {
+class EmailPasswordFormState extends State<EmailPasswordForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -28,13 +28,13 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: const Text(
-              'Sign in with email and password',
-            ),
             padding: const EdgeInsets.all(
               16,
             ),
             alignment: Alignment.center,
+            child: const Text(
+              'Sign in with email and password',
+            ),
           ),
           EmailTextField(
             emailController: _emailController,

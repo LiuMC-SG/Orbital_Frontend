@@ -12,18 +12,25 @@ import 'package:helpus/utilities/constants.dart';
 class ModuleGraphScreen extends StatefulWidget {
   const ModuleGraphScreen({Key? key}) : super(key: key);
   @override
-  _ModuleGraphScreenState createState() => _ModuleGraphScreenState();
+  ModuleGraphScreenState createState() => ModuleGraphScreenState();
 }
 
-class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
+class ModuleGraphScreenState extends State<ModuleGraphScreen> {
   Graph graph = Graph();
   final SugiyamaConfiguration _configuration = SugiyamaConfiguration();
   Profile profile = Profile.blankProfile();
+  late Future<bool> future;
+
+  @override
+  void initState() {
+    super.initState();
+    future = setInitial();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: setInitial(),
+      future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -50,17 +57,19 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
                               profile: profile,
                             )),
                   ).then((value) {
-                    setState(() {});
+                    setState(() {
+                      future = setInitial();
+                    });
                   });
                 },
                 backgroundColor: FirebaseColors.firebaseNavy,
+                tooltip: 'Add module',
                 child: const Icon(
                   Icons.add,
                 ),
-                tooltip: 'Add module',
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -81,15 +90,15 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     _configuration.nodeSeparation = 10; // X Separation
     _configuration.levelSeparation = 20; // Y Separation
 
-    Paint _transparent = Paint()..color = Colors.transparent;
-    Paint _standard = Paint()..color = Colors.black;
+    Paint transparent = Paint()..color = Colors.transparent;
+    Paint standard = Paint()..color = Colors.black;
 
     // Add all edges
-    for (GraphEdge _edge in profile.graphModel.edges) {
+    for (GraphEdge edge in profile.graphModel.edges) {
       graph.addEdge(
-        Node.Id(_edge.from),
-        Node.Id(_edge.to),
-        paint: _edge.to == -1 ? _transparent : _standard,
+        Node.Id(edge.from),
+        Node.Id(edge.to),
+        paint: edge.to == -1 ? transparent : standard,
       );
     }
 
@@ -189,16 +198,16 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
   }
 
   // Remove module from graph
-  void removeModule(String moduleCode) {
+  void removeModule(String moduleCode) async {
     int nodeId = profile.graphModel.getNodeId(moduleCode);
     profile.graphModel.removeMod(moduleCode);
     setState(() {
       graph.removeNode(Node.Id(nodeId));
-      for (GraphEdge _edge in profile.graphModel.edges) {
-        if (_edge.from == nodeId || _edge.to == nodeId) {
+      for (GraphEdge edge in profile.graphModel.edges) {
+        if (edge.from == nodeId || edge.to == nodeId) {
           graph.removeEdge(Edge(
-            Node.Id(_edge.from),
-            Node.Id(_edge.to),
+            Node.Id(edge.from),
+            Node.Id(edge.to),
           ));
         }
       }
@@ -209,15 +218,19 @@ class _ModuleGraphScreenState extends State<ModuleGraphScreen> {
     DocumentReference documentReference = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid);
-    documentReference.set(
+    debugPrint('1');
+    debugPrint(profile.graphModel.toJson().toString());
+    await documentReference.set(
       {
         'moduleGrading': moduleGrading
             .map(
               (e) => e.toJson(),
             )
-            .toList()
+            .toList(),
+        'graphModel': profile.graphModel.toJson(),
       },
       SetOptions(merge: true),
     );
+    debugPrint('2');
   }
 }

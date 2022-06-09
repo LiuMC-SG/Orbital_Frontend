@@ -17,10 +17,10 @@ class AddModulesDialog extends StatefulWidget {
     required this.currModules,
   }) : super(key: key);
   @override
-  _AddModulesDialogState createState() => _AddModulesDialogState();
+  AddModulesDialogState createState() => AddModulesDialogState();
 }
 
-class _AddModulesDialogState extends State<AddModulesDialog> {
+class AddModulesDialogState extends State<AddModulesDialog> {
   var prereqModules = <String>[];
   var otherModules = <String>[];
 
@@ -49,11 +49,12 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
       title: const Text('Select Prerequisite'),
       content: dialogBody(),
       actions: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: TextButton(
                 child: const Text('Remove Module'),
                 onPressed: () {
@@ -63,7 +64,9 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: TextButton(
                 child: const Text('Completed'),
                 onPressed: () {
@@ -73,7 +76,9 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: TextButton(
                 child: const Text('Waive Prereq'),
                 onPressed: () {
@@ -83,7 +88,9 @@ class _AddModulesDialogState extends State<AddModulesDialog> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: TextButton(
                 child: const Text('Clear Prereq'),
                 onPressed: () {

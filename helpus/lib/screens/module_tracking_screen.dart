@@ -8,10 +8,10 @@ import 'package:helpus/models/profile_data.dart';
 class ModuleTrackingScreen extends StatefulWidget {
   const ModuleTrackingScreen({Key? key}) : super(key: key);
   @override
-  _ModuleTrackingScreenState createState() => _ModuleTrackingScreenState();
+  ModuleTrackingScreenState createState() => ModuleTrackingScreenState();
 }
 
-class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
+class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
   Profile profile = Profile.blankProfile();
   late List<String> moduleInfo;
   late List<ModuleGrading> moduleGrading;
@@ -96,6 +96,7 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           child: DataTable(
             columns: createColumn(),
             rows: createRow(),
+            columnSpacing: 20,
           ),
         ),
       ],
@@ -104,38 +105,39 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
 
   // Create column for DataTable
   List<DataColumn> createColumn() {
-    return <DataColumn>[
+    return const <DataColumn>[
       DataColumn(
-        label: Container(
-          child: const Text(
+        label: Expanded(
+          child: Text(
             'Module Code',
+            textAlign: TextAlign.center,
           ),
-          alignment: Alignment.center,
         ),
       ),
       DataColumn(
-        label: Container(
-          child: const Text(
+        label: Expanded(
+          child: Text(
             'MC',
+            textAlign: TextAlign.center,
           ),
-          alignment: Alignment.center,
         ),
       ),
       DataColumn(
-        label: Container(
-          child: const Text(
+        label: Expanded(
+          child: Text(
             'Grade',
+            textAlign: TextAlign.center,
           ),
-          alignment: Alignment.center,
         ),
       ),
       DataColumn(
-          label: Container(
-        child: const Text(
-          'S/U',
+        label: Expanded(
+          child: Text(
+            'S/U',
+            textAlign: TextAlign.center,
+          ),
         ),
-        alignment: Alignment.center,
-      )),
+      ),
     ];
   }
 
@@ -146,50 +148,46 @@ class _ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
       tempRow.add(DataRow(
         cells: <DataCell>[
           DataCell(
-            Container(
-              child: Text(
-                moduleGrading[i].moduleCode,
-              ),
-              alignment: Alignment.center,
+            Text(
+              moduleGrading[i].moduleCode,
+              textAlign: TextAlign.center,
             ),
           ),
           DataCell(
-            Container(
-              child: Text(
-                moduleGrading[i].mc.toString(),
-              ),
-              alignment: Alignment.center,
+            Text(
+              moduleGrading[i].mc.toString(),
+              textAlign: TextAlign.center,
             ),
           ),
           DataCell(
-            Container(
-              child: DropdownButton<String>(
-                items: ModuleGrading.grades
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-                onChanged: (String? value) {
-                  setState(() {
-                    moduleGrading[i].grade = value!;
-                    updateModuleInfo();
-                  });
-                },
-                value: moduleGrading[i].grade,
-              ),
-              alignment: Alignment.center,
+            DropdownButton<String>(
+              items: ModuleGrading.grades
+                  .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          e,
+                          textAlign: TextAlign.center,
+                        ),
+                      ))
+                  .toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  moduleGrading[i].grade = value!;
+                  updateModuleInfo();
+                });
+              },
+              value: moduleGrading[i].grade,
             ),
           ),
           DataCell(
-            Container(
-              child: Checkbox(
-                value: moduleGrading[i].isSU,
-                onChanged: (bool? value) {
-                  setState(() {
-                    moduleGrading[i].changeSU();
-                    updateModuleInfo();
-                  });
-                },
-              ),
-              alignment: Alignment.center,
+            Checkbox(
+              value: moduleGrading[i].isSU,
+              onChanged: (bool? value) {
+                setState(() {
+                  moduleGrading[i].changeSU();
+                  updateModuleInfo();
+                });
+              },
             ),
           ),
         ],

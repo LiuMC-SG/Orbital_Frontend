@@ -13,10 +13,10 @@ class GoogleSignInButton extends StatefulWidget {
     required this.checkUser,
   }) : super(key: key);
   @override
-  _GoogleSignInButtonState createState() => _GoogleSignInButtonState();
+  GoogleSignInButtonState createState() => GoogleSignInButtonState();
 }
 
-class _GoogleSignInButtonState extends State<GoogleSignInButton> {
+class GoogleSignInButtonState extends State<GoogleSignInButton> {
   @override
   Widget build(BuildContext context) {
     return SignInButton(
