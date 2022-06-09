@@ -7,6 +7,7 @@ class SideMenuItem {
   late int thisId;
   String title;
   IconData icon;
+
   SideMenuItem(this.title, this.icon) {
     thisId = SideMenuItem.id;
     SideMenuItem.id++;

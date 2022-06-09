@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/models/graph_model.dart';
-import 'package:helpus/screens/module_generation_screen.dart';
 import 'package:helpus/screens/module_graph/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
 import 'package:helpus/screens/profile_screen.dart';
-import 'package:helpus/screens/settings_screen.dart';
+import 'package:helpus/screens/todo_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/models/drawer_item.dart';
 import 'package:helpus/widgets/profile/profile_photo.dart';
@@ -21,10 +20,6 @@ class HomeScreen extends StatefulWidget {
       Icons.account_circle_rounded,
     ),
     SideMenuItem(
-      'Settings',
-      Icons.settings_rounded,
-    ),
-    SideMenuItem(
       'Module Graph',
       Icons.backup_table,
     ),
@@ -33,8 +28,8 @@ class HomeScreen extends StatefulWidget {
       Icons.book_rounded,
     ),
     SideMenuItem(
-      'Module Generation',
-      Icons.view_carousel_rounded,
+      'To Do',
+      Icons.assignment_rounded,
     ),
   ];
   HomeScreen({Key? key}) : super(key: key);
@@ -58,13 +53,11 @@ class HomeScreenState extends State<HomeScreen> {
       case 0:
         return const ProfileScreen();
       case 1:
-        return const SettingsScreen();
-      case 2:
         return const ModuleGraphScreen();
-      case 3:
+      case 2:
         return const ModuleTrackingScreen();
-      case 4:
-        return const ModuleGenerationScreen();
+      case 3:
+        return const TodoScreen();
       default:
         return const Text('Error');
     }
