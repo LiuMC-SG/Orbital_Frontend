@@ -105,6 +105,7 @@ class AddModulesDialogState extends State<AddModulesDialog> {
     );
   }
 
+  // Main dialog box body
   Widget dialogBody() {
     return SizedBox(
       width: 300,
