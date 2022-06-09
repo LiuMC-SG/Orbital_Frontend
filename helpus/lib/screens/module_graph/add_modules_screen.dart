@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/graph_model.dart';
@@ -111,11 +112,9 @@ class AddModulesScreenState extends State<AddModulesScreen> {
   Widget buildSearch() {
     return Container(
       margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      height: 40,
       child: TextField(
+        maxLines: 1,
+        minLines: 1,
         onChanged: (value) {
           filterModules(value);
         },
@@ -171,18 +170,22 @@ class AddModulesScreenState extends State<AddModulesScreen> {
               Wrap(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
+                    padding: kIsWeb
+                        ? const EdgeInsets.all(20)
+                        : const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
                     child: ElevatedButton(
                       onPressed: submitModules,
                       child: const Text('Add Modules'),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
+                    padding: kIsWeb
+                        ? const EdgeInsets.all(20)
+                        : const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
                     child: ElevatedButton(
                       onPressed: removeAllModules,
                       child: const Text('Remove All'),

@@ -51,6 +51,8 @@ class AddModulesDialogState extends State<AddModulesDialog> {
       content: dialogBody(),
       actions: <Widget>[
         Wrap(
+          alignment: WrapAlignment.center,
+          runAlignment: WrapAlignment.spaceEvenly,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
