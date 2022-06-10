@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/models/profile_data.dart';
 
-// Module generation screen
-class TodoAddScreen extends StatefulWidget {
-  const TodoAddScreen({Key? key}) : super(key: key);
+// Template screen
+class TemplateScreen extends StatefulWidget {
+  const TemplateScreen({Key? key}) : super(key: key);
   @override
-  TodoAddScreenState createState() => TodoAddScreenState();
+  TemplateScreenState createState() => TemplateScreenState();
 }
 
-class TodoAddScreenState extends State<TodoAddScreen> {
+class TemplateScreenState extends State<TemplateScreen> {
   Profile profile = Profile.blankProfile();
   late Future<bool> _future;
 
@@ -43,6 +43,6 @@ class TodoAddScreenState extends State<TodoAddScreen> {
   }
 
   Widget body() {
-    return const Text('add');
+    return const Text('Template');
   }
 }
