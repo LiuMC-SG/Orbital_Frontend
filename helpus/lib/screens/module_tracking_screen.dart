@@ -93,10 +93,12 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           ),
         ),
         Expanded(
-          child: DataTable(
-            columns: createColumn(),
-            rows: createRow(),
-            columnSpacing: 20,
+          child: SingleChildScrollView(
+            child: DataTable(
+              columns: createColumn(),
+              rows: createRow(),
+              columnSpacing: 20,
+            ),
           ),
         ),
       ],
