@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +15,7 @@ class TodoScreen extends StatefulWidget {
 class TodoScreenState extends State<TodoScreen> {
   final TextEditingController _filter = TextEditingController();
   Profile profile = Profile.blankProfile();
-  late final List<Todo> todoList;
+  List<Todo> todoList = [];
   List<Todo> filteredList = [];
   List<bool> selectedTask = [];
   bool allSelected = false;
@@ -32,11 +30,13 @@ class TodoScreenState extends State<TodoScreen> {
   Future<bool> setInitial() async {
     await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
     setState(() {
+      todoList.clear();
       todoList = profile.todoList;
       filteredList.clear();
       filteredList.addAll(todoList);
       selectedTask.clear();
       selectedTask.addAll(todoList.map((_) => false));
+      _filter.text = '';
     });
     return true;
   }
@@ -135,7 +135,11 @@ class TodoScreenState extends State<TodoScreen> {
                   Navigator.pushNamed(
                     context,
                     RoutesText.addTask,
-                  );
+                  ).then((value) {
+                    setState(() {
+                      _future = setInitial();
+                    });
+                  });
                 },
                 child: const Text('Add Task'),
               ),
@@ -227,7 +231,36 @@ class TodoScreenState extends State<TodoScreen> {
   }
 
   // Delete selected tasks
-  void deleteTasks() {}
+  void deleteTasks() async {
+    List<Todo> selectedList = [];
+    for (int i = 0; i < selectedTask.length; i++) {
+      if (selectedTask[i]) {
+        selectedList.add(filteredList[i]);
+      }
+    }
+    setState(() {
+      filteredList.removeWhere((element) => selectedList.contains(element));
+      todoList.removeWhere((element) => selectedList.contains(element));
+      selectedTask.clear();
+      selectedTask.addAll(filteredList.map((_) => false));
+      allSelected = false;
+    });
+
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+
+    await documentReference.set(
+      {
+        'todoList': todoList
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList(),
+      },
+      SetOptions(merge: true),
+    );
+  }
 
   // Create initial column for DataTable
   List<DataColumn> createColumnInitial() {
