@@ -124,13 +124,12 @@ class TodoScreenState extends State<TodoScreen> {
   Widget body() {
     return Column(
       children: <Widget>[
+        buildSearch(),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: buildSearch(),
-            ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(
@@ -142,7 +141,7 @@ class TodoScreenState extends State<TodoScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
                 onPressed: () {
                   deleteTasks();
@@ -158,13 +157,26 @@ class TodoScreenState extends State<TodoScreen> {
             color: Colors.black,
           ),
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: DataTable(
-              columns: createColumn(),
-              rows: createRow(),
-              columnSpacing: 20,
-            ),
+        SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Row(
+            children: [
+              DataTable(
+                columns: createColumnInitial(),
+                rows: createRowInitial(),
+                columnSpacing: 20,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: createColumnExtra(),
+                    rows: createRowExtra(),
+                    columnSpacing: 20,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -217,8 +229,8 @@ class TodoScreenState extends State<TodoScreen> {
   // Delete selected tasks
   void deleteTasks() {}
 
-  // Create column for DataTable
-  List<DataColumn> createColumn() {
+  // Create initial column for DataTable
+  List<DataColumn> createColumnInitial() {
     return <DataColumn>[
       DataColumn(
         label: Center(
@@ -238,6 +250,12 @@ class TodoScreenState extends State<TodoScreen> {
           ),
         ),
       ),
+    ];
+  }
+
+  // Create extra column for DataTable
+  List<DataColumn> createColumnExtra() {
+    return <DataColumn>[
       const DataColumn(
         label: Expanded(
           child: Text(
@@ -273,8 +291,8 @@ class TodoScreenState extends State<TodoScreen> {
     ];
   }
 
-  // Create row for DataTable
-  List<DataRow> createRow() {
+  // Create initial row for DataTable
+  List<DataRow> createRowInitial() {
     return filteredList
         .asMap()
         .map(
@@ -313,6 +331,23 @@ class TodoScreenState extends State<TodoScreen> {
                     ],
                   ),
                 ),
+              ],
+            ),
+          ),
+        )
+        .values
+        .toList();
+  }
+
+  // Create row for DataTable
+  List<DataRow> createRowExtra() {
+    return filteredList
+        .asMap()
+        .map(
+          (index, module) => MapEntry(
+            index,
+            DataRow(
+              cells: <DataCell>[
                 DataCell(
                   TextButton(
                     child: Text(filteredList[index].deadline),
