@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:helpus/models/profile_data.dart';
 
 // Module generation screen
-class TodoScreen extends StatefulWidget {
-  const TodoScreen({Key? key}) : super(key: key);
+class TodoAddScreen extends StatefulWidget {
+  const TodoAddScreen({Key? key}) : super(key: key);
   @override
-  TodoScreenState createState() => TodoScreenState();
+  TodoAddScreenState createState() => TodoAddScreenState();
 }
 
-class TodoScreenState extends State<TodoScreen> {
+class TodoAddScreenState extends State<TodoAddScreen> {
   Profile profile = Profile.blankProfile();
   late Future<bool> _future;
 
@@ -19,13 +19,18 @@ class TodoScreenState extends State<TodoScreen> {
     _future = setInitial();
   }
 
+  Future<bool> setInitial() async {
+    await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const Text('To Do');
+          return const Text('add');
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
@@ -35,10 +40,5 @@ class TodoScreenState extends State<TodoScreen> {
         );
       },
     );
-  }
-
-  Future<bool> setInitial() async {
-    await Profile.generate(FirebaseAuth.instance.currentUser!.uid, profile);
-    return true;
   }
 }

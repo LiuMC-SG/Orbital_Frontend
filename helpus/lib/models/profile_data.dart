@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/models/module_data.dart';
+import 'package:helpus/models/todo_data.dart';
 
 // Profile class to store user profile data
 class Profile {
@@ -10,6 +11,7 @@ class Profile {
   String photoURL;
   GraphModel graphModel;
   List<ModuleGrading> moduleGrading;
+  List<Todo> todoList;
 
   Profile(
     this.name,
@@ -17,11 +19,19 @@ class Profile {
     this.photoURL,
     this.graphModel,
     this.moduleGrading,
+    this.todoList,
   );
 
   // Generate blank profile
   static blankProfile() {
-    return Profile('', '', '', GraphModel.blankGraphModel, <ModuleGrading>[]);
+    return Profile(
+      '',
+      '',
+      '',
+      GraphModel.blankGraphModel,
+      <ModuleGrading>[],
+      <Todo>[],
+    );
   }
 
   // Generate profile from firestore using firebase userid
@@ -57,7 +67,8 @@ class Profile {
         ..photoURL = mappedValue['photoURL'] ?? ''
         ..graphModel = GraphModel(mappedValue['graphModel'])
         ..moduleGrading =
-            ModuleGrading.fromJsonList(mappedValue['moduleGrading']);
+            ModuleGrading.fromJsonList(mappedValue['moduleGrading'])
+        ..todoList = Todo.fromJsonList(mappedValue['todoList']);
     }
   }
 
@@ -68,12 +79,14 @@ class Profile {
     String photoURLString = 'photoURL: $photoURL';
     String graphModelString = 'graphModel: $graphModel';
     String moduleGradingString = 'moduleGrading: $moduleGrading';
+    String todoListString = 'todoList: $todoList';
     return [
       nameString,
       emailString,
       photoURLString,
       graphModelString,
       moduleGradingString,
+      todoListString,
     ].join(', ');
   }
 

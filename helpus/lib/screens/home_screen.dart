@@ -5,7 +5,7 @@ import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/screens/module_graph/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
 import 'package:helpus/screens/profile_screen.dart';
-import 'package:helpus/screens/todo_screen.dart';
+import 'package:helpus/screens/todo/todo_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/models/drawer_item.dart';
 import 'package:helpus/widgets/profile/profile_photo.dart';

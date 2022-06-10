@@ -37,13 +37,18 @@ class Todo {
     return deadlineDate.isBefore(now);
   }
 
+  // Change completion status
+  void changeCompletion() {
+    completed = !completed;
+  }
+
   // Generate todo task from json data
   static Todo fromJson(Map<String, dynamic> json) {
     return Todo(
       json['title'],
       json['description'],
       json['deadline'],
-      json['labels'],
+      json['labels']?.cast<String>(),
       json['completed'],
     );
   }
@@ -67,9 +72,16 @@ class Todo {
     };
   }
 
-  // Check if todo contains query
-  bool contains(List<String> query) {
-    List<String> queryLower = query.map((String s) => s.toLowerCase()).toList();
+  // Check if the todo task contains the query text
+  bool contains(String query) {
+    return title.toLowerCase().contains(query.toLowerCase()) ||
+        description.toLowerCase().contains(query.toLowerCase());
+  }
+
+  // Check if todo contains query tags
+  bool containsTags(List<String> queryTags) {
+    List<String> queryLower =
+        queryTags.map((String s) => s.toLowerCase()).toList();
     List<String> labelsLower =
         labels.map((String s) => s.toLowerCase()).toList();
     for (String query in queryLower) {

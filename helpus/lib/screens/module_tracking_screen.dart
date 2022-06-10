@@ -153,46 +153,54 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
             DataRow(
               cells: <DataCell>[
                 DataCell(
-                  Text(
-                    moduleGrading[index].moduleCode,
-                    textAlign: TextAlign.center,
+                  Center(
+                    child: Text(
+                      moduleGrading[index].moduleCode,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 DataCell(
-                  Text(
-                    moduleGrading[index].mc.toString(),
-                    textAlign: TextAlign.center,
+                  Center(
+                    child: Text(
+                      moduleGrading[index].mc.toString(),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 DataCell(
-                  DropdownButton<String>(
-                    items: ModuleGrading.grades
-                        .map((e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(
-                                e,
-                                textAlign: TextAlign.center,
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        moduleGrading[index].grade = value!;
-                        updateModuleInfo();
-                      });
-                    },
-                    value: moduleGrading[index].grade,
+                  Center(
+                    child: DropdownButton<String>(
+                      items: ModuleGrading.grades
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ))
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          moduleGrading[index].grade = value!;
+                          updateModuleInfo();
+                        });
+                      },
+                      value: moduleGrading[index].grade,
+                    ),
                   ),
                 ),
                 DataCell(
-                  Checkbox(
-                    value: moduleGrading[index].isSU,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        moduleGrading[index].changeSU();
-                        updateModuleInfo();
-                      });
-                    },
+                  Center(
+                    child: Checkbox(
+                      value: moduleGrading[index].isSU,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          moduleGrading[index].changeSU();
+                          updateModuleInfo();
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -200,7 +208,6 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           ),
         )
         .values
-        .toList()
-        .cast<DataRow>();
+        .toList();
   }
 }
