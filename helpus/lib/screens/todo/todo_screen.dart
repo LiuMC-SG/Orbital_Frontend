@@ -382,9 +382,9 @@ class TodoScreenState extends State<TodoScreen> {
             DataRow(
               cells: <DataCell>[
                 DataCell(
-                  TextButton(
-                    child: Text(filteredList[index].deadline),
-                    onPressed: () {},
+                  Text(
+                    Todo.deadlineToString(filteredList[index].deadline),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 DataCell(

@@ -144,7 +144,7 @@ class TodoAddScreenState extends State<TodoAddScreen> {
                             width: 1,
                           ),
                         ),
-                        child: Text(deadline.toString()),
+                        child: Text(Todo.deadlineToString(deadline.toString())),
                       ),
                     ),
                   ],

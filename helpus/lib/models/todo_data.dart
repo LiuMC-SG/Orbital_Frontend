@@ -1,4 +1,6 @@
 // Class to track todo data
+import 'package:intl/intl.dart';
+
 class Todo {
   String title;
   String description;
@@ -35,6 +37,11 @@ class Todo {
     DateTime deadlineDate = DateTime.parse(deadline);
     DateTime now = DateTime.now();
     return deadlineDate.isBefore(now);
+  }
+
+  // Deadline to string
+  static String deadlineToString(String dateTime) {
+    return DateFormat('yyyy-MM-dd HH:mm').format(DateTime.parse(dateTime));
   }
 
   // Change completion status
