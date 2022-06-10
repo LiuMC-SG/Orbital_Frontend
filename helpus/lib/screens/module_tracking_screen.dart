@@ -145,56 +145,62 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
 
   // Create row for DataTable
   List<DataRow> createRow() {
-    List<DataRow> tempRow = [];
-    for (int i = 0; i < moduleGrading.length; i++) {
-      tempRow.add(DataRow(
-        cells: <DataCell>[
-          DataCell(
-            Text(
-              moduleGrading[i].moduleCode,
-              textAlign: TextAlign.center,
+    return moduleGrading
+        .asMap()
+        .map(
+          (index, module) => MapEntry(
+            index,
+            DataRow(
+              cells: <DataCell>[
+                DataCell(
+                  Text(
+                    moduleGrading[index].moduleCode,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    moduleGrading[index].mc.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                DataCell(
+                  DropdownButton<String>(
+                    items: ModuleGrading.grades
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(
+                                e,
+                                textAlign: TextAlign.center,
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        moduleGrading[index].grade = value!;
+                        updateModuleInfo();
+                      });
+                    },
+                    value: moduleGrading[index].grade,
+                  ),
+                ),
+                DataCell(
+                  Checkbox(
+                    value: moduleGrading[index].isSU,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        moduleGrading[index].changeSU();
+                        updateModuleInfo();
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-          DataCell(
-            Text(
-              moduleGrading[i].mc.toString(),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          DataCell(
-            DropdownButton<String>(
-              items: ModuleGrading.grades
-                  .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(
-                          e,
-                          textAlign: TextAlign.center,
-                        ),
-                      ))
-                  .toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  moduleGrading[i].grade = value!;
-                  updateModuleInfo();
-                });
-              },
-              value: moduleGrading[i].grade,
-            ),
-          ),
-          DataCell(
-            Checkbox(
-              value: moduleGrading[i].isSU,
-              onChanged: (bool? value) {
-                setState(() {
-                  moduleGrading[i].changeSU();
-                  updateModuleInfo();
-                });
-              },
-            ),
-          ),
-        ],
-      ));
-    }
-    return tempRow;
+        )
+        .values
+        .toList()
+        .cast<DataRow>();
   }
 }
