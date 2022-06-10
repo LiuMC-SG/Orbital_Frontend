@@ -100,8 +100,8 @@ class AddModulesScreenState extends State<AddModulesScreen> {
           .map((element) => CondensedModule.fromJson(element))
           .toList()
           .cast<CondensedModule>();
-      modules
-          .removeWhere((element) => currModules.contains(element.moduleCode));
+      // modules
+      //     .removeWhere((element) => currModules.contains(element.moduleCode));
       return modules;
     } else {
       throw Exception('Failed to load module info');
