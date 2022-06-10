@@ -113,8 +113,6 @@ class AddModulesScreenState extends State<AddModulesScreen> {
     return Container(
       margin: const EdgeInsets.all(20),
       child: TextField(
-        maxLines: 1,
-        minLines: 1,
         onChanged: (value) {
           filterModules(value);
         },
