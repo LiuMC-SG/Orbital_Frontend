@@ -91,9 +91,10 @@ class SignInScreenState extends State<SignInScreen> {
         child: Row(
           children: const <Widget>[
             Expanded(
-                child: Divider(
-              color: Colors.black45,
-            )),
+              child: Divider(
+                color: Colors.black45,
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                 left: 8.0,
