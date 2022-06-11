@@ -420,8 +420,12 @@ class TodoScreenState extends State<TodoScreen> {
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
-                        '/edit_task?id=$index',
-                      );
+                        '/edit_task?id=${filteredList[index].id}',
+                      ).then((value) {
+                        setState(() {
+                          _future = setInitial();
+                        });
+                      });
                     },
                   ),
                 ),
