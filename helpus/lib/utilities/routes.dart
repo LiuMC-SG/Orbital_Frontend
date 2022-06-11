@@ -61,7 +61,10 @@ class Routes {
     if (user == null) {
       return createRoute(
         const SignInScreen(),
-        settings,
+        RouteSettings(
+          name: RoutesText.signIn,
+          arguments: settings.arguments,
+        ),
       );
     } else {
       return createRoute(page, settings);
