@@ -126,7 +126,7 @@ class RegisterScreenState extends State<RegisterScreen> {
       if (!mounted) return;
       Navigator.pushNamed(
         context,
-        RoutesText.signIn,
+        RoutesText.home,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

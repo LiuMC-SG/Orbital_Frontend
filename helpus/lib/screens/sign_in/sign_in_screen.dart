@@ -7,11 +7,7 @@ import 'package:helpus/widgets/sign_in/email_sign_in.dart';
 
 // Sign in screen
 class SignInScreen extends StatefulWidget {
-  final User? user;
-  const SignInScreen({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const SignInScreen({Key? key}) : super(key: key);
   @override
   SignInScreenState createState() => SignInScreenState();
 }
@@ -24,7 +20,7 @@ class SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    _user = widget.user ?? FirebaseAuth.instance.currentUser;
+    _user = FirebaseAuth.instance.currentUser;
     Future.delayed(Duration.zero, () {
       checkUser(_user);
     });
@@ -121,30 +117,16 @@ class SignInScreenState extends State<SignInScreen> {
   // Check user then perform login function.
   void checkUser(User? user) async {
     if (user != null) {
-      // if (kIsWeb) {
-      //   bool _isNotABot = await RecaptchaService.isNotABot();
-
-      //   if (_isNotABot) {
-      //     login();
-      //   }
-      // } else {
-      //   login();
-      // }
-      login();
+      Future.delayed(
+        Duration.zero,
+        () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RoutesText.home,
+            (route) => false,
+          );
+        },
+      );
     }
-  }
-
-  // Login with email and password. If successful, navigate to home screen.
-  void login() {
-    Future.delayed(
-      Duration.zero,
-      () {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          RoutesText.home,
-          (route) => false,
-        );
-      },
-    );
   }
 }

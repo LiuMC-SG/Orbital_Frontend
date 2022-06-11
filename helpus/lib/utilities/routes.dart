@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/screens/error_screen.dart';
 import 'package:helpus/screens/sign_in/forget_password_screen.dart';
@@ -10,47 +11,65 @@ import 'package:helpus/utilities/constants.dart';
 
 // Routes url and equivalent screens
 class Routes {
-  // static Map<String, Widget Function(BuildContext)> routes = {
-  //   RoutesText.signIn: (context) => const SignInScreen(
-  //         user: null,
-  //       ),
-  //   RoutesText.forgetPassword: (context) => const ForgetPasswordScreen(),
-  //   RoutesText.register: (context) => const RegisterScreen(),
-  //   RoutesText.home: (context) => HomeScreen(),
-  //   RoutesText.addTask: (context) => const TodoAddScreen(),
-  //   RoutesText.editTask: (context) => const TodoEditScreen(),
-  // };
-
   static Route<dynamic>? onGenerateRoutes(RouteSettings settings) {
     late Widget page;
+    late bool requireUser;
     final Uri uri = Uri.parse(settings.name ?? '');
     switch (uri.path) {
       case RoutesText.signIn:
-        page = const SignInScreen(
-          user: null,
-        );
+        page = const SignInScreen();
+        requireUser = false;
         break;
       case RoutesText.forgetPassword:
         page = const ForgetPasswordScreen();
+        requireUser = false;
         break;
       case RoutesText.register:
         page = const RegisterScreen();
+        requireUser = false;
         break;
       case RoutesText.home:
         page = HomeScreen();
+        requireUser = true;
         break;
       case RoutesText.addTask:
         page = const TodoAddScreen();
+        requireUser = true;
         break;
       case RoutesText.editTask:
         page = TodoEditScreen(
           id: int.tryParse(uri.queryParameters['id'] as String),
         );
+        requireUser = true;
         break;
       default:
         page = const ErrorScreen();
+        requireUser = false;
     }
 
+    if (requireUser) {
+      return checkUser(page, settings);
+    } else {
+      return createRoute(page, settings);
+    }
+  }
+
+  // Checks if the user is logged in. If logged in, go to screen. Otherwise,
+  // redirect to signin screen
+  static MaterialPageRoute checkUser(Widget page, RouteSettings settings) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return createRoute(
+        const SignInScreen(),
+        settings,
+      );
+    } else {
+      return createRoute(page, settings);
+    }
+  }
+
+  // Create route
+  static MaterialPageRoute createRoute(Widget page, RouteSettings settings) {
     return MaterialPageRoute<dynamic>(
       builder: (context) {
         return page;

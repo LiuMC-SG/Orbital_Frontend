@@ -116,13 +116,16 @@ class ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .delete();
+
     try {
       await FirebaseStorage.instance.ref().child('users/${user!.uid}').delete();
     } on FirebaseException catch (e) {
       debugPrint('deleteAccount: ${e.message}');
     }
+
     await user!.delete();
     await FirebaseAuth.instance.signOut();
+
     if (!mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,

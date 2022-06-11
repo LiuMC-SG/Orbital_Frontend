@@ -170,6 +170,7 @@ class HomeScreenState extends State<HomeScreen> {
         'photoURL': user.photoURL ?? '',
         'graphModel': GraphModel.blankGraphModel.toJson(),
         'moduleGrading': [],
+        'todoList': [],
       });
     }
     await Profile.generate(user.uid, profile);
