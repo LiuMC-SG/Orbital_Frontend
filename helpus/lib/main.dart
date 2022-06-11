@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:helpus/firebase_options.dart';
 import 'package:helpus/models/recaptcha/recaptcha_service.dart';
 import 'package:helpus/secrets.dart';
+import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/utilities/routes.dart';
 
 void main() async {
@@ -49,8 +50,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/sign_in',
-      routes: Routes.routes,
+      initialRoute: RoutesText.signIn,
+      // routes: Routes.routes,
+      onGenerateRoute: Routes.onGenerateRoutes,
     );
   }
 }

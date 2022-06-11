@@ -1,7 +1,10 @@
 // Class to track todo data
+import 'dart:math';
+
 import 'package:intl/intl.dart';
 
 class Todo {
+  int id;
   String title;
   String description;
   String deadline;
@@ -9,6 +12,7 @@ class Todo {
   bool completed;
 
   Todo(
+    this.id,
     this.title,
     this.description,
     this.deadline,
@@ -18,18 +22,32 @@ class Todo {
 
   @override
   String toString() {
+    String idString = 'id: $id';
     String titleString = 'title: $title';
     String descriptionString = 'description: $description';
     String deadlineString = 'deadline: $deadline';
     String labelsString = 'labels: $labels';
     String completedString = 'completed: $completed';
     return [
+      idString,
       titleString,
       descriptionString,
       deadlineString,
       labelsString,
       completedString,
     ].join(', ');
+  }
+
+  // Generate blank todo
+  static Todo blankTodo() {
+    return Todo(
+      0,
+      '',
+      '',
+      DateTime.now().toString(),
+      [],
+      false,
+    );
   }
 
   // Check if a task is overdue
@@ -49,9 +67,19 @@ class Todo {
     completed = !completed;
   }
 
+  // Obtain id
+  static int getMaxId(List<Todo> todoList) {
+    if (todoList.isEmpty) {
+      return -1;
+    } else {
+      return todoList.map((todo) => todo.id).reduce((a, b) => max(a, b));
+    }
+  }
+
   // Generate todo task from json data
   static Todo fromJson(Map<String, dynamic> json) {
     return Todo(
+      json['id'],
       json['title'],
       json['description'],
       json['deadline'],
@@ -71,6 +99,7 @@ class Todo {
   // Generate json data from todo task
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'description': description,
       'deadline': deadline,

@@ -32,4 +32,5 @@ class RoutesText {
   static const register = '/register';
   static const home = '/home';
   static const addTask = '/add_task';
+  static const editTask = '/edit_task';
 }

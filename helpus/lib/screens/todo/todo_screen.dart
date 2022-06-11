@@ -5,7 +5,7 @@ import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
 import 'package:helpus/utilities/constants.dart';
 
-// Module generation screen
+// Task screen
 class TodoScreen extends StatefulWidget {
   const TodoScreen({Key? key}) : super(key: key);
   @override
@@ -418,10 +418,10 @@ class TodoScreenState extends State<TodoScreen> {
                     ),
                     splashRadius: 20,
                     onPressed: () {
-                      // Navigator.pushNamed(
-                      //   context,
-                      //   '/todo_edit?id=$index',
-                      // );
+                      Navigator.pushNamed(
+                        context,
+                        '/edit_task?id=$index',
+                      );
                     },
                   ),
                 ),
