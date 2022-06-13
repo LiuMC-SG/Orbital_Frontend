@@ -2,16 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
+import 'package:helpus/widgets/todo/labels_selection_dialog.dart';
 
 // Task data screen
 class TodoDataScreen extends StatefulWidget {
   final Todo todoTask;
   final bool edit;
+  final Labels labels;
+  final Profile profile;
   const TodoDataScreen({
     Key? key,
     required this.todoTask,
     required this.edit,
+    required this.labels,
+    required this.profile,
   }) : super(key: key);
   @override
   TodoDataScreenState createState() => TodoDataScreenState();
@@ -150,7 +156,18 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                       child: Text('Labels:'),
                     ),
                     GestureDetector(
-                      onTap: showLabelPicker,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return LabelsSelectionDialog(
+                              onAdd: onAdd,
+                              initialLabels: labels.labels,
+                              allModules: widget.profile.labels.labels,
+                            );
+                          },
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.all(16),
                         padding: const EdgeInsets.all(10),
@@ -239,9 +256,6 @@ class TodoDataScreenState extends State<TodoDataScreen> {
     );
   }
 
-  // Label picker
-  void showLabelPicker() {}
-
   // Create new todo task
   void createTask() async {
     if (_formKey.currentState!.validate()) {
@@ -290,4 +304,6 @@ class TodoDataScreenState extends State<TodoDataScreen> {
       Fluttertoast.showToast(msg: 'Please fill in all fields');
     }
   }
+
+  void onAdd(List<String>? labels) {}
 }

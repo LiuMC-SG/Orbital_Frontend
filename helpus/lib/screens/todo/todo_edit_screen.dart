@@ -66,6 +66,8 @@ class TodoEditScreenState extends State<TodoEditScreen> {
       return TodoDataScreen(
         todoTask: todoTask,
         edit: true,
+        labels: profile.labels,
+        profile: profile,
       );
     } else {
       return Scaffold(

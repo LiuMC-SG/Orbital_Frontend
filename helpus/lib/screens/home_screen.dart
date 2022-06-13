@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/models/graph_model.dart';
+import 'package:helpus/models/todo_data.dart';
 import 'package:helpus/screens/module_graph/module_graph_screen.dart';
 import 'package:helpus/screens/module_tracking_screen.dart';
 import 'package:helpus/screens/profile_screen.dart';
@@ -171,6 +172,7 @@ class HomeScreenState extends State<HomeScreen> {
         'graphModel': GraphModel.blankGraphModel.toJson(),
         'moduleGrading': [],
         'todoList': [],
+        'labels': Labels.blankLabels().toJson(),
       });
     }
     await Profile.generate(user.uid, profile);

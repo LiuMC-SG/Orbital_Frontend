@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/todo/labels_filter_dialog.dart';
 
 // Task screen
 class TodoScreen extends StatefulWidget {
@@ -86,7 +87,7 @@ class TodoScreenState extends State<TodoScreen> {
     dummySearchList.addAll(todoList);
     if (query.isNotEmpty) {
       List<Todo> dummyListData = <Todo>[];
-      for (var item in dummySearchList) {
+      for (Todo item in dummySearchList) {
         if (item.contains(query)) {
           dummyListData.add(item);
         }
@@ -124,7 +125,32 @@ class TodoScreenState extends State<TodoScreen> {
   Widget body() {
     return Column(
       children: <Widget>[
-        buildSearch(),
+        Row(
+          children: [
+            Expanded(
+              child: buildSearch(),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return LabelFilterDialog(
+                      addSelectedLabel: addSelectedLabel,
+                      labels: profile.labels,
+                    );
+                  },
+                );
+              },
+              child: Row(
+                children: const [
+                  Icon(Icons.local_offer_rounded),
+                  Text('Labels'),
+                ],
+              ),
+            ),
+          ],
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -185,6 +211,14 @@ class TodoScreenState extends State<TodoScreen> {
         ),
       ],
     );
+  }
+
+  // Add selected label to the filter
+  void addSelectedLabel(String label) {
+    setState(() {
+      _filter.text = '${_filter.text} label:$label';
+      filterModules(_filter.text);
+    });
   }
 
   // Change overall selection

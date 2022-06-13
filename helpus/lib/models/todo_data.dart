@@ -1,9 +1,8 @@
-// Class to track todo data
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// Class to track todo data
 class Todo {
   int id;
   String title;
@@ -109,25 +108,41 @@ class Todo {
     };
   }
 
-  // Check if the todo task contains the query text
-  bool contains(String query) {
+  // Check if title or description contain query
+  bool checkTitleDescription(String query) {
     return title.toLowerCase().contains(query.toLowerCase()) ||
         description.toLowerCase().contains(query.toLowerCase());
   }
 
-  // // Check if todo contains query tags
-  // bool containsTags(List<String> queryTags) {
-  //   List<String> queryLower =
-  //       queryTags.map((String s) => s.toLowerCase()).toList();
-  //   List<String> labelsLower =
-  //       labels.map((String s) => s.toLowerCase()).toList();
-  //   for (String query in queryLower) {
-  //     if (!labelsLower.contains(query)) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
+  // Check if the todo task contains the query text
+  bool contains(String query) {
+    List<String> querySplit = query.toLowerCase().split(' ');
+    List<String> queryList = [];
+    List<String> dummyList = [];
+    for (String queryWord in querySplit) {
+      if (queryWord.contains('label:')) {
+        queryList.add(queryWord);
+        queryList.add(dummyList.join(' '));
+        dummyList.clear();
+      } else {
+        dummyList.add(queryWord);
+      }
+    }
+    queryList.add(dummyList.join(' '));
+    for (String query in queryList) {
+      if (query.contains('label:')) {
+        String label = query.replaceAll('label:', '');
+        if (!labels.contains(label)) {
+          return false;
+        }
+      } else {
+        if (!checkTitleDescription(query)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }
 
 class Labels {
@@ -140,7 +155,7 @@ class Labels {
   ];
 
   static Labels blankLabels() {
-    return Labels([]);
+    return Labels(defaultTags);
   }
 
   Labels(this.labels);
@@ -177,6 +192,11 @@ class Labels {
   // Map over each element
   List<dynamic> map(Function(String) function) {
     return labels.map(function).toList();
+  }
+
+  // Check if the list contains the query
+  bool contains(String query) {
+    return labels.contains(query);
   }
 
   @override
