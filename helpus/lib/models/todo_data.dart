@@ -1,6 +1,7 @@
 // Class to track todo data
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Todo {
@@ -8,7 +9,7 @@ class Todo {
   String title;
   String description;
   String deadline;
-  List<String> labels;
+  Labels labels;
   bool completed;
 
   Todo(
@@ -45,7 +46,7 @@ class Todo {
       '',
       '',
       DateTime.now().toString(),
-      [],
+      Labels.blankLabels(),
       false,
     );
   }
@@ -83,7 +84,7 @@ class Todo {
       json['title'],
       json['description'],
       json['deadline'],
-      json['labels']?.cast<String>(),
+      Labels.fromJson(json['labels']),
       json['completed'],
     );
   }
@@ -103,7 +104,7 @@ class Todo {
       'title': title,
       'description': description,
       'deadline': deadline,
-      'labels': labels,
+      'labels': labels.toJson(),
       'completed': completed,
     };
   }
@@ -114,17 +115,72 @@ class Todo {
         description.toLowerCase().contains(query.toLowerCase());
   }
 
-  // Check if todo contains query tags
-  bool containsTags(List<String> queryTags) {
-    List<String> queryLower =
-        queryTags.map((String s) => s.toLowerCase()).toList();
-    List<String> labelsLower =
-        labels.map((String s) => s.toLowerCase()).toList();
-    for (String query in queryLower) {
-      if (!labelsLower.contains(query)) {
-        return false;
-      }
+  // // Check if todo contains query tags
+  // bool containsTags(List<String> queryTags) {
+  //   List<String> queryLower =
+  //       queryTags.map((String s) => s.toLowerCase()).toList();
+  //   List<String> labelsLower =
+  //       labels.map((String s) => s.toLowerCase()).toList();
+  //   for (String query in queryLower) {
+  //     if (!labelsLower.contains(query)) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+}
+
+class Labels {
+  List<String> labels;
+
+  static List<String> defaultTags = [
+    'Exam',
+    'Assignment',
+    'Tutorial',
+  ];
+
+  static Labels blankLabels() {
+    return Labels([]);
+  }
+
+  Labels(this.labels);
+
+  // Generate tags from json data
+  static Labels fromJson(List<dynamic>? json) {
+    if (json == null) {
+      return Labels.blankLabels();
     }
-    return true;
+    return Labels(
+      json.cast<String>(),
+    );
+  }
+
+  // Generate json data from tags
+  List<String> toJson() {
+    return labels;
+  }
+
+  // Add new label if it does not already exist in the current list
+  void addLabel(String newLabel) {
+    if (!labels.contains(newLabel)) {
+      labels.add(newLabel);
+    }
+  }
+
+  // Add labels in the list if they do not already exist in the current list
+  void addLabels(List<String> newLabels) {
+    for (String newLabel in newLabels) {
+      addLabel(newLabel);
+    }
+  }
+
+  // Map over each element
+  List<dynamic> map(Function(String) function) {
+    return labels.map(function).toList();
+  }
+
+  @override
+  String toString() {
+    return labels.toString();
   }
 }

@@ -308,7 +308,7 @@ class TodoScreenState extends State<TodoScreen> {
       const DataColumn(
         label: Expanded(
           child: Text(
-            'Tags',
+            'Labels',
             textAlign: TextAlign.center,
           ),
         ),
@@ -407,7 +407,7 @@ class TodoScreenState extends State<TodoScreen> {
                       return Chip(
                         label: Text(e),
                       );
-                    }).toList(),
+                    }).cast<Widget>(),
                   ),
                 ),
                 DataCell(

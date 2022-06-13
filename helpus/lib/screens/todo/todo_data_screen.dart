@@ -23,7 +23,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
   late final TextEditingController _descriptionController;
   final currDate = DateTime.now();
   late DateTime deadline;
-  late List<String> labels;
+  late Labels labels;
   late bool completed;
 
   @override
