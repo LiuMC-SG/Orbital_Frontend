@@ -177,7 +177,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                             width: 1,
                           ),
                         ),
-                        child: const Text('Select Labels'),
+                        child: showLabelPicker(),
                       ),
                     ),
                   ],
@@ -256,6 +256,27 @@ class TodoDataScreenState extends State<TodoDataScreen> {
     );
   }
 
+  // Label picker
+  Widget showLabelPicker() {
+    if (labels.isEmpty()) {
+      return const Text('Select Labels');
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: labels
+              .map((element) => Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(element),
+                    ),
+                  ))
+              .cast<Widget>(),
+        ),
+      );
+    }
+  }
+
   // Create new todo task
   void createTask() async {
     if (_formKey.currentState!.validate()) {
@@ -305,5 +326,10 @@ class TodoDataScreenState extends State<TodoDataScreen> {
     }
   }
 
-  void onAdd(List<String>? labels) {}
+  // Setting labels for todo task
+  void onAdd(List<String>? labels) {
+    setState(() {
+      this.labels.labels = labels ?? [];
+    });
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // Class to track todo data
@@ -116,7 +117,7 @@ class Todo {
 
   // Check if the todo task contains the query text
   bool contains(String query) {
-    List<String> querySplit = query.toLowerCase().split(' ');
+    List<String> querySplit = query.toLowerCase().trim().split(' ');
     List<String> queryList = [];
     List<String> dummyList = [];
     for (String queryWord in querySplit) {
@@ -128,10 +129,13 @@ class Todo {
         dummyList.add(queryWord);
       }
     }
-    queryList.add(dummyList.join(' '));
+    if (dummyList.isNotEmpty) {
+      queryList.add(dummyList.join(' '));
+    }
     for (String query in queryList) {
       if (query.contains('label:')) {
         String label = query.replaceAll('label:', '');
+        debugPrint(labels.contains(label).toString());
         if (!labels.contains(label)) {
           return false;
         }
@@ -155,7 +159,7 @@ class Labels {
   ];
 
   static Labels blankLabels() {
-    return Labels(defaultTags);
+    return Labels([]);
   }
 
   Labels(this.labels);
@@ -183,9 +187,11 @@ class Labels {
   }
 
   // Add labels in the list if they do not already exist in the current list
-  void addLabels(List<String> newLabels) {
-    for (String newLabel in newLabels) {
-      addLabel(newLabel);
+  void addLabels(List<String>? newLabels) {
+    if (newLabels != null) {
+      for (String newLabel in newLabels) {
+        addLabel(newLabel);
+      }
     }
   }
 
@@ -196,7 +202,23 @@ class Labels {
 
   // Check if the list contains the query
   bool contains(String query) {
-    return labels.contains(query);
+    List<String> labelsLower = labels.map((e) => e.toLowerCase()).toList();
+    return labelsLower.contains(query);
+  }
+
+  // Check if the list contains any labels
+  bool isEmpty() {
+    return labels.isEmpty;
+  }
+
+  // Number of labels
+  int length() {
+    return labels.length;
+  }
+
+  // Obtain the label at index
+  String getLabel(int index) {
+    return labels[index];
   }
 
   @override

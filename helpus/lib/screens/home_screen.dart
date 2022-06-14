@@ -172,7 +172,7 @@ class HomeScreenState extends State<HomeScreen> {
         'graphModel': GraphModel.blankGraphModel.toJson(),
         'moduleGrading': [],
         'todoList': [],
-        'labels': Labels.blankLabels().toJson(),
+        'labels': Labels(Labels.defaultTags).toJson(),
       });
     }
     await Profile.generate(user.uid, profile);
