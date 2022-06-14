@@ -191,6 +191,7 @@ class TodoScreenState extends State<TodoScreen> {
           padding: EdgeInsets.all(20),
           child: Divider(
             color: Colors.black,
+            thickness: 1.5,
           ),
         ),
         Expanded(
