@@ -435,7 +435,7 @@ class TodoScreenState extends State<TodoScreen> {
                     alignment: WrapAlignment.spaceEvenly,
                     children: filteredList[index].labels.map((e) {
                       return Padding(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: GestureDetector(
                           child: Chip(
                             label: Text(e),
