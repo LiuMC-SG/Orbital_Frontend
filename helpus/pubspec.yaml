@@ -55,6 +55,8 @@ dependencies:
 
   intl: ^0.17.0
 
+  dcdg: ^4.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

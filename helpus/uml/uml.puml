@@ -1,0 +1,834 @@
+@startuml
+set namespaceSeparator ::
+
+class "helpus::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions web
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions currentPlatform
+}
+
+"helpus::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"
+
+class "helpus::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::main.dart::MyApp"
+
+class "helpus::models::drawer_item.dart::SideMenuItem" {
+  {static} +int id
+  +int thisId
+  +String title
+  +IconData icon
+  +dynamic generateListTile()
+}
+
+"helpus::models::drawer_item.dart::SideMenuItem" o-- "flutter::src::widgets::icon_data.dart::IconData"
+
+class "helpus::models::graph_model.dart::GraphModel" {
+  +List<GraphNode> nodes
+  +List<GraphEdge> edges
+  {static} +GraphModel blankGraphModel
+  +String toString()
+  +Map<String, dynamic> toJson()
+  +void addNode()
+  +void addEdge()
+  +int getNodeId()
+  +int getEdgeId()
+  +void removeMod()
+  +int maxId()
+}
+
+"helpus::models::graph_model.dart::GraphModel" o-- "helpus::models::graph_model.dart::GraphModel"
+
+class "helpus::models::graph_model.dart::GraphNode" {
+  +int id
+  +String label
+  {static} +GraphNode? generate()
+  +String toString()
+  +Map<String, dynamic> toJson()
+}
+
+class "helpus::models::graph_model.dart::GraphEdge" {
+  +int from
+  +int to
+  {static} +GraphEdge? generate()
+  +String toString()
+  +Map<String, int> toJson()
+}
+
+class "helpus::models::module_data.dart::CondensedModule" {
+  +String moduleCode
+  +String title
+  +String prerequisite
+  +num mc
+  {static} +CondensedModule fromJson()
+  +bool contains()
+  +String toString()
+}
+
+class "helpus::models::module_data.dart::ModuleGrading" {
+  {static} +List<String> grades
+  {static} +ModuleGrading empty
+  +String moduleCode
+  +num mc
+  +String grade
+  +bool isSU
+  +num getGrade()
+  +void changeSU()
+  +bool checkS()
+  {static} +List<String> calcModules()
+  {static} +ModuleGrading fromJson()
+  {static} +List<ModuleGrading> fromJsonList()
+  +Map<String, dynamic> toJson()
+  +String toString()
+}
+
+"helpus::models::module_data.dart::ModuleGrading" o-- "helpus::models::module_data.dart::ModuleGrading"
+
+class "helpus::models::profile_data.dart::Profile" {
+  +String name
+  +String email
+  +String photoURL
+  +GraphModel graphModel
+  +List<ModuleGrading> moduleGrading
+  +List<Todo> todoList
+  +Labels labels
+  {static} +dynamic blankProfile()
+  {static} +dynamic generate()
+  {static} +Future<void> setProfile()
+  +String toString()
+  +bool equals()
+}
+
+"helpus::models::profile_data.dart::Profile" o-- "helpus::models::graph_model.dart::GraphModel"
+"helpus::models::profile_data.dart::Profile" o-- "helpus::models::todo_data.dart::Labels"
+
+class "helpus::models::recaptcha::recaptcha_response.dart::RecaptchaResponse" {
+  +bool success
+  +DateTime challengeTimeStamp
+  +String hostName
+  +double score
+  +String action
+  +List<String> errorCodes
+  +int hashCode
+  +RecaptchaResponse copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "helpus::models::recaptcha::recaptcha_service.dart::RecaptchaService" {
+  {static} -String _token
+  {static} +Future<void> initiate()
+  {static} +Future<bool> isNotABot()
+  {static} -Future<RecaptchaResponse?> _getVerificationResponse()
+}
+
+class "helpus::models::todo_data.dart::Todo" {
+  +int id
+  +String title
+  +String description
+  +String deadline
+  +Labels labels
+  +bool completed
+  +String toString()
+  {static} +Todo blankTodo()
+  +bool isOverdue()
+  {static} +String deadlineToString()
+  +void changeCompletion()
+  {static} +int getMaxId()
+  {static} +Todo fromJson()
+  {static} +List<Todo> fromJsonList()
+  +Map<String, dynamic> toJson()
+  +bool checkTitleDescription()
+  +bool contains()
+}
+
+"helpus::models::todo_data.dart::Todo" o-- "helpus::models::todo_data.dart::Labels"
+
+class "helpus::models::todo_data.dart::Labels" {
+  +List<String> labels
+  {static} +List<String> defaultTags
+  {static} +Labels blankLabels()
+  {static} +Labels fromJson()
+  +List<String> toJson()
+  +void addLabel()
+  +void addLabels()
+  +void removeLabel()
+  +void removeLabels()
+  +List<dynamic> map()
+  +bool contains()
+  +bool isEmpty()
+  +int length()
+  +String getLabel()
+  +String toString()
+}
+
+class "helpus::screens::error_screen.dart::ErrorScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::screens::error_screen.dart::ErrorScreen"
+
+class "helpus::screens::home_screen.dart::HomeScreen" {
+  +List<SideMenuItem> sideMenuItems
+  +HomeScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::home_screen.dart::HomeScreen"
+
+class "helpus::screens::home_screen.dart::HomeScreenState" {
+  -int _selectedDrawerIndex
+  +Profile profile
+  -void _onItemSelect()
+  -Widget _getDrawerItemWidget()
+  +Widget build()
+  +Future<bool> checkProfile()
+}
+
+"helpus::screens::home_screen.dart::HomeScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::home_screen.dart::HomeScreenState"
+
+class "helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreen" {
+  +Profile profile
+  +AddModulesScreenState createState()
+}
+
+"helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreen" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreen"
+
+class "helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreenState" {
+  -TextEditingController _filter
+  +bool isInitialised
+  +List<CondensedModule> searchedModules
+  +Map<CondensedModule, List<String>> selectedModules
+  +List<CondensedModule> allModules
+  +List<String> currModules
+  +void initState()
+  +Widget build()
+  +Widget addModule()
+  +Future<List<CondensedModule>> fetchModules()
+  +Widget buildSearch()
+  +Widget generateScrollView()
+  +void filterModules()
+  +Color getColor()
+  +void changeSelectedModule()
+  +dynamic Function(List<String>?) onAdd()
+  +void removeModule()
+  +void removeAllModules()
+  +void submitModules()
+  +void dispose()
+}
+
+"helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::module_graph::add_modules_screen.dart::AddModulesScreenState"
+
+class "helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreen" {
+  +ModuleGraphScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreen"
+
+class "helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreenState" {
+  +Graph graph
+  -SugiyamaConfiguration _configuration
+  +Profile profile
+  +Future<bool> future
+  +void initState()
+  +Widget build()
+  +Future<bool> setInitial()
+  +Widget generateGraph()
+  +Widget builder()
+  +Widget masterNodeWidget()
+  +Widget nodeWidget()
+  +void nodeOnPressed()
+  +void removeModule()
+}
+
+"helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreenState" o-- "graphview::GraphView.dart::Graph"
+"helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreenState" o-- "graphview::GraphView.dart::SugiyamaConfiguration"
+"helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::module_graph::module_graph_screen.dart::ModuleGraphScreenState"
+
+class "helpus::screens::profile::profile_screen.dart::ProfileScreen" {
+  +ProfileScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::profile::profile_screen.dart::ProfileScreen"
+
+class "helpus::screens::profile::profile_screen.dart::ProfileScreenState" {
+  +Profile profile
+  +Widget build()
+  +Future<bool> setInitial()
+  +void setName()
+  +void changePassword()
+  +void deleteAccount()
+}
+
+"helpus::screens::profile::profile_screen.dart::ProfileScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::profile::profile_screen.dart::ProfileScreenState"
+
+class "helpus::screens::sign_in::forget_password_screen.dart::ForgetPasswordScreen" {
+  +ForgetPasswordScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::sign_in::forget_password_screen.dart::ForgetPasswordScreen"
+
+class "helpus::screens::sign_in::forget_password_screen.dart::ForgetPasswordScreenState" {
+  -TextEditingController _emailController
+  -bool? _sent
+  -String? _message
+  +Widget build()
+  +Future<void> resetPassword()
+  +void dispose()
+}
+
+"helpus::screens::sign_in::forget_password_screen.dart::ForgetPasswordScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::sign_in::forget_password_screen.dart::ForgetPasswordScreenState"
+
+class "helpus::screens::sign_in::register_screen.dart::RegisterScreen" {
+  +RegisterScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::sign_in::register_screen.dart::RegisterScreen"
+
+class "helpus::screens::sign_in::register_screen.dart::RegisterScreenState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _emailController
+  -TextEditingController _passwordController
+  -TextEditingController _passwordRepeatController
+  -bool? _success
+  -String? _message
+  +Widget build()
+  -void _registerWithEmailAndPassword()
+  +void dispose()
+}
+
+"helpus::screens::sign_in::register_screen.dart::RegisterScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"helpus::screens::sign_in::register_screen.dart::RegisterScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::sign_in::register_screen.dart::RegisterScreenState"
+
+class "helpus::screens::sign_in::sign_in_screen.dart::SignInScreen" {
+  +SignInScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::sign_in::sign_in_screen.dart::SignInScreen"
+
+class "helpus::screens::sign_in::sign_in_screen.dart::SignInScreenState" {
+  +bool isForgetPassword
+  +bool isRegister
+  -User? _user
+  +Widget build()
+  +Widget buildRowDivider()
+  +void checkUser()
+}
+
+"helpus::screens::sign_in::sign_in_screen.dart::SignInScreenState" o-- "firebase_auth::firebase_auth.dart::User"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::sign_in::sign_in_screen.dart::SignInScreenState"
+
+class "helpus::screens::todo::todo_add_screen.dart::TodoAddScreen" {
+  +TodoAddScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::todo::todo_add_screen.dart::TodoAddScreen"
+
+class "helpus::screens::todo::todo_add_screen.dart::TodoAddScreenState" {
+  +Profile profile
+  -Future<bool> _future
+  +void initState()
+  +Future<bool> setInitial()
+  +Widget build()
+}
+
+"helpus::screens::todo::todo_add_screen.dart::TodoAddScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::todo::todo_add_screen.dart::TodoAddScreenState"
+
+class "helpus::screens::todo::todo_data_screen.dart::TodoDataScreen" {
+  +Todo todoTask
+  +bool edit
+  +Labels labels
+  +Profile profile
+  +TodoDataScreenState createState()
+}
+
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreen" o-- "helpus::models::todo_data.dart::Todo"
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreen" o-- "helpus::models::todo_data.dart::Labels"
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreen" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::todo::todo_data_screen.dart::TodoDataScreen"
+
+class "helpus::screens::todo::todo_data_screen.dart::TodoDataScreenState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _titleController
+  -TextEditingController _descriptionController
+  +DateTime currDate
+  +DateTime deadline
+  +Labels labels
+  +bool completed
+  +void initState()
+  +Widget build()
+  +Widget body()
+  +void showDateTimePicker()
+  +Widget showLabelPicker()
+  +void createTask()
+  +void onAdd()
+  +void dispose()
+}
+
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"helpus::screens::todo::todo_data_screen.dart::TodoDataScreenState" o-- "helpus::models::todo_data.dart::Labels"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::todo::todo_data_screen.dart::TodoDataScreenState"
+
+class "helpus::screens::todo::todo_edit_screen.dart::TodoEditScreen" {
+  +int? id
+  +TodoEditScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::todo::todo_edit_screen.dart::TodoEditScreen"
+
+class "helpus::screens::todo::todo_edit_screen.dart::TodoEditScreenState" {
+  +Profile profile
+  +Todo todoTask
+  +bool exist
+  -Future<bool> _future
+  +void initState()
+  +Future<bool> setInitial()
+  +Widget build()
+  +Widget body()
+}
+
+"helpus::screens::todo::todo_edit_screen.dart::TodoEditScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"helpus::screens::todo::todo_edit_screen.dart::TodoEditScreenState" o-- "helpus::models::todo_data.dart::Todo"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::todo::todo_edit_screen.dart::TodoEditScreenState"
+
+class "helpus::screens::todo::todo_screen.dart::TodoScreen" {
+  +TodoScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::todo::todo_screen.dart::TodoScreen"
+
+class "helpus::screens::todo::todo_screen.dart::TodoScreenState" {
+  -TextEditingController _filter
+  +Profile profile
+  +List<Todo> todoList
+  +List<Todo> filteredList
+  +List<bool> selectedTask
+  +bool allSelected
+  -Future<bool> _future
+  +void initState()
+  +Future<bool> setInitial()
+  +Widget build()
+  +Widget buildSearch()
+  +void filterModules()
+  +void updateModuleInfo()
+  +Widget body()
+  +void addSelectedLabel()
+  +void changeSelection()
+  +void checkSelection()
+  +IconData getIconData()
+  +void deleteTasks()
+  +List<DataColumn> createColumnInitial()
+  +List<DataColumn> createColumnExtra()
+  +List<DataRow> createRowInitial()
+  +List<DataRow> createRowExtra()
+}
+
+"helpus::screens::todo::todo_screen.dart::TodoScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"helpus::screens::todo::todo_screen.dart::TodoScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::todo::todo_screen.dart::TodoScreenState"
+
+class "helpus::screens::tracking::module_tracking_screen.dart::ModuleTrackingScreen" {
+  +ModuleTrackingScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::screens::tracking::module_tracking_screen.dart::ModuleTrackingScreen"
+
+class "helpus::screens::tracking::module_tracking_screen.dart::ModuleTrackingScreenState" {
+  +Profile profile
+  +List<String> moduleInfo
+  +List<ModuleGrading> moduleGrading
+  -Future<bool> _future
+  +void initState()
+  +Widget build()
+  +Future<bool> setInitial()
+  +void updateModuleInfo()
+  +Widget moduleTrackingWidget()
+  +List<DataColumn> createColumn()
+  +List<DataRow> createRow()
+}
+
+"helpus::screens::tracking::module_tracking_screen.dart::ModuleTrackingScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::screens::tracking::module_tracking_screen.dart::ModuleTrackingScreenState"
+
+class "helpus::secrets.dart::Config" {
+  {static} +String siteKey
+  {static} +String secretKey
+  {static} +Uri verificationURL
+}
+
+class "helpus::template::template_screen.dart::TemplateScreen" {
+  +TemplateScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::template::template_screen.dart::TemplateScreen"
+
+class "helpus::template::template_screen.dart::TemplateScreenState" {
+  +Profile profile
+  -Future<bool> _future
+  +void initState()
+  +Future<bool> setInitial()
+  +Widget build()
+  +Widget body()
+}
+
+"helpus::template::template_screen.dart::TemplateScreenState" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::template::template_screen.dart::TemplateScreenState"
+
+class "helpus::utilities::constants.dart::FirebaseColors" {
+  {static} +Color firebaseYellow
+  {static} +Color firebaseAmber
+  {static} +Color firebaseOrange
+  {static} +Color firebaseBlue
+  {static} +Color firebaseNavy
+  {static} +Color firebaseCoral
+  {static} +Color firebaseGrey
+}
+
+"helpus::utilities::constants.dart::FirebaseColors" o-- "dart::ui::Color"
+
+class "helpus::utilities::constants.dart::GoogleColors" {
+  {static} +Color googleBlue
+  {static} +Color googleRed
+  {static} +Color googleYellow
+  {static} +Color googleGreen
+}
+
+"helpus::utilities::constants.dart::GoogleColors" o-- "dart::ui::Color"
+
+class "helpus::utilities::constants.dart::SignInText" {
+  {static} +String google
+  {static} +String facebook
+}
+
+class "helpus::utilities::constants.dart::RoutesText" {
+  {static} +String signIn
+  {static} +String forgetPassword
+  {static} +String register
+  {static} +String home
+  {static} +String addTask
+  {static} +String editTask
+}
+
+class "helpus::utilities::routes.dart::Routes" {
+  {static} +Route<dynamic>? onGenerateRoutes()
+  {static} +MaterialPageRoute<dynamic> checkUser()
+  {static} +MaterialPageRoute<dynamic> createRoute()
+}
+
+class "helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialog" {
+  +dynamic Function(List<String>?) onAdd
+  +dynamic Function() removeMod
+  +List<String> initialModules
+  +List<String> allModules
+  +String selectedModule
+  +List<String> currModules
+  +AddModulesDialogState createState()
+}
+
+"helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialog" o-- "null::dynamic Function(List<String>)"
+"helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialog" o-- "null::dynamic Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialog"
+
+class "helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialogState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::module_graph::add_modules_dialog.dart::AddModulesDialogState"
+
+class "helpus::widgets::multi_selection_dialog.dart::MultiSelectionDialog" {
+  +dynamic Function(List<String>?) onAdd
+  +List<String> initialSelection
+  +List<String> allSelection
+  +List<String> removedSelection
+  +List<String> additionalSelection
+  +String currSelection
+  +List<Widget> actions
+  +String dialogTitle
+  +MultiSelectionDialogState createState()
+}
+
+"helpus::widgets::multi_selection_dialog.dart::MultiSelectionDialog" o-- "null::dynamic Function(List<String>)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::multi_selection_dialog.dart::MultiSelectionDialog"
+
+class "helpus::widgets::multi_selection_dialog.dart::MultiSelectionDialogState" {
+  +List<String> addedSelection
+  +List<String> otherSelection
+  +List<Widget> actions
+  +void initState()
+  +Widget build()
+  +Widget dialogBody()
+  +void addSelection()
+  +void removeSelection()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::multi_selection_dialog.dart::MultiSelectionDialogState"
+
+class "helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialog" {
+  +ChangePasswordDialogState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialog"
+
+class "helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialogState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _passwordController
+  -TextEditingController _passwordRepeatController
+  -bool? _success
+  -String? _message
+  +Widget build()
+  +Widget passwordForm()
+  -void _changePassword()
+  +void dispose()
+}
+
+"helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialogState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialogState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::profile::change_password_dialog.dart::ChangePasswordDialogState"
+
+class "helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEdit" {
+  +String title
+  +String value
+  +dynamic Function(String) submission
+  +ProfileInfoEditState createState()
+}
+
+"helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEdit" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEdit"
+
+class "helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEditState" {
+  -TextEditingController? _textController
+  +Widget build()
+  +void dispose()
+}
+
+"helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEditState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::profile::profile_info_edit.dart::ProfileInfoEditState"
+
+class "helpus::widgets::profile::profile_info_static.dart::ProfileInfoStatic" {
+  +String title
+  +String value
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::widgets::profile::profile_info_static.dart::ProfileInfoStatic"
+
+class "helpus::widgets::profile::profile_photo.dart::ProfilePhoto" {
+  +Profile profile
+  +Icon base
+  +Widget build()
+}
+
+"helpus::widgets::profile::profile_photo.dart::ProfilePhoto" o-- "helpus::models::profile_data.dart::Profile"
+"helpus::widgets::profile::profile_photo.dart::ProfilePhoto" o-- "flutter::src::widgets::icon.dart::Icon"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::widgets::profile::profile_photo.dart::ProfilePhoto"
+
+class "helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEdit" {
+  +Profile profile
+  +ProfilePhotoEditState createState()
+}
+
+"helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEdit" o-- "helpus::models::profile_data.dart::Profile"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEdit"
+
+class "helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEditState" {
+  -ProfilePhoto _profilePhoto
+  +Widget build()
+  +Widget profilePhoto()
+  +Widget editIcon()
+  +void setPicture()
+}
+
+"helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEditState" o-- "helpus::widgets::profile::profile_photo.dart::ProfilePhoto"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::profile::profile_photo_edit.dart::ProfilePhotoEditState"
+
+class "helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordForm" {
+  +dynamic Function(User?) checkUser
+  +EmailPasswordFormState createState()
+}
+
+"helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordForm" o-- "null::dynamic Function(User)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordForm"
+
+class "helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordFormState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _emailController
+  -TextEditingController _passwordController
+  -bool? _success
+  +Widget build()
+  -void _signInWithEmailAndPassword()
+  +void dispose()
+}
+
+"helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordFormState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordFormState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::sign_in::email_sign_in.dart::EmailPasswordFormState"
+
+class "helpus::widgets::sign_in::email_text_field.dart::EmailTextField" {
+  +TextEditingController emailController
+  +String? Function(String?)? validator
+  +Widget build()
+  +String? defaultValidator()
+}
+
+"helpus::widgets::sign_in::email_text_field.dart::EmailTextField" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"helpus::widgets::sign_in::email_text_field.dart::EmailTextField" o-- "null::String Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::widgets::sign_in::email_text_field.dart::EmailTextField"
+
+class "helpus::widgets::sign_in::facebook_sign_in_button.dart::FacebookSignInButton" {
+  +dynamic Function(User?) checkUser
+  +FacebookSignInButtonState createState()
+}
+
+"helpus::widgets::sign_in::facebook_sign_in_button.dart::FacebookSignInButton" o-- "null::dynamic Function(User)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::sign_in::facebook_sign_in_button.dart::FacebookSignInButton"
+
+class "helpus::widgets::sign_in::facebook_sign_in_button.dart::FacebookSignInButtonState" {
+  +Widget build()
+  +void facebookSignIn()
+  +void facebookSignInWeb()
+  +void facebookSignInOthers()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::sign_in::facebook_sign_in_button.dart::FacebookSignInButtonState"
+
+class "helpus::widgets::sign_in::google_sign_in_button.dart::GoogleSignInButton" {
+  +dynamic Function(User?) checkUser
+  +GoogleSignInButtonState createState()
+}
+
+"helpus::widgets::sign_in::google_sign_in_button.dart::GoogleSignInButton" o-- "null::dynamic Function(User)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::sign_in::google_sign_in_button.dart::GoogleSignInButton"
+
+class "helpus::widgets::sign_in::google_sign_in_button.dart::GoogleSignInButtonState" {
+  +Widget build()
+  +void googleSignIn()
+  +void googleSignInWeb()
+  +void googleSignInOthers()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::sign_in::google_sign_in_button.dart::GoogleSignInButtonState"
+
+class "helpus::widgets::sign_in::password_text_field.dart::PasswordTextField" {
+  +TextEditingController passwordController
+  +String? Function(String?)? validator
+  +String labelText
+  +Widget build()
+  +String? defaultValidator()
+}
+
+"helpus::widgets::sign_in::password_text_field.dart::PasswordTextField" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"helpus::widgets::sign_in::password_text_field.dart::PasswordTextField" o-- "null::String Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "helpus::widgets::sign_in::password_text_field.dart::PasswordTextField"
+
+class "helpus::widgets::sign_in::sign_in_button.dart::SignInButton" {
+  +Image image
+  +String textLabel
+  +dynamic Function() login
+  +SignInButtonState createState()
+}
+
+"helpus::widgets::sign_in::sign_in_button.dart::SignInButton" o-- "flutter::src::widgets::image.dart::Image"
+"helpus::widgets::sign_in::sign_in_button.dart::SignInButton" o-- "null::dynamic Function()"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::sign_in::sign_in_button.dart::SignInButton"
+
+class "helpus::widgets::sign_in::sign_in_button.dart::SignInButtonState" {
+  +bool isSigningIn
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::sign_in::sign_in_button.dart::SignInButtonState"
+
+class "helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialog" {
+  +dynamic Function(String) addLabel
+  +AddLabelDialogState createState()
+}
+
+"helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialog" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialog"
+
+class "helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialogState" {
+  -TextEditingController _labelController
+  +Widget build()
+  +Widget dialogBody()
+}
+
+"helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialogState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::todo::add_labels_dialog.dart::AddLabelDialogState"
+
+class "helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialog" {
+  +dynamic Function(String) addSelectedLabel
+  +Labels labels
+  +LabelFilterDialogState createState()
+}
+
+"helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialog" o-- "null::dynamic Function(String)"
+"helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialog" o-- "helpus::models::todo_data.dart::Labels"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialog"
+
+class "helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialogState" {
+  +Labels labels
+  +void initState()
+  +Widget build()
+  +Widget dialogBody()
+  +void addLabel()
+  +void removeLabel()
+}
+
+"helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialogState" o-- "helpus::models::todo_data.dart::Labels"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::todo::labels_filter_dialog.dart::LabelFilterDialogState"
+
+class "helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialog" {
+  +dynamic Function(List<String>?) onAdd
+  +List<String> initialLabels
+  +List<String> allLabels
+  +LabelsSelectionDialogState createState()
+}
+
+"helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialog" o-- "null::dynamic Function(List<String>)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialog"
+
+class "helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialogState" {
+  +Labels allLabels
+  +void initState()
+  +Widget build()
+}
+
+"helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialogState" o-- "helpus::models::todo_data.dart::Labels"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::todo::labels_selection_dialog.dart::LabelsSelectionDialogState"
+
+class "helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialog" {
+  +dynamic Function(List<String>?) onRemove
+  +List<String> allLabels
+  +LabelsRemovalDialogState createState()
+}
+
+"helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialog" o-- "null::dynamic Function(List<String>)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialog"
+
+class "helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialogState" {
+  +Labels allLabels
+  +List<bool> selected
+  +void initState()
+  +Widget build()
+  +List<Widget> labelSelection()
+  +void removeSelected()
+}
+
+"helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialogState" o-- "helpus::models::todo_data.dart::Labels"
+"flutter::src::widgets::framework.dart::State" <|-- "helpus::widgets::todo::remove_labels_dialog.dart::LabelsRemovalDialogState"
+
+
+@enduml
