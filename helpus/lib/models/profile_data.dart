@@ -12,6 +12,7 @@ class Profile {
   GraphModel graphModel;
   List<ModuleGrading> moduleGrading;
   List<Todo> todoList;
+  Labels labels;
 
   Profile(
     this.name,
@@ -20,6 +21,7 @@ class Profile {
     this.graphModel,
     this.moduleGrading,
     this.todoList,
+    this.labels,
   );
 
   // Generate blank profile
@@ -31,6 +33,7 @@ class Profile {
       GraphModel.blankGraphModel,
       <ModuleGrading>[],
       <Todo>[],
+      Labels.blankLabels(),
     );
   }
 
@@ -68,7 +71,8 @@ class Profile {
         ..graphModel = GraphModel(mappedValue['graphModel'])
         ..moduleGrading =
             ModuleGrading.fromJsonList(mappedValue['moduleGrading'])
-        ..todoList = Todo.fromJsonList(mappedValue['todoList']);
+        ..todoList = Todo.fromJsonList(mappedValue['todoList'])
+        ..labels = Labels.fromJson(mappedValue['labels']);
     }
   }
 
@@ -80,6 +84,7 @@ class Profile {
     String graphModelString = 'graphModel: $graphModel';
     String moduleGradingString = 'moduleGrading: $moduleGrading';
     String todoListString = 'todoList: $todoList';
+    String labelsString = 'labels: $labels';
     return [
       nameString,
       emailString,
@@ -87,6 +92,7 @@ class Profile {
       graphModelString,
       moduleGradingString,
       todoListString,
+      labelsString,
     ].join(', ');
   }
 

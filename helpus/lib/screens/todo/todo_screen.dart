@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/todo/labels_filter_dialog.dart';
 
 // Task screen
 class TodoScreen extends StatefulWidget {
@@ -86,7 +87,7 @@ class TodoScreenState extends State<TodoScreen> {
     dummySearchList.addAll(todoList);
     if (query.isNotEmpty) {
       List<Todo> dummyListData = <Todo>[];
-      for (var item in dummySearchList) {
+      for (Todo item in dummySearchList) {
         if (item.contains(query)) {
           dummyListData.add(item);
         }
@@ -124,7 +125,38 @@ class TodoScreenState extends State<TodoScreen> {
   Widget body() {
     return Column(
       children: <Widget>[
-        buildSearch(),
+        Row(
+          children: [
+            Expanded(
+              child: buildSearch(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: OutlinedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return LabelFilterDialog(
+                        addSelectedLabel: addSelectedLabel,
+                        labels: profile.labels,
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.local_offer_rounded),
+                      Text('Labels'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -161,30 +193,40 @@ class TodoScreenState extends State<TodoScreen> {
             color: Colors.black,
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Row(
-            children: [
-              DataTable(
-                columns: createColumnInitial(),
-                rows: createRowInitial(),
-                columnSpacing: 20,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: createColumnExtra(),
-                    rows: createRowExtra(),
-                    columnSpacing: 20,
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Row(
+              children: [
+                DataTable(
+                  columns: createColumnInitial(),
+                  rows: createRowInitial(),
+                  columnSpacing: 20,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: createColumnExtra(),
+                      rows: createRowExtra(),
+                      columnSpacing: 20,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
     );
+  }
+
+  // Add selected label to the filter
+  void addSelectedLabel(String label) {
+    setState(() {
+      _filter.text = '${_filter.text} label:$label';
+      filterModules(_filter.text);
+    });
   }
 
   // Change overall selection
@@ -300,7 +342,7 @@ class TodoScreenState extends State<TodoScreen> {
       const DataColumn(
         label: Expanded(
           child: Text(
-            'Completion Status',
+            'Labels',
             textAlign: TextAlign.center,
           ),
         ),
@@ -308,7 +350,7 @@ class TodoScreenState extends State<TodoScreen> {
       const DataColumn(
         label: Expanded(
           child: Text(
-            'Labels',
+            'Completion Status',
             textAlign: TextAlign.center,
           ),
         ),
@@ -388,6 +430,24 @@ class TodoScreenState extends State<TodoScreen> {
                   ),
                 ),
                 DataCell(
+                  Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    children: filteredList[index].labels.map((e) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: GestureDetector(
+                          child: Chip(
+                            label: Text(e),
+                          ),
+                          onTap: () {
+                            addSelectedLabel(e);
+                          },
+                        ),
+                      );
+                    }).cast<Widget>(),
+                  ),
+                ),
+                DataCell(
                   Center(
                     child: Checkbox(
                       value: filteredList[index].completed,
@@ -398,16 +458,6 @@ class TodoScreenState extends State<TodoScreen> {
                         });
                       },
                     ),
-                  ),
-                ),
-                DataCell(
-                  Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    children: filteredList[index].labels.map((e) {
-                      return Chip(
-                        label: Text(e),
-                      );
-                    }).cast<Widget>(),
                   ),
                 ),
                 DataCell(

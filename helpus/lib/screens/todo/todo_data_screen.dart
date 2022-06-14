@@ -2,16 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
+import 'package:helpus/widgets/todo/labels_selection_dialog.dart';
 
 // Task data screen
 class TodoDataScreen extends StatefulWidget {
   final Todo todoTask;
   final bool edit;
+  final Labels labels;
+  final Profile profile;
   const TodoDataScreen({
     Key? key,
     required this.todoTask,
     required this.edit,
+    required this.labels,
+    required this.profile,
   }) : super(key: key);
   @override
   TodoDataScreenState createState() => TodoDataScreenState();
@@ -91,7 +97,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                       border: OutlineInputBorder(),
                     ),
                     validator: (String? value) {
-                      if (value == null) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
                       return null;
@@ -110,7 +116,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                     ),
                     maxLines: 5,
                     validator: (String? value) {
-                      if (value == null) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your description';
                       }
                       return null;
@@ -150,7 +156,18 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                       child: Text('Labels:'),
                     ),
                     GestureDetector(
-                      onTap: showLabelPicker,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return LabelsSelectionDialog(
+                              onAdd: onAdd,
+                              initialLabels: labels.labels,
+                              allLabels: widget.profile.labels.labels,
+                            );
+                          },
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.all(16),
                         padding: const EdgeInsets.all(10),
@@ -160,7 +177,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                             width: 1,
                           ),
                         ),
-                        child: const Text('Select Labels'),
+                        child: showLabelPicker(),
                       ),
                     ),
                   ],
@@ -240,7 +257,25 @@ class TodoDataScreenState extends State<TodoDataScreen> {
   }
 
   // Label picker
-  void showLabelPicker() {}
+  Widget showLabelPicker() {
+    if (labels.isEmpty()) {
+      return const Text('Select Labels');
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: labels
+              .map((element) => Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(element),
+                    ),
+                  ))
+              .cast<Widget>(),
+        ),
+      );
+    }
+  }
 
   // Create new todo task
   void createTask() async {
@@ -287,7 +322,24 @@ class TodoDataScreenState extends State<TodoDataScreen> {
       if (!mounted) return;
       Navigator.pop(context);
     } else {
-      Fluttertoast.showToast(msg: 'Please fill in all fields');
+      Fluttertoast.showToast(
+        msg: 'Please fill in all fields',
+        timeInSecForIosWeb: 2,
+      );
     }
+  }
+
+  // Setting labels for todo task
+  void onAdd(List<String>? labels) {
+    setState(() {
+      this.labels.labels = labels ?? [];
+    });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 }

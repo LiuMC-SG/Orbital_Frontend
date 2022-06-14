@@ -9,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/graph_model.dart';
 import 'package:helpus/models/module_data.dart';
 import 'package:helpus/models/profile_data.dart';
-import 'package:helpus/widgets/add_modules_dialog.dart';
+import 'package:helpus/widgets/module_graph/add_modules_dialog.dart';
 import 'package:http/http.dart' as http;
 
 // Add module to module graph screen

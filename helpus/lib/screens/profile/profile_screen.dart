@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/utilities/constants.dart';
-import 'package:helpus/widgets/change_password_dialog.dart';
+import 'package:helpus/widgets/profile/change_password_dialog.dart';
 import 'package:helpus/widgets/profile/profile_info_edit.dart';
 import 'package:helpus/widgets/profile/profile_info_static.dart';
 import 'package:helpus/widgets/profile/profile_photo_edit.dart';

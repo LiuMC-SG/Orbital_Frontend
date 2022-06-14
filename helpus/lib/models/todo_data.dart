@@ -1,9 +1,9 @@
-// Class to track todo data
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// Class to track todo data
 class Todo {
   int id;
   String title;
@@ -109,25 +109,44 @@ class Todo {
     };
   }
 
-  // Check if the todo task contains the query text
-  bool contains(String query) {
+  // Check if title or description contain query
+  bool checkTitleDescription(String query) {
     return title.toLowerCase().contains(query.toLowerCase()) ||
         description.toLowerCase().contains(query.toLowerCase());
   }
 
-  // // Check if todo contains query tags
-  // bool containsTags(List<String> queryTags) {
-  //   List<String> queryLower =
-  //       queryTags.map((String s) => s.toLowerCase()).toList();
-  //   List<String> labelsLower =
-  //       labels.map((String s) => s.toLowerCase()).toList();
-  //   for (String query in queryLower) {
-  //     if (!labelsLower.contains(query)) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
+  // Check if the todo task contains the query text
+  bool contains(String query) {
+    List<String> querySplit = query.toLowerCase().trim().split(' ');
+    List<String> queryList = [];
+    List<String> dummyList = [];
+    for (String queryWord in querySplit) {
+      if (queryWord.contains('label:')) {
+        queryList.add(queryWord);
+        queryList.add(dummyList.join(' '));
+        dummyList.clear();
+      } else {
+        dummyList.add(queryWord);
+      }
+    }
+    if (dummyList.isNotEmpty) {
+      queryList.add(dummyList.join(' '));
+    }
+    for (String query in queryList) {
+      if (query.contains('label:')) {
+        String label = query.replaceAll('label:', '');
+        debugPrint(labels.contains(label).toString());
+        if (!labels.contains(label)) {
+          return false;
+        }
+      } else {
+        if (!checkTitleDescription(query)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }
 
 class Labels {
@@ -168,15 +187,50 @@ class Labels {
   }
 
   // Add labels in the list if they do not already exist in the current list
-  void addLabels(List<String> newLabels) {
-    for (String newLabel in newLabels) {
-      addLabel(newLabel);
+  void addLabels(List<String>? newLabels) {
+    if (newLabels != null) {
+      for (String newLabel in newLabels) {
+        addLabel(newLabel);
+      }
+    }
+  }
+
+  // Remove label from the list
+  void removeLabel(String currLabel) {
+    labels.remove(currLabel);
+  }
+
+  // Remove labels from the list
+  void removeLabels(List<String>? currLabels) {
+    if (currLabels != null) {
+      labels.removeWhere((element) => currLabels.contains(element));
     }
   }
 
   // Map over each element
   List<dynamic> map(Function(String) function) {
     return labels.map(function).toList();
+  }
+
+  // Check if the list contains the query
+  bool contains(String query) {
+    List<String> labelsLower = labels.map((e) => e.toLowerCase()).toList();
+    return labelsLower.contains(query);
+  }
+
+  // Check if the list contains any labels
+  bool isEmpty() {
+    return labels.isEmpty;
+  }
+
+  // Number of labels
+  int length() {
+    return labels.length;
+  }
+
+  // Obtain the label at index
+  String getLabel(int index) {
+    return labels[index];
   }
 
   @override

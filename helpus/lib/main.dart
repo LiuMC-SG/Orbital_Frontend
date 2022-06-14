@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: RoutesText.signIn,
-      // routes: Routes.routes,
       onGenerateRoute: Routes.onGenerateRoutes,
     );
   }
