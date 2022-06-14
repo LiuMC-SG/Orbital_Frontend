@@ -187,26 +187,28 @@ class TodoScreenState extends State<TodoScreen> {
             color: Colors.black,
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Row(
-            children: [
-              DataTable(
-                columns: createColumnInitial(),
-                rows: createRowInitial(),
-                columnSpacing: 20,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: createColumnExtra(),
-                    rows: createRowExtra(),
-                    columnSpacing: 20,
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Row(
+              children: [
+                DataTable(
+                  columns: createColumnInitial(),
+                  rows: createRowInitial(),
+                  columnSpacing: 20,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: createColumnExtra(),
+                      rows: createRowExtra(),
+                      columnSpacing: 20,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
