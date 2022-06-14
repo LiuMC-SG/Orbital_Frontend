@@ -130,23 +130,29 @@ class TodoScreenState extends State<TodoScreen> {
             Expanded(
               child: buildSearch(),
             ),
-            OutlinedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return LabelFilterDialog(
-                      addSelectedLabel: addSelectedLabel,
-                      labels: profile.labels,
-                    );
-                  },
-                );
-              },
-              child: Row(
-                children: const [
-                  Icon(Icons.local_offer_rounded),
-                  Text('Labels'),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: OutlinedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return LabelFilterDialog(
+                        addSelectedLabel: addSelectedLabel,
+                        labels: profile.labels,
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.local_offer_rounded),
+                      Text('Labels'),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -336,7 +342,7 @@ class TodoScreenState extends State<TodoScreen> {
       const DataColumn(
         label: Expanded(
           child: Text(
-            'Completion Status',
+            'Labels',
             textAlign: TextAlign.center,
           ),
         ),
@@ -344,7 +350,7 @@ class TodoScreenState extends State<TodoScreen> {
       const DataColumn(
         label: Expanded(
           child: Text(
-            'Labels',
+            'Completion Status',
             textAlign: TextAlign.center,
           ),
         ),
@@ -424,6 +430,24 @@ class TodoScreenState extends State<TodoScreen> {
                   ),
                 ),
                 DataCell(
+                  Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    children: filteredList[index].labels.map((e) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: GestureDetector(
+                          child: Chip(
+                            label: Text(e),
+                          ),
+                          onTap: () {
+                            addSelectedLabel(e);
+                          },
+                        ),
+                      );
+                    }).cast<Widget>(),
+                  ),
+                ),
+                DataCell(
                   Center(
                     child: Checkbox(
                       value: filteredList[index].completed,
@@ -434,16 +458,6 @@ class TodoScreenState extends State<TodoScreen> {
                         });
                       },
                     ),
-                  ),
-                ),
-                DataCell(
-                  Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    children: filteredList[index].labels.map((e) {
-                      return Chip(
-                        label: Text(e),
-                      );
-                    }).cast<Widget>(),
                   ),
                 ),
                 DataCell(

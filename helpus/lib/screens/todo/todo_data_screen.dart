@@ -97,7 +97,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                       border: OutlineInputBorder(),
                     ),
                     validator: (String? value) {
-                      if (value == null) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter a title';
                       }
                       return null;
@@ -116,7 +116,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                     ),
                     maxLines: 5,
                     validator: (String? value) {
-                      if (value == null) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your description';
                       }
                       return null;
@@ -163,7 +163,7 @@ class TodoDataScreenState extends State<TodoDataScreen> {
                             return LabelsSelectionDialog(
                               onAdd: onAdd,
                               initialLabels: labels.labels,
-                              allModules: widget.profile.labels.labels,
+                              allLabels: widget.profile.labels.labels,
                             );
                           },
                         );
@@ -322,7 +322,10 @@ class TodoDataScreenState extends State<TodoDataScreen> {
       if (!mounted) return;
       Navigator.pop(context);
     } else {
-      Fluttertoast.showToast(msg: 'Please fill in all fields');
+      Fluttertoast.showToast(
+        msg: 'Please fill in all fields',
+        timeInSecForIosWeb: 2,
+      );
     }
   }
 
@@ -331,5 +334,12 @@ class TodoDataScreenState extends State<TodoDataScreen> {
     setState(() {
       this.labels.labels = labels ?? [];
     });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 }

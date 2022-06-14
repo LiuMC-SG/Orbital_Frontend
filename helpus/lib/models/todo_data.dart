@@ -195,6 +195,18 @@ class Labels {
     }
   }
 
+  // Remove label from the list
+  void removeLabel(String currLabel) {
+    labels.remove(currLabel);
+  }
+
+  // Remove labels from the list
+  void removeLabels(List<String>? currLabels) {
+    if (currLabels != null) {
+      labels.removeWhere((element) => currLabels.contains(element));
+    }
+  }
+
   // Map over each element
   List<dynamic> map(Function(String) function) {
     return labels.map(function).toList();

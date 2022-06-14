@@ -33,41 +33,26 @@ class AddModulesDialogState extends State<AddModulesDialog> {
       currSelection: widget.selectedModule,
       additionalSelection: widget.currModules,
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: TextButton(
-            child: const Text('Remove Module'),
-            onPressed: () {
-              widget.removeMod();
-              Navigator.of(context).pop();
-            },
-          ),
+        TextButton(
+          child: const Text('Remove Module'),
+          onPressed: () {
+            widget.removeMod();
+            Navigator.of(context).pop();
+          },
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: TextButton(
-            child: const Text('Waive Prereq'),
-            onPressed: () {
-              widget.onAdd(['master']);
-              Navigator.of(context).pop();
-            },
-          ),
+        TextButton(
+          child: const Text('Waive Prereq'),
+          onPressed: () {
+            widget.onAdd(['master']);
+            Navigator.of(context).pop();
+          },
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: TextButton(
-            child: const Text('Clear Prereq'),
-            onPressed: () {
-              widget.onAdd(<String>[]);
-              Navigator.of(context).pop();
-            },
-          ),
+        TextButton(
+          child: const Text('Clear Prereq'),
+          onPressed: () {
+            widget.onAdd(<String>[]);
+            Navigator.of(context).pop();
+          },
         ),
       ],
       dialogTitle: 'Select Prerequisite',

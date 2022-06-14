@@ -50,17 +50,12 @@ class MultiSelectionDialogState extends State<MultiSelectionDialog> {
     otherSelection.sort();
 
     actions.addAll([
-      Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: TextButton(
-          child: const Text('Complete'),
-          onPressed: () {
-            widget.onAdd(addedSelection);
-            Navigator.of(context).pop();
-          },
-        ),
+      TextButton(
+        child: const Text('Complete'),
+        onPressed: () {
+          widget.onAdd(addedSelection);
+          Navigator.of(context).pop();
+        },
       ),
     ]);
     actions.addAll(widget.actions);
@@ -71,13 +66,11 @@ class MultiSelectionDialogState extends State<MultiSelectionDialog> {
     return AlertDialog(
       title: Text(widget.dialogTitle),
       content: dialogBody(),
-      actions: <Widget>[
-        Wrap(
-          alignment: WrapAlignment.center,
-          runAlignment: WrapAlignment.spaceEvenly,
-          children: actions,
-        ),
-      ],
+      actionsPadding: const EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actions: actions,
     );
   }
 
