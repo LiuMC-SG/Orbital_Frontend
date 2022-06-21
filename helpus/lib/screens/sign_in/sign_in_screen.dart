@@ -37,6 +37,11 @@ class SignInScreenState extends State<SignInScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              Image.asset(
+                'assets/logo/HelpUS logo.png',
+                height: 180,
+                width: 400,
+              ),
               EmailPasswordForm(
                 checkUser: checkUser,
               ),
