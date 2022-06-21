@@ -24,7 +24,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Email Your Email',
+                  'Enter Your Email',
                 ),
                 TextFormField(
                   controller: _emailController,
