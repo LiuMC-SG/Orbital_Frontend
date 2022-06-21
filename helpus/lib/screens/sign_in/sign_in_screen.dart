@@ -40,6 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              Image.asset('assets/icon/app_icon.png'),
               EmailPasswordForm(
                 checkUser: checkUser,
               ),
