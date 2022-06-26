@@ -25,56 +25,59 @@ class SignInScreenState extends State<SignInScreen> {
       checkUser(_user);
     });
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 20.0,
-            bottom: 20.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              EmailPasswordForm(
-                checkUser: checkUser,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 20.0,
+                bottom: 20.0,
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    RoutesText.forgetPassword,
-                  );
-                },
-                child: const Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              buildRowDivider(
-                size: size,
-              ),
-              Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                spacing: 20,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  GoogleSignInButton(
+                  Image.asset('assets/icon/app_icon.png',
+                      height: 200, width: 200, fit: BoxFit.fitWidth),
+                  EmailPasswordForm(
                     checkUser: checkUser,
                   ),
-                  FacebookSignInButton(
-                    checkUser: checkUser,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        RoutesText.forgetPassword,
+                      );
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  buildRowDivider(
+                    size: size,
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    spacing: 20,
+                    children: [
+                      GoogleSignInButton(
+                        checkUser: checkUser,
+                      ),
+                      FacebookSignInButton(
+                        checkUser: checkUser,
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   // Divider of line and text between normal email password sign in and 3rd

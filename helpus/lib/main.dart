@@ -48,7 +48,11 @@ class MyApp extends StatelessWidget {
       title: 'HelpUS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[50],
+          foregroundColor: Colors.cyan[800],
+        ),
+        primarySwatch: Colors.teal,
       ),
       initialRoute: RoutesText.signIn,
       onGenerateRoute: Routes.onGenerateRoutes,
