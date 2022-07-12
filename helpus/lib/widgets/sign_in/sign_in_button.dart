@@ -46,6 +46,9 @@ class SignInButtonState extends State<SignInButton> {
               icon: widget.image,
               label: Text(
                 widget.textLabel,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
               ),
               onPressed: () async {
                 setState(() {

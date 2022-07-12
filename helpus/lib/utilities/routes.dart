@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/screens/error_screen.dart';
-import 'package:helpus/screens/sign_in/forget_password_screen.dart';
 import 'package:helpus/screens/home_screen.dart';
 import 'package:helpus/screens/sign_in/register_screen.dart';
 import 'package:helpus/screens/sign_in/sign_in_screen.dart';
@@ -18,10 +17,6 @@ class Routes {
     switch (uri.path) {
       case RoutesText.signIn:
         page = const SignInScreen();
-        requireUser = false;
-        break;
-      case RoutesText.forgetPassword:
-        page = const ForgetPasswordScreen();
         requireUser = false;
         break;
       case RoutesText.register:
