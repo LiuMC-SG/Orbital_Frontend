@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helpus/utilities/constants.dart';
-import 'package:helpus/widgets/sign_in/facebook_sign_in_button.dart';
+// import 'package:helpus/widgets/sign_in/facebook_sign_in_button.dart';
 import 'package:helpus/widgets/sign_in/google_sign_in_button.dart';
 import 'package:helpus/widgets/sign_in/email_sign_in.dart';
 
@@ -24,60 +24,70 @@ class SignInScreenState extends State<SignInScreen> {
     Future.delayed(Duration.zero, () {
       checkUser(_user);
     });
+    if (size.width > 600) {
+      size = Size(600, size.width);
+    }
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 20.0,
-                bottom: 20.0,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color.fromARGB(100, 0, 111, 157),
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(150, 0, 111, 157),
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Image.asset('assets/icon/app_icon.png',
-                      height: 200, width: 200, fit: BoxFit.fitWidth),
-                  EmailPasswordForm(
-                    checkUser: checkUser,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        RoutesText.forgetPassword,
-                      );
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            alignment: Alignment.center,
+            width: size.width,
+            height: 800,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  top: 20.0,
+                  bottom: 20.0,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Image.asset(
+                      'assets/icon/app_icon.png',
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.fitWidth,
                     ),
-                  ),
-                  buildRowDivider(
-                    size: size,
-                  ),
-                  Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    spacing: 20,
-                    children: [
-                      GoogleSignInButton(
-                        checkUser: checkUser,
-                      ),
-                      FacebookSignInButton(
-                        checkUser: checkUser,
-                      ),
-                    ],
-                  ),
-                ],
+                    EmailPasswordForm(
+                      checkUser: checkUser,
+                      size: size,
+                    ),
+                    buildRowDivider(
+                      size: size,
+                    ),
+                    Wrap(
+                      alignment: WrapAlignment.spaceEvenly,
+                      spacing: 20,
+                      children: [
+                        GoogleSignInButton(
+                          checkUser: checkUser,
+                        ),
+                        // FacebookSignInButton(
+                        //   checkUser: checkUser,
+                        // ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   // Divider of line and text between normal email password sign in and 3rd

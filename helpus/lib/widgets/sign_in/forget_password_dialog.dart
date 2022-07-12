@@ -2,23 +2,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/utilities/constants.dart';
 
-// Forget password screen
-class ForgetPasswordScreen extends StatefulWidget {
-  const ForgetPasswordScreen({Key? key}) : super(key: key);
+// Forget password dialog
+class ForgetPasswordDialog extends StatefulWidget {
+  const ForgetPasswordDialog({Key? key}) : super(key: key);
   @override
-  ForgetPasswordScreenState createState() => ForgetPasswordScreenState();
+  ForgetPasswordDialogState createState() => ForgetPasswordDialogState();
 }
 
-class ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+class ForgetPasswordDialogState extends State<ForgetPasswordDialog> {
   final TextEditingController _emailController = TextEditingController();
   bool? _sent;
   String? _message;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Form(
+    return AlertDialog(
+      content: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Form(
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -51,36 +51,30 @@ class ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: resetPassword,
-                      child: const Text(
-                        'Send Email',
-                      ),
-                    ),
-                    ElevatedButton(
-                      child: const Text(
-                        'Sign In',
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          RoutesText.signIn,
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
         ),
       ),
+      actions: [
+        ElevatedButton(
+          onPressed: resetPassword,
+          child: const Text(
+            'Send Email',
+          ),
+        ),
+        ElevatedButton(
+          child: const Text(
+            'Sign In',
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              RoutesText.signIn,
+            );
+          },
+        ),
+      ],
     );
   }
 
