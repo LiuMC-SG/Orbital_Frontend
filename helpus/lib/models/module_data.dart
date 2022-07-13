@@ -37,8 +37,8 @@ class CondensedModule {
 class ModuleGrading {
   static final List<String> grades = [
     'A+',
-    'A-',
     'A',
+    'A-',
     'B+',
     'B',
     'B-',
