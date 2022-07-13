@@ -102,17 +102,25 @@ class ModuleGrading {
     num cap = 0;
     num totalMC = 0;
     num includedMC = 0;
+    num countSU = 0;
     for (ModuleGrading module in modules) {
       if (!module.isSU && module.grade != '') {
         cap += module.getGrade() * module.mc;
         includedMC += module.mc;
       }
+      if (module.isSU) {
+        countSU += module.mc;
+      }
       totalMC += module.mc;
     }
+    if (includedMC != 0) {
+      cap = cap / includedMC;
+    }
     return [
-      (cap / includedMC).toStringAsFixed(2),
-      includedMC.toString(),
       totalMC.toString(),
+      countSU.toString(),
+      includedMC.toString(),
+      cap.toStringAsFixed(2),
     ];
   }
 

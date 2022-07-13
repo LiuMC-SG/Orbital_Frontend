@@ -74,15 +74,30 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Total MC: ${moduleInfo[2]}'),
+              child: Text('Total MC: ${moduleInfo[0]}'),
             ),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('Included MC: ${moduleInfo[1]}'),
+              child: Text(
+                'SU: ${moduleInfo[1]}/32',
+                style: TextStyle(
+                    color: int.parse(moduleInfo[1]) > 32
+                        ? Colors.red
+                        : Colors.black),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Text('Included MC: ${moduleInfo[2]}'),
             ),
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Text('CAP: ${moduleInfo[0]}'),
+              child: Text('CAP: ${moduleInfo[3]}'),
             ),
           ],
         ),
