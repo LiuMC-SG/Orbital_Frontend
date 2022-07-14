@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'dart:html' as webFile;
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +10,7 @@ import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/models/todo_data.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/widgets/todo/labels_filter_dialog.dart';
+import 'package:helpus/providers/Calendar.dart';
 
 // Task screen
 class TodoScreen extends StatefulWidget {
@@ -185,6 +191,15 @@ class TodoScreenState extends State<TodoScreen> {
                 child: const Text('Delete Tasks'),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  exportTasks();
+                },
+                child: const Text('Export Tasks'),
+              ),
+            ),
           ],
         ),
         const Padding(
@@ -303,6 +318,38 @@ class TodoScreenState extends State<TodoScreen> {
       },
       SetOptions(merge: true),
     );
+  }
+
+  // Export tasks as iCalender file
+  void exportTasks() async {
+    List<Todo> selectedList = [];
+    for (int i = 0; i < selectedTask.length; i++) {
+      if (selectedTask[i]) {
+        selectedList.add(filteredList[i]);
+      }
+    }
+
+    Calendar cal = Calendar();
+    cal.addTodoList(selectedList);
+    String generatedCal = cal.generateICalender();
+
+    if (kIsWeb) {
+      var blob = webFile.Blob([generatedCal], 'text/calendar');
+      // ignore: unused_local_variable
+      var anchorElement = webFile.AnchorElement(
+        href: webFile.Url.createObjectUrlFromBlob(blob).toString(),
+      )
+        ..setAttribute('download', 'helpus.ics')
+        ..click();
+    } else {
+      Directory appDocumentsDirectory =
+          await getApplicationDocumentsDirectory();
+      String appDocumentsPath = appDocumentsDirectory.path;
+      String filePath = '$appDocumentsPath/helpus.ics';
+
+      File file = File(filePath);
+      file.writeAsString(generatedCal);
+    }
   }
 
   // Create initial column for DataTable
