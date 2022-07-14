@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:helpus/firebase_options.dart';
-import 'package:helpus/models/recaptcha/recaptcha_service.dart';
+// import 'package:helpus/models/recaptcha/recaptcha_service.dart';
 import 'package:helpus/secrets.dart';
 import 'package:helpus/utilities/constants.dart';
 import 'package:helpus/utilities/routes.dart';
@@ -19,9 +19,9 @@ void main() async {
 
   // Initialise recaptcha
   await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: Config.siteKey);
-  if (kIsWeb) {
-    await RecaptchaService.initiate();
-  }
+  // if (kIsWeb) {
+  //   await RecaptchaService.initiate();
+  // }
 
   // Enable persistence of firebase data
   if (kIsWeb) {
