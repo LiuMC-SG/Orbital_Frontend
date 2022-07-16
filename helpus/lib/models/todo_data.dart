@@ -60,7 +60,12 @@ class Todo {
 
   // Return datetime of deadline
   String getDeadlineDate() {
-    return DateTime.parse(deadline).toUtc().toIso8601String();
+    return DateTime.parse(deadline)
+        .toUtc()
+        .toIso8601String()
+        .replaceAll('-', '')
+        .replaceAll(':', '')
+        .replaceAll('.000', '');
   }
 
   // Deadline to string
