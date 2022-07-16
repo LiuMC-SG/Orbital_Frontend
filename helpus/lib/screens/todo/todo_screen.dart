@@ -27,6 +27,7 @@ class TodoScreenState extends State<TodoScreen> {
   List<bool> selectedTask = [];
   bool allSelected = false;
   late Future<bool> _future;
+  late double width;
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class TodoScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
@@ -437,21 +439,27 @@ class TodoScreenState extends State<TodoScreen> {
                   ),
                 ),
                 DataCell(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(filteredList[index].title),
-                      Text(
-                        filteredList[index].description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
+                  SizedBox(
+                    width: width * 0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          filteredList[index].title,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                        Text(
+                          filteredList[index].description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
