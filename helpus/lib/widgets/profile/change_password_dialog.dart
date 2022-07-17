@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:helpus/widgets/sign_in/password_text_field.dart';
 
 // Change password dialog
 class ChangePasswordDialog extends StatefulWidget {
@@ -33,7 +34,11 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 child: TextButton(
                   child: const Text('Change Password'),
                   onPressed: () {
-                    _changePassword();
+                    if (_formKey.currentState!.validate()) {
+                      _changePassword();
+                    } else {
+                      _success = null;
+                    }
                   },
                 ),
               ),
@@ -64,25 +69,13 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-              ),
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
+            PasswordTextField(
+              passwordController: _passwordController,
+              labelText: 'Password',
             ),
-            TextFormField(
-              controller: _passwordRepeatController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
-              ),
+            PasswordTextField(
+              passwordController: _passwordRepeatController,
+              labelText: 'Confirm Password',
               validator: (String? value) {
                 if (value != _passwordController.text) {
                   return 'Please enter same password';

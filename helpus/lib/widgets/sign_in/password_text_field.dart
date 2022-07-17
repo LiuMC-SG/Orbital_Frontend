@@ -38,6 +38,7 @@ class PasswordTextFieldState extends State<PasswordTextField> {
             hintText: 'Enter your password',
             border: InputBorder.none,
             suffixIcon: IconButton(
+              splashRadius: 0.1,
               icon: Icon(
                 hidden ? Icons.visibility_off : Icons.visibility,
               ),
