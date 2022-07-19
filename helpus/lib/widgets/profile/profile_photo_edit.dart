@@ -98,6 +98,9 @@ class ProfilePhotoEditState extends State<ProfilePhotoEdit> {
         setState(() {
           _profilePhoto = ProfilePhoto(profile: widget.profile);
         });
+        Fluttertoast.showToast(
+          msg: 'Profile image updated',
+        );
       } on FirebaseException catch (e) {
         debugPrint('setPicture: ${e.message}');
       } catch (e) {

@@ -46,21 +46,18 @@ class ProfileInfoEditState extends State<ProfileInfoEdit> {
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.navigate_next_rounded,
-                  color: Colors.black,
-                ),
+              ElevatedButton.icon(
                 onPressed: () {
                   widget.submission(
                     _textController!.text,
                   );
                 },
-                padding: const EdgeInsets.all(0),
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-                iconSize: 16,
+                icon: const Icon(
+                  Icons.navigate_next_rounded,
+                ),
+                label: const Text(
+                  'Update',
+                ),
               ),
             ],
           ),
