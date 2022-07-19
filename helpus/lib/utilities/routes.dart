@@ -2,10 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/screens/error_screen.dart';
 import 'package:helpus/screens/home_screen.dart';
+import 'package:helpus/screens/module_graph/module_graph_screen.dart';
+import 'package:helpus/screens/profile/profile_screen.dart';
 import 'package:helpus/screens/sign_in/register_screen.dart';
 import 'package:helpus/screens/sign_in/sign_in_screen.dart';
 import 'package:helpus/screens/todo/todo_add_screen.dart';
 import 'package:helpus/screens/todo/todo_edit_screen.dart';
+import 'package:helpus/screens/todo/todo_screen.dart';
+import 'package:helpus/screens/tracking/module_tracking_screen.dart';
 import 'package:helpus/utilities/constants.dart';
 
 // Routes url and equivalent screens
@@ -25,6 +29,22 @@ class Routes {
         break;
       case RoutesText.home:
         page = HomeScreen();
+        requireUser = true;
+        break;
+      case RoutesText.profile:
+        page = const ProfileScreen();
+        requireUser = true;
+        break;
+      case RoutesText.moduleGraph:
+        page = const ModuleGraphScreen();
+        requireUser = true;
+        break;
+      case RoutesText.moduleTracking:
+        page = const ModuleTrackingScreen();
+        requireUser = true;
+        break;
+      case RoutesText.todo:
+        page = const TodoScreen();
         requireUser = true;
         break;
       case RoutesText.addTask:

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/app_drawer.dart';
 import 'package:helpus/widgets/profile/change_password_dialog.dart';
 import 'package:helpus/widgets/profile/profile_info_edit.dart';
 import 'package:helpus/widgets/profile/profile_info_static.dart';
@@ -22,52 +23,58 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: setInitial(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ProfilePhotoEdit(
-                profile: profile,
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              ProfileInfoEdit(
-                title: 'Name',
-                value: profile.name,
-                submission: setName,
-              ),
-              ProfileInfoStatic(
-                title: 'Email',
-                value: profile.email,
-              ),
-              Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                spacing: 20,
-                children: [
-                  ElevatedButton(
-                    onPressed: changePassword,
-                    child: const Text('Change Password'),
-                  ),
-                  ElevatedButton(
-                    onPressed: deleteAccount,
-                    child: const Text('Delete Account'),
-                  ),
-                ],
-              ),
-            ],
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+      ),
+      drawer: AppDrawer.getDrawer(context, profile, 0),
+      body: FutureBuilder(
+        future: setInitial(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ProfilePhotoEdit(
+                  profile: profile,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                ProfileInfoEdit(
+                  title: 'Name',
+                  value: profile.name,
+                  submission: setName,
+                ),
+                ProfileInfoStatic(
+                  title: 'Email',
+                  value: profile.email,
+                ),
+                Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  spacing: 20,
+                  children: [
+                    ElevatedButton(
+                      onPressed: changePassword,
+                      child: const Text('Change Password'),
+                    ),
+                    ElevatedButton(
+                      onPressed: deleteAccount,
+                      child: const Text('Delete Account'),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 
