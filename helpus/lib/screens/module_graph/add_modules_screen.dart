@@ -174,7 +174,7 @@ class AddModulesScreenState extends State<AddModulesScreen> {
                             horizontal: 20,
                           ),
                     child: ElevatedButton(
-                      onPressed: submitModules,
+                      onPressed: checkModules,
                       child: const Text('Add Modules'),
                     ),
                   ),
@@ -253,7 +253,16 @@ class AddModulesScreenState extends State<AddModulesScreen> {
   // selected module only. Otherwise, then it would prompt dialog to add
   // prerequisite to the module.
   void changeSelectedModule(int index) {
-    if (selectedModules.keys.elementAt(index).prerequisite != '') {
+    String prequisite = selectedModules.keys.elementAt(index).prerequisite;
+    if (prequisite != '') {
+      List<String> allModules =
+          selectedModules.keys.map((e) => e.moduleCode).toList();
+      for (String module in currModules) {
+        if (!allModules.contains(module)) {
+          allModules.add(module);
+        }
+      }
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -262,12 +271,10 @@ class AddModulesScreenState extends State<AddModulesScreen> {
             removeMod: () {
               removeModule(index);
             },
-            initialModules:
-                selectedModules[selectedModules.keys.elementAt(index)] ??
-                    <String>[],
-            allModules: selectedModules.keys.map((e) => e.moduleCode).toList(),
-            selectedModule: selectedModules.keys.elementAt(index).moduleCode,
-            currModules: currModules,
+            allModules: allModules,
+            selectedModules: selectedModules.values.elementAt(index),
+            currModule: selectedModules.keys.elementAt(index).moduleCode,
+            prerequisite: prequisite,
           );
         },
       );
@@ -324,86 +331,123 @@ class AddModulesScreenState extends State<AddModulesScreen> {
     });
   }
 
-  // Submit selected modules to the database. Each module is a node and edge is
-  // from prereq module to the selected module.
-  void submitModules() async {
-    bool havePrerequisite = false;
+  void checkModules() async {
+    List<String> havePrerequisite = <String>[];
     for (var i = 0; i < selectedModules.length; i++) {
       if (selectedModules.keys.elementAt(i).prerequisite != '' &&
           selectedModules.values.elementAt(i).isEmpty) {
-        havePrerequisite = true;
+        havePrerequisite.add(selectedModules.keys.elementAt(i).moduleCode);
       }
     }
-    if (havePrerequisite) {
-      Fluttertoast.showToast(msg: 'Not all Modules Perequisites are satisfied');
-    } else {
-      DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid);
-      DocumentSnapshot documentSnapshot = await documentReference.get();
-      final mappedValue = Map<String, dynamic>.from(
-          documentSnapshot.data() as Map<Object?, Object?>);
-
-      // Update firestore graph model
-      GraphModel updatedGraphModel = GraphModel(mappedValue['graphModel']);
-      final int startId = updatedGraphModel.maxId() + 1;
-      int counter = startId;
-      for (var i = 0; i < selectedModules.length; i++) {
-        String moduleCode = selectedModules.keys.elementAt(i).moduleCode;
-        if (updatedGraphModel.getNodeId(moduleCode) == -1) {
-          updatedGraphModel.addNode(GraphNode(
-            counter,
-            selectedModules.keys.elementAt(i).moduleCode,
-          ));
-          counter++;
-        }
-      }
-      for (var i = 0; i < selectedModules.length; i++) {
-        for (var prereq in selectedModules.values.elementAt(i)) {
-          if (prereq != 'master') {
-            updatedGraphModel.addEdge(GraphEdge(
-              updatedGraphModel.getNodeId(prereq),
-              updatedGraphModel
-                  .getNodeId(selectedModules.keys.elementAt(i).moduleCode),
-            ));
-          }
-        }
-      }
-
-      // Update firestore moduleGrading
-      List<ModuleGrading> updatedModuleGrading =
-          ModuleGrading.fromJsonList(mappedValue['moduleGrading']);
-      List<String> updatedModuleGradingString =
-          updatedModuleGrading.map((e) => e.moduleCode).toList();
-      for (var module in selectedModules.keys) {
-        if (!updatedModuleGradingString.contains(module.moduleCode)) {
-          updatedModuleGrading.add(ModuleGrading(
-            module.moduleCode,
-            allModules
-                .where((element) => element.moduleCode == module.moduleCode)
-                .first
-                .mc,
-            '',
-            false,
-          ));
-        }
-      }
-
-      await documentReference.set(
-        {
-          'moduleGrading': updatedModuleGrading
-              .map(
-                (e) => e.toJson(),
-              )
-              .toList(),
-          'graphModel': updatedGraphModel.toJson(),
+    if (havePrerequisite.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Missing Prerequisite'),
+            content: SizedBox(
+              width: 300,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'The following modules have prerequisites that are not selected:',
+                  ),
+                  Text(
+                    havePrerequisite.join(', '),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              Center(
+                child: TextButton(
+                  child: const Text('Continue'),
+                  onPressed: () {
+                    submitModules();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          );
         },
-        SetOptions(merge: true),
       );
-
-      if (!mounted) return;
-      Navigator.pop(context);
+    } else {
+      submitModules();
     }
+  }
+
+  // Submit selected modules to the database. Each module is a node and edge is
+  // from prereq module to the selected module.
+  void submitModules() async {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+    final mappedValue = Map<String, dynamic>.from(
+        documentSnapshot.data() as Map<Object?, Object?>);
+
+    // Update firestore graph model
+    GraphModel updatedGraphModel = GraphModel(mappedValue['graphModel']);
+    final int startId = updatedGraphModel.maxId() + 1;
+    int counter = startId;
+    for (var i = 0; i < selectedModules.length; i++) {
+      String moduleCode = selectedModules.keys.elementAt(i).moduleCode;
+      if (updatedGraphModel.getNodeId(moduleCode) == -1) {
+        updatedGraphModel.addNode(GraphNode(
+          counter,
+          selectedModules.keys.elementAt(i).moduleCode,
+        ));
+        counter++;
+      }
+    }
+    for (var i = 0; i < selectedModules.length; i++) {
+      for (var prereq in selectedModules.values.elementAt(i)) {
+        if (prereq != 'master') {
+          updatedGraphModel.addEdge(GraphEdge(
+            updatedGraphModel.getNodeId(prereq),
+            updatedGraphModel
+                .getNodeId(selectedModules.keys.elementAt(i).moduleCode),
+          ));
+        }
+      }
+    }
+
+    // Update firestore moduleGrading
+    List<ModuleGrading> updatedModuleGrading =
+        ModuleGrading.fromJsonList(mappedValue['moduleGrading']);
+    List<String> updatedModuleGradingString =
+        updatedModuleGrading.map((e) => e.moduleCode).toList();
+    for (var module in selectedModules.keys) {
+      if (!updatedModuleGradingString.contains(module.moduleCode)) {
+        updatedModuleGrading.add(ModuleGrading(
+          module.moduleCode,
+          allModules
+              .where((element) => element.moduleCode == module.moduleCode)
+              .first
+              .mc,
+          '',
+          false,
+        ));
+      }
+    }
+
+    await documentReference.set(
+      {
+        'moduleGrading': updatedModuleGrading
+            .map(
+              (e) => e.toJson(),
+            )
+            .toList(),
+        'graphModel': updatedGraphModel.toJson(),
+      },
+      SetOptions(merge: true),
+    );
+
+    if (!mounted) return;
+    Navigator.pop(context);
   }
 
   @override
