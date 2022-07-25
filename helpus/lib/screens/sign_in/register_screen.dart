@@ -21,93 +21,143 @@ class RegisterScreenState extends State<RegisterScreen> {
   String? _message;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    if (size.width > 600) {
+      size = Size(600, size.width);
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: const Color.fromARGB(100, 0, 111, 157),
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(
-                    16,
-                  ),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Register with email and password',
-                  ),
-                ),
-                EmailTextField(
-                  emailController: _emailController,
-                ),
-                PasswordTextField(
-                  passwordController: _passwordController,
-                  labelText: 'Password',
-                ),
-                PasswordTextField(
-                  passwordController: _passwordRepeatController,
-                  labelText: 'Confirm Password',
-                  validator: (String? value) {
-                    if (value != _passwordController.text) {
-                      return 'Please enter same password';
-                    }
-                    return null;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16.0,
-                      ),
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _registerWithEmailAndPassword();
-                          } else {
-                            _success = null;
-                          }
-                        },
-                        child: const Text('Sign Up'),
-                      ),
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(150, 0, 111, 157),
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            alignment: Alignment.center,
+            width: size.width,
+            height: 700,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16.0,
+                      right: 16.0,
+                      top: 20.0,
+                      bottom: 20.0,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16.0,
-                      ),
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            RoutesText.signIn,
-                          );
-                        },
-                        child: const Text(
-                          'Back to Sign In',
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/icon/app_icon.png',
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.fitWidth,
                         ),
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                  ),
-                  child: Text(
-                    _success == null ? '' : _message ?? '',
-                    style: const TextStyle(
-                      color: Colors.red,
+                        Container(
+                          padding: const EdgeInsets.all(
+                            16,
+                          ),
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Register with email and password',
+                          ),
+                        ),
+                        EmailTextField(
+                          emailController: _emailController,
+                        ),
+                        PasswordTextField(
+                          passwordController: _passwordController,
+                          labelText: 'Password',
+                        ),
+                        PasswordTextField(
+                          passwordController: _passwordRepeatController,
+                          labelText: 'Confirm Password',
+                          validator: (String? value) {
+                            if (value != _passwordController.text) {
+                              return 'Please enter same password';
+                            }
+                            return null;
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                              ),
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    _registerWithEmailAndPassword();
+                                  } else {
+                                    _success = null;
+                                  }
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                              ),
+                              alignment: Alignment.center,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    RoutesText.signIn,
+                                  );
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Back to Sign In',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: Text(
+                            _success == null ? '' : _message ?? '',
+                            style: const TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ),
