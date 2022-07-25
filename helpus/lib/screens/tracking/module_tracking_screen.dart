@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpus/models/module_data.dart';
 import 'package:helpus/models/profile_data.dart';
+import 'package:helpus/widgets/app_drawer.dart';
 
 // Module tracking screen
 class ModuleTrackingScreen extends StatefulWidget {
@@ -25,19 +26,25 @@ class ModuleTrackingScreenState extends State<ModuleTrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return moduleTrackingWidget();
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Module Tracking'),
+      ),
+      drawer: AppDrawer.getDrawer(context, profile, 2),
+      body: FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return moduleTrackingWidget();
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 

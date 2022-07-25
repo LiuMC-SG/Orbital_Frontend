@@ -7,6 +7,7 @@ import 'package:helpus/models/module_data.dart';
 import 'package:helpus/models/profile_data.dart';
 import 'package:helpus/screens/module_graph/add_modules_screen.dart';
 import 'package:helpus/utilities/constants.dart';
+import 'package:helpus/widgets/app_drawer.dart';
 
 // Module graph screen
 class ModuleGraphScreen extends StatefulWidget {
@@ -29,56 +30,63 @@ class ModuleGraphScreenState extends State<ModuleGraphScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: generateGraph(),
-                  ),
-                ],
-              ),
-            ),
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.all(20),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddModulesScreen(
-                              profile: profile,
-                            )),
-                  ).then((value) {
-                    setState(() {
-                      future = setInitial();
-                    });
-                  });
-                },
-                backgroundColor: FirebaseColors.firebaseNavy,
-                tooltip: 'Add module',
-                child: const Icon(
-                  Icons.add,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Module Graph'),
+      ),
+      drawer: AppDrawer.getDrawer(context, profile, 1),
+      body: FutureBuilder(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: generateGraph(),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+              floatingActionButton: Padding(
+                padding: const EdgeInsets.all(20),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddModulesScreen(
+                                profile: profile,
+                              )),
+                    ).then((value) {
+                      setState(() {
+                        future = setInitial();
+                      });
+                    });
+                  },
+                  backgroundColor: FirebaseColors.firebaseNavy,
+                  tooltip: 'Add module',
+                  child: const Icon(
+                    Icons.add,
+                  ),
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 

@@ -31,6 +31,10 @@ class RoutesText {
   static const forgetPassword = '/forget_password';
   static const register = '/register';
   static const home = '/home';
+  static const profile = '/profile';
+  static const moduleGraph = '/module_graph';
+  static const moduleTracking = '/module_tracking';
+  static const todo = '/todo';
   static const addTask = '/add_task';
   static const editTask = '/edit_task';
 }

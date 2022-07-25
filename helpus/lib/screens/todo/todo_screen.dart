@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:html' as webFile;
 import 'package:flutter/foundation.dart';
+import 'package:helpus/widgets/app_drawer.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,19 +53,25 @@ class TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return body();
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Todo Tracking'),
+      ),
+      drawer: AppDrawer.getDrawer(context, profile, 3),
+      body: FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return body();
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 
